@@ -6,7 +6,7 @@ This is a Flask project containing the recommender system API for the colleges a
 
 1. Clone the repository.
 2. Install the required packages using `pip install -r requirements.txt`.
-3. Run the application using `python3 app.py`.
+3. Run the application using `python3 run.py`.
 
 ## Usage
 
@@ -44,7 +44,7 @@ The POST request needs to contain a JSON object like this as it's body:
 
 ## Credits
 
-This project was created by [Your Name](https://github.com/gabeha).
+This project was created by [Gabriel Hauss](https://github.com/gabeha).
 
 ## License
 
