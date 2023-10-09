@@ -14,15 +14,15 @@ class RecSys():
         self.validate_input = True
         self.system_course_data = True
 
-
     """
     function: validate_system_input
     description: validate the format of the input data
     """
+
     def validate_system_input(self,
-                               student_input,
-                               course_data = None,
-                               student_data = None):
+                              student_input,
+                              course_data=None,
+                              student_data=None):
 
         check_student_input(student_input)
 
@@ -31,7 +31,7 @@ class RecSys():
 
         check_course_data(course_data)
 
-        if student_data != None:
+        if student_data is not None:
             check_student_data(student_data)
 
         return student_input, course_data, student_data
@@ -104,30 +104,35 @@ class RecSys():
                 }
                     
     """
-    def get_recommendation( self,
-                            student_intput,
-                            course_data = None,
-                            student_data = None,
-                            ):
+
+    def get_recommendation(self,
+                           student_intput,
+                           course_data=None,
+                           student_data=None,
+                           ):
 
         try:
-            if self.validate_input: student_data, course_data, student_data = self.validate_system_input(student_intput, course_data, student_data)
+            if self.validate_input:
+                student_data, course_data, student_data = self.validate_system_input(student_intput,
+                                                                                     course_data,
+                                                                                     student_data)
         except Exception as e:
             raise e
 
-        results = { "recommended_courses": {},
-                    "sorted_recommended_courses": [],
-                    "explanation": "" }
+        results = {"recommended_courses": {},
+                   "sorted_recommended_courses": [],
+                   "explanation": ""}
 
         results = make_results_template(results, course_data)
 
-        results = compute_recommendation(results, student_intput, course_data, student_data, self.precomputed_course, self.precomputed_bloom, self.top_n)
+        results = compute_recommendation(results, student_intput, course_data, student_data, self.precomputed_course,
+                                         self.precomputed_bloom, self.top_n)
 
         if self.contraints:
-            results = compute_contraints(results) # recommended_courses
-            results = compute_warnings(results, student_data) # structured_recommendation
+            results = compute_constraints(results)  # recommended_courses
+            results = compute_warnings(results, student_data)  # structured_recommendation
         else:
-            results = compute_warnings(results, student_data) # sorted_recommended_courses
+            results = compute_warnings(results, student_data)  # sorted_recommended_courses
 
         self.results = results
         self.student_input = student_intput
@@ -143,4 +148,3 @@ class RecSys():
               f"Top_n: {self.top_n} \n" +
               f"Validate_input: {self.validate_input} \n" +
               f"System_course_data: {self.system_course_data} \n")
-

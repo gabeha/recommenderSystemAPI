@@ -63,7 +63,7 @@ student_data : dictionary  {
                             }
 """
 def check_student_data(student_data):
-    if not isinstance(student_input, dict):
+    if not isinstance(student_data, dict):
         raise StudentDataFormatError("student_data is not a dictionary")
     if not 'courses_taken' in student_data:
         raise StudentDataFormatError("student_data does not have courses_taken")
