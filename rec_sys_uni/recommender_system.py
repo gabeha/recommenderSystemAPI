@@ -4,7 +4,7 @@ from rec_sys_uni._helpers_rec_sys import make_results_template
 from rec_sys_uni.rec_systems._systems import *
 
 
-class RecSys():
+class RecSys:
 
     def __init__(self):
         self.precomputed_course = False
