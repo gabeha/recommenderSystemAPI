@@ -1,0 +1,15 @@
+{
+  "recommendedModules": [
+    {
+      "name": "module1",
+      "period": 1,
+      "year": 2018
+    },
+    {
+      "name": "module2",
+      "period": 2,
+      "year": 2018
+    }
+  ],
+  "explanation": "This is a test explanation"
+}
