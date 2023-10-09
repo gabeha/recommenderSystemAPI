@@ -14,7 +14,7 @@ This is a Flask project containing the recommender system API for the colleges a
 
 The POST request needs to contain a JSON object like this as it's body:
 
-{
+`{
 "keywords": {
 "dog": 0.4,
 "cat": 0.8,
@@ -33,7 +33,7 @@ The POST request needs to contain a JSON object like this as it's body:
 "evaluate": 0.9,
 "create": 1.0
 }
-}
+}`
 
 ## Contributing
 
