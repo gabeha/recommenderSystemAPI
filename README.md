@@ -10,7 +10,7 @@ This is a Flask project containing the recommender system for the colleges at Ma
 
 ## Usage
 
-1. Open your web browser and navigate to `http://localhost:5000`.
+1. Open a tool like Postman and create requests to `http://127.0.0.1:5000/api`.
 
 ## Contributing
 
