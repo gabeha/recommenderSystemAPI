@@ -1,11 +1,15 @@
-def compute_recommendation(results, student_intput, course_data, student_data, precomputed_course, precomputed_bloom,
-                           top_n):
-    return results
+from rec_sys_uni.rec_systems.course_based_sys.course_based import course_based_recommendation
+
+def compute_recommendation(recSys):
+    course_based_recommendation(recSys) # Change weight of each course based on the keywords and fill sorted recommendation list
+    pass
 
 
-def compute_constraints(recommended_courses):
-    return recommended_courses
+
+def compute_constraints(recSys):
+    pass
 
 
-def compute_warnings(recommended_courses, student_data):
-    return recommended_courses
+
+def compute_warnings(recSys):
+    pass

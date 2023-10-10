@@ -1,25 +1,26 @@
 from rec_sys_uni.errors_checker.exceptions.rec_sys_errors import *
-"""
-student_input : dictionary {
-                            keywords: {keywords(String): weight(float), ...} ,
-                            blooms: {blooms(String): weight(float), ...}
-                            }
-                                e.g. student_input =    {
-                                                            keywords: {
-                                                                            'python': 0.5,
-                                                                            'data science': 0.2
-                                                                      },
-                                                            blooms: {
-                                                                        'create': 0.5,
-                                                                        'understand': 0.75,
-                                                                        'apply': 0.25',
-                                                                        'analyze': 0.5,
-                                                                        'evaluate': 0,
-                                                                        'remember': 1
-                                                                    }
-                                                        }
-"""
+
 def check_student_input(student_input):
+    """
+    student_input : dictionary {
+                                keywords: {keywords(String): weight(float), ...} ,
+                                blooms: {blooms(String): weight(float), ...}
+                                }
+                                    e.g. student_input =    {
+                                                                keywords: {
+                                                                                'python': 0.5,
+                                                                                'data science': 0.2
+                                                                          },
+                                                                blooms: {
+                                                                            'create': 0.5,
+                                                                            'understand': 0.75,
+                                                                            'apply': 0.25',
+                                                                            'analyze': 0.5,
+                                                                            'evaluate': 0,
+                                                                            'remember': 1
+                                                                        }
+                                                            }
+    """
     if student_input == None:
         raise StudentInputFormatError("student_input is None")
     if not isinstance(student_input, dict):
@@ -44,25 +45,22 @@ def check_student_input(student_input):
             raise StudentInputFormatError("student_input['blooms'][key] is not a float")
 
 
-
-
-
-"""
-student_data : dictionary  {
-                            courses_taken: 
-                                {
-                                    course_id(String): 
-                                                        {
-                                                            passed: boolean,
-                                                            grade: float,
-                                                            period: int || [from, to],
-                                                            year: int
-                                                        }, 
-                                    ...
-                                }
-                            }
-"""
 def check_student_data(student_data):
+    """
+    student_data : dictionary  {
+                                courses_taken:
+                                    {
+                                        course_id(String):
+                                                            {
+                                                                passed: boolean,
+                                                                grade: float,
+                                                                period: int || [from, to],
+                                                                year: int
+                                                            },
+                                        ...
+                                    }
+                                }
+    """
     if not isinstance(student_data, dict):
         raise StudentDataFormatError("student_data is not a dictionary")
     if not 'courses_taken' in student_data:
@@ -88,23 +86,22 @@ def check_student_data(student_data):
         if not isinstance(key['year'], int):
             raise StudentDataFormatError(f"{key}[year] is not an integer")
 
-
-"""
-course_data : dictionary    {  
-                                course_id(String): dictionary
-                                        { 
-                                            course_name: String,    e.g "Philosophy of Science"
-                                            period: [int, ...] or [[int, int], ...],    e.g [1, 4] or [[1, 2, 3], [4, 5, 6]] or [[1,2]]
-                                            level: int,        e.g 1, 2, 3
-                                            prerequisites: [course_id(String), ...],    e.g ["COR1001", "COR1002"]
-                                            description: String,    e.g "This course is about ..."
-                                            ilos: [String, ...],    e.g ["Be able to apply the scientific method to a given problem", 
-                                                                         "Be able to explain the difference between science and pseudoscience"]
-                                        },
-                                ...
-                            }
-"""
 def check_course_data(course_data):
+    """
+    course_data : dictionary    {
+                                    course_id(String): dictionary
+                                            {
+                                                course_name: String,    e.g "Philosophy of Science"
+                                                period: [int, ...] or [[int, int], ...],    e.g [1, 4] or [[1, 2, 3], [4, 5, 6]] or [[1,2]]
+                                                level: int,        e.g 1, 2, 3
+                                                prerequisites: [course_id(String), ...],    e.g ["COR1001", "COR1002"]
+                                                description: String,    e.g "This course is about ..."
+                                                ilos: [String, ...],    e.g ["Be able to apply the scientific method to a given problem",
+                                                                             "Be able to explain the difference between science and pseudoscience"]
+                                            },
+                                    ...
+                                }
+    """
     if course_data == None:
         raise CourseDataFormatError("course_data is None")
     if not isinstance(course_data, dict):
