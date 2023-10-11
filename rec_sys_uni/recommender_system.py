@@ -2,18 +2,19 @@ from rec_sys_uni.errors_checker.errors import check_student_input, check_student
 from rec_sys_uni.datasets.datasets import get_course_data
 from rec_sys_uni._helpers_rec_sys import make_results_template
 from rec_sys_uni.rec_systems._systems import *
-from sentence_transformers import SentenceTransformer
+from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 
 
 class RecSys:
 
-    def __init__(self):
+    def __init__(self,
+                 course_based: CourseBasedRecSys = None):
         self.precomputed_bloom = False
         self.constraints = False
         self.top_n = 20
         self.validate_input = True
         self.system_course_data = True
-        self.course_based_settings = None
+        self.course_based = course_based
 
 
     def validate_system_input(self,

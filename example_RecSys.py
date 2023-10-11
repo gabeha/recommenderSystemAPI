@@ -1,12 +1,8 @@
 from rec_sys_uni.recommender_system import RecSys
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 
-rs = RecSys()
 
-# Print settings of RecSys
-rs._settings_()
-
-rs.course_based_settings = CourseBasedRecSys(
+course_based = CourseBasedRecSys(
     top_n=20,
     min_df=1,
     use_maxsum=False,
@@ -16,6 +12,13 @@ rs.course_based_settings = CourseBasedRecSys(
     force_keywords=True,
     precomputed_course=False
 )
+
+
+rs = RecSys(course_based=course_based)
+
+# Print settings of RecSys
+rs._settings_()
+
 
 # Get list of recommended courses
 student_input = { "keywords": { 'artificial': 1.0, 'math': 1.0,  'statistics': 1.0, 'data analyze': 1.0, 'law': 1.0, 'human rights': 1.0},

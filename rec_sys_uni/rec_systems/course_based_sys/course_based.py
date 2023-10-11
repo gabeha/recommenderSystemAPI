@@ -13,10 +13,11 @@ from keybert._maxsum import max_sum_distance
 
 from rec_sys_uni.errors_checker.exceptions.rec_sys_errors import CourseBasedSettingsError
 
+
 class CourseBasedRecSys:
 
     def __init__(self,
-                 course_based_model = SentenceTransformer('all-MiniLM-L6-v2'),
+                 course_based_model=SentenceTransformer('all-MiniLM-L6-v2'),
                  keyphrase_ngram_range: Tuple[int, int] = (1, 1),
                  stop_words: Union[str, List[str]] = "english",
                  top_n: int = 10,
@@ -28,8 +29,8 @@ class CourseBasedRecSys:
                  highlight: bool = False,
                  seed_keywords: Union[List[str], List[List[str]]] = None,
                  threshold: float = None,
-                 force_keywords = False,
-                 precomputed_course = False
+                 force_keywords=False,
+                 precomputed_course=False
                  ):
         self.course_based_model = course_based_model
         self.keyphrase_ngram_range = keyphrase_ngram_range
@@ -46,62 +47,53 @@ class CourseBasedRecSys:
         self.force_keywords = force_keywords
         self.precomputed_course = precomputed_course
 
+    def recommend(self, recSys):
 
+        kw_model = KeyBERT(model=self.course_based_model)
 
+        course_data = recSys.course_data
+        student_input = recSys.student_input['keywords']
 
-def course_based_recommendation(recSys):
+        keywords = []
+        for i in student_input:
+            keywords.append(i)
 
-    if recSys.course_based_settings is None:
-        raise CourseBasedSettingsError("Course based settings are not set")
+        course_descriptions = []
+        for i in course_data:
+            course_descriptions.append(course_data[i]['description'])
 
-    cbs = recSys.course_based_settings
+        doc_embeddings = None
+        word_embeddings = None
 
-    kw_model = KeyBERT(model=cbs.course_based_model)
+        if self.precomputed_course:
+            doc_embeddings = np.load('doc_embeddings.npy')  # TODO: Need to implemented
+            word_embeddings = np.load('word_embeddings.npy')  # TODO: Need to implemented
 
-    course_data = recSys.course_data
-    student_input = recSys.student_input['keywords']
+        keywords_relevance = extract_keywords_relevance(course_descriptions, keywords, kw_model,
+                                                        doc_embeddings=doc_embeddings,
+                                                        word_embeddings=word_embeddings,
+                                                        keyphrase_ngram_range=self.keyphrase_ngram_range,
+                                                        stop_words=self.stop_words,
+                                                        top_n=self.top_n,
+                                                        min_df=self.min_df,
+                                                        use_maxsum=self.use_maxsum,
+                                                        use_mmr=self.use_mmr,
+                                                        diversity=self.diversity,
+                                                        nr_candidates=self.nr_candidates,
+                                                        highlight=self.highlight,
+                                                        seed_keywords=self.seed_keywords,
+                                                        threshold=self.threshold,
+                                                        force_keywords=self.force_keywords)
 
-    keywords = []
-    for i in student_input:
-        keywords.append(i)
-
-    course_descriptions = []
-    for i in course_data:
-        course_descriptions.append(course_data[i]['description'])
-
-    doc_embeddings = None
-    word_embeddings = None
-
-    if cbs.precomputed_course:
-        doc_embeddings = np.load('doc_embeddings.npy') # TODO: Need to implemented
-        word_embeddings = np.load('word_embeddings.npy') # TODO: Need to implemented
-
-    keywords_relevance = extract_keywords_relevance(course_descriptions, keywords, kw_model,
-                                                    doc_embeddings=doc_embeddings,
-                                                    word_embeddings=word_embeddings,
-                                                    keyphrase_ngram_range=cbs.keyphrase_ngram_range,
-                                                    stop_words=cbs.stop_words,
-                                                    top_n=cbs.top_n,
-                                                    min_df=cbs.min_df,
-                                                    use_maxsum=cbs.use_maxsum,
-                                                    use_mmr=cbs.use_mmr,
-                                                    diversity=cbs.diversity,
-                                                    nr_candidates=cbs.nr_candidates,
-                                                    highlight=cbs.highlight,
-                                                    seed_keywords=cbs.seed_keywords,
-                                                    threshold=cbs.threshold,
-                                                    force_keywords=cbs.force_keywords )
-
-
-    # Sum all weights of keywords
-    recommended_courses = recSys.results['recommended_courses']
-    for index, code in enumerate(course_data):
-        keywords_weightes = keywords_relevance[index]
-        score = 0
-        for i in keywords_weightes:
-            score += i[1] * student_input[i[0]]
-        recommended_courses[code]['score'] = score
-    recSys.results['recommended_courses'] = recommended_courses
+        # Sum all weights of keywords
+        recommended_courses = recSys.results['recommended_courses']
+        for index, code in enumerate(course_data):
+            keywords_weightes = keywords_relevance[index]
+            score = 0
+            for i in keywords_weightes:
+                score += i[1] * student_input[i[0]]
+            recommended_courses[code]['score'] = score
+        recSys.results['recommended_courses'] = recommended_courses
 
 
 def extract_keywords_relevance(
@@ -122,7 +114,7 @@ def extract_keywords_relevance(
         doc_embeddings: np.array = None,
         word_embeddings: np.array = None,
         threshold: float = None,
-        force_keywords = False
+        force_keywords=False
 ) -> Union[List[Tuple[str, float]], List[List[Tuple[str, float]]]]:
     """Extract keywords and/or keyphrases
 
@@ -294,4 +286,3 @@ def extract_keywords_relevance(
     #     )
     #     return keywords
     return all_keywords
-
