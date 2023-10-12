@@ -1,6 +1,6 @@
 from rec_sys_uni.errors_checker.errors import check_student_input, check_student_data, check_course_data
 from rec_sys_uni.datasets.datasets import get_course_data
-from rec_sys_uni._helpers_rec_sys import make_results_template
+from rec_sys_uni._helpers_rec_sys import make_results_template, semester_course_cleaning
 from rec_sys_uni.rec_systems._systems import *
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 
@@ -9,7 +9,6 @@ class RecSys:
 
     def __init__(self,
                  course_based: CourseBasedRecSys = None):
-        self.precomputed_bloom = False
         self.constraints = False
         self.top_n = 20
         self.validate_input = True
@@ -50,6 +49,7 @@ class RecSys:
         parameters: student_input : dictionary {
                                                 keywords: {keywords(String): weight(float), ...} ,
                                                 blooms: {blooms(String): weight(float), ...}
+                                                semester: float
                                                 }
                                                     e.g. student_input =    {
                                                                                 keywords: {
@@ -61,9 +61,10 @@ class RecSys:
                                                                                         'understand': 0.75,
                                                                                         'apply': 0.25',
                                                                                         'analyze': 0.5,
-                                                                                        'evaluate': 0,
-                                                                                        'remember': 1
+                                                                                        'evaluate': 0.0,
+                                                                                        'remember': 1.0
                                                                                         }
+                                                                                semester: 1.0
                                                                             }
 
                     student_data : dictionary  {
@@ -105,7 +106,11 @@ class RecSys:
                                                             ...
                                                         },
                         sorted_recommended_courses: list of course_id(String) sorted by score,
-                        structured_recommendation: TODO (Later stage)
+                        structured_recommendation: dictionary {
+                                                                period_1: list of course_id(String), condition <= 5
+                                                                period_2: list of course_id(String), condition <= 5
+                                                                period_3: list of course_id(String), condition == 1
+                                                                semester: list of course_id(String), condition == 1
                         explanation: String
                     }
 
@@ -113,9 +118,10 @@ class RecSys:
 
         try:
             if self.validate_input:
-                student_data, course_data, student_data = self.validate_system_input(student_intput,
-                                                                                     course_data,
-                                                                                     student_data)
+                student_input, course_data, student_data = self.validate_system_input(student_intput,
+                                                                                      course_data,
+                                                                                      student_data)
+            course_data = semester_course_cleaning(course_data, student_intput['semester'])
         except Exception as e:
             raise e
 
@@ -143,16 +149,37 @@ class RecSys:
 
         # Append code of sorted courses to the list
         final_recommendation_list = []
+
+        # structured recommendation dictionary
+        structured_recommendation = {'period_1': [],
+                                     'period_2': [],
+                                     'period_3': [],
+                                     'semester': []}
+
         for i in sorted_recommendation_list:
+            period = course_data[i[0]]['period']
+            for j in period:
+                if isinstance(j, list) and len(structured_recommendation['semester']) == 0:
+                    structured_recommendation['semester'].append(i[0])
+                    break
+                if (j == 1 or j ==4) and len(structured_recommendation['period_1']) <= 5:
+                    structured_recommendation['period_1'].append(i[0])
+                    break
+                if (j == 2 or j == 5) and len(structured_recommendation['period_2']) <= 5:
+                    structured_recommendation['period_2'].append(i[0])
+                    break
+                if (j == 3 or j == 6) and len(structured_recommendation['period_3']) == 0:
+                    structured_recommendation['period_3'].append(i[0])
+                    break
             final_recommendation_list.append(i[0])
+        self.results['structured_recommendation'] = structured_recommendation
         self.results['sorted_recommended_courses'] = final_recommendation_list
 
 
         return self.results
 
     def _settings_(self):
-        print(f"Precomputed_bloom: {self.precomputed_bloom} \n" +
-              f"Contraints: {self.constraints} \n" +
+        print(f"Contraints: {self.constraints} \n" +
               f"Top_n: {self.top_n} \n" +
               f"Validate_input: {self.validate_input} \n" +
               f"System_course_data: {self.system_course_data} \n")

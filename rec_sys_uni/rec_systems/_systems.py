@@ -1,6 +1,8 @@
 
 def compute_recommendation(recSys):
-    recSys.course_based.recommend(recSys) # Change weight of each course based on the keywords and fill sorted recommendation list
+    recSys.course_based.recommend(recSys) # Change scores of each course based on the keywords
+
+
     pass
 
 
