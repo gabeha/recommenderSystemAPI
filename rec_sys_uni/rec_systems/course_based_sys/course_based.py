@@ -23,6 +23,20 @@ class CourseBasedRecSys:
                  minimal_similarity_zeroshot: float = 0.8,
                  precomputed_course=False
                  ):
+        """
+        The constructor for CourseBasedRecSys class.
+        :param model_name: model name of the sentence transformer
+        :param top_n: number of keywords to be extracted
+        :param seed_help: apply seed help
+        :param domain_adapt: apply domain adaptation
+        :param zero_adapt: apply zero-shot adaptation
+        :param seed_type: type of the seed help either 'title' or 'domains'
+        :param domain_type: type of the domain adaptation either 'title' or 'domains'
+        :param zero_type: type of the zero-shot adaptation either 'title' or 'domains'
+        :param adaptive_thr: adaptive threshold for the zero-shot adaptation
+        :param minimal_similarity_zeroshot: minimal similarity between a candidate and a domain word for the zero-shot adaptation
+        :param precomputed_course: use precomputed course embeddings or not
+        """
         self.course_based_model = SentenceTransformer(model_name)
         self.model_name = model_name
         self.top_n = top_n
@@ -50,7 +64,7 @@ class CourseBasedRecSys:
         for i in student_input:
             keywords.append(i)
 
-        # Get course descriptions
+        # Get seed keywords, course descriptions, course codes, and doc embeddings
         course_descriptions = []
         course_codes = []
         seed_keywords = []
@@ -73,8 +87,6 @@ class CourseBasedRecSys:
 
         if not self.seed_help: seed_keywords = None
 
-        word_embeddings = None
-
         # Extract probabilities of keywords
         keywords_relevance = extract_keywords_relevance(docs=course_descriptions,
                                                         candidates=keywords,
@@ -88,7 +100,6 @@ class CourseBasedRecSys:
                                                         adaptive_thr=self.adaptive_thr,
                                                         minimal_similarity_zeroshot=self.minimal_similarity_zeroshot,
                                                         doc_embeddings=doc_embeddings,
-                                                        word_embeddings=word_embeddings,
                                                         seed_keywords=seed_keywords,
                                                         top_n=self.top_n)
 
@@ -131,7 +142,6 @@ def extract_keywords_relevance(
         top_n: int = 100,
         seed_keywords: Union[List[str], List[List[str]]] = None,
         doc_embeddings: np.array = None,
-        word_embeddings: np.array = None
 ) -> Union[List[Tuple[str, float]], List[List[Tuple[str, float]]]]:
     """Extract keywords and/or keyphrases
 
@@ -139,30 +149,29 @@ def extract_keywords_relevance(
     at once instead of iterating over a single document.
 
     Arguments:
-        docs: The document(s) for which to extract keywords/keyphrases
+        docs: The document(s) for which to calculate keywords/keyphrases relevance
 
-        candidates: Candidate keywords/keyphrases to use instead of extracting them from the document(s)
+        candidates: Candidate keywords/keyphrases to use for calculating the relevance
 
-        keyBERT model
+        keyBERT model: The model to use for extraction embeddings
 
-        course_codes
+        model_name: The name of the model to use for extraction embeddings
 
-        domain_type
+        course_codes: The codes of the courses
 
-        zero_type
+        domain_type: The type of the domain adaptation
 
-        domain_adapt
+        zero_type: The type of the zero-shot adaptation
 
-        zero_adapt
+        domain_adapt: Whether to apply domain adaptation
 
-        adaptive_thr
+        zero_adapt: Whether to apply zero-shot adaptation
 
-        minimal_similarity_zeroshot
+        adaptive_thr: The threshold for the adaptive weighting of the domain words
 
-        top_n: Return the top n keywords/keyphrases
+        minimal_similarity_zeroshot: The minimal similarity between a candidate and a domain word
 
-        highlight: Whether to print the document and highlight its keywords/keyphrases.
-                   NOTE: This does not work if multiple documents are passed.
+        top_n: Return the top n keywords/keyphrases with the closest distances to the original document.
 
         seed_keywords: Seed keywords that may guide the extraction of keywords by
                        steering the similarities towards the seeded keywords.
@@ -172,14 +181,9 @@ def extract_keywords_relevance(
                        - locally: when a nested list of str is passed, keywords differs among documents.
 
         doc_embeddings: The embeddings of each document.
-        word_embeddings: The embeddings of each potential keyword/keyphrase across
-                         across the vocabulary of the set of input documents.
-                         NOTE: The `word_embeddings` should be generated through
-                         `.extract_embeddings` as the order of these embeddings depend
-                         on the vectorizer that was used to generate its vocabulary.
 
     Returns:
-        keywords: The keywords for a document with their respective distances
+        keywords: The keywords probabilities for a document with their respective distances
                   to the input document.
 
     """
@@ -193,8 +197,8 @@ def extract_keywords_relevance(
     # Extract embeddings
     if doc_embeddings is None:
         doc_embeddings = keyBERT.model.embed(docs)
-    if word_embeddings is None:
-        word_embeddings = keyBERT.model.embed(candidates)
+
+    word_embeddings = keyBERT.model.embed(candidates)
 
     # Guided KeyBERT either local (keywords shared among documents) or global (keywords per document)
     if not domain_adapt and not zero_adapt:
@@ -246,7 +250,7 @@ def extract_keywords_relevance(
                         [doc_embedding, seed_embeddings], axis=0, weights=[3, 1]
                     )
 
-            # Compute distances and extract keywords
+            # Compute distances between keywords and document
             distances = cosine_similarity(doc_embedding, candidate_embeddings)
             keywords = [
                            (candidates[index], round(float(distances[0][index]), 4))
