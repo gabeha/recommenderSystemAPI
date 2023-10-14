@@ -2,16 +2,14 @@ from rec_sys_uni.recommender_system import RecSys
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 
 
-course_based = CourseBasedRecSys(
-    top_n=20,
-    min_df=1,
-    use_maxsum=False,
-    use_mmr=False,
-    diversity=0.5,
-    nr_candidates=20,
-    force_keywords=True,
-    precomputed_course=False
-)
+course_based = CourseBasedRecSys(seed_help=True,
+                                 domain_adapt=True,
+                                 zero_adapt=True,
+                                 domain_type='title',
+                                 seed_type='title',
+                                 zero_type='title',
+                                 precomputed_course=True)
+
 
 
 rs = RecSys(course_based=course_based)

@@ -2,119 +2,140 @@ from keybert import KeyBERT
 from sentence_transformers import SentenceTransformer
 import numpy as np
 from typing import List, Union, Tuple
+import torch
 
-from packaging import version
-from sklearn import __version__ as sklearn_version
+
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import CountVectorizer
 
 from keybert._mmr import mmr
 from keybert._maxsum import max_sum_distance
+# from rec_sys_uni.datasets.data.adoptation_model._attention import DomainAttentionLayer
 
 from rec_sys_uni.errors_checker.exceptions.rec_sys_errors import CourseBasedSettingsError
+from rec_sys_uni.datasets.datasets import get_domains_data
 
 
 class CourseBasedRecSys:
 
     def __init__(self,
-                 course_based_model=SentenceTransformer('all-MiniLM-L6-v2'),
-                 keyphrase_ngram_range: Tuple[int, int] = (1, 1),
-                 stop_words: Union[str, List[str]] = "english",
-                 top_n: int = 10,
-                 min_df: int = 1,
-                 use_maxsum: bool = False,
-                 use_mmr: bool = False,
-                 diversity: float = 0.5,
-                 nr_candidates: int = 20,
-                 highlight: bool = False,
-                 seed_keywords: Union[List[str], List[List[str]]] = None,
-                 threshold: float = None,
-                 force_keywords=False,
+                 course_based_model=SentenceTransformer('all-MiniLM-L12-v2'),
+                 top_n: int = 100,
+                 seed_help: bool = False,
+                 domain_adapt: bool = False,
+                 zero_adapt: bool = False,
+                 seed_type: str = 'title', # 'title' or 'domains'
+                 domain_type: str = 'title', # 'title' or 'domains'
+                 zero_type: str = 'title', # 'title' or 'domains'
+                 adaptive_thr: float = 0.0,
+                 minimal_similarity_zeroshot: float = 0.8,
                  precomputed_course=False
                  ):
         self.course_based_model = course_based_model
-        self.keyphrase_ngram_range = keyphrase_ngram_range
-        self.stop_words = stop_words
         self.top_n = top_n
-        self.min_df = min_df
-        self.use_maxsum = use_maxsum
-        self.use_mmr = use_mmr
-        self.diversity = diversity
-        self.nr_candidates = nr_candidates
-        self.highlight = highlight
-        self.seed_keywords = seed_keywords
-        self.threshold = threshold
-        self.force_keywords = force_keywords
+        self.seed_help = seed_help
+        self.seed_type = seed_type
+        self.domain_type = domain_type
+        self.zero_type = zero_type
+        self.domain_adapt = domain_adapt
+        self.zero_adapt = zero_adapt
+        self.adaptive_thr = adaptive_thr
+        self.minimal_similarity_zeroshot = minimal_similarity_zeroshot
         self.precomputed_course = precomputed_course
+
+
 
     def recommend(self, recSys):
 
+        # Initiate KeyBERT model
         kw_model = KeyBERT(model=self.course_based_model)
 
-        course_data = recSys.course_data
-        student_input = recSys.student_input['keywords']
+        course_data = recSys.course_data # Get course data
+        student_input = recSys.student_input['keywords'] # Get student input
+        domains_data = get_domains_data() # Get domains data
 
+        # Put keywords in a list
         keywords = []
         for i in student_input:
             keywords.append(i)
 
+
+        # Get course descriptions
         course_descriptions = []
+        course_codes = []
+        seed_keywords = []
+        doc_embeddings = None
         for i in course_data:
             course_descriptions.append(course_data[i]['description'])
+            course_codes.append(i)
+            if self.seed_help:
+                if self.seed_type == 'title':
+                    seed_keywords.append([course_data[i]['course_name']])
+                elif self.seed_type == 'domains':
+                    seed_keywords.append(domains_data[i])
+            if self.precomputed_course:
+                doc_embed_tmp = np.load(f'rec_sys_uni/datasets/data/course/precomputed_courses/course_embed_{i}.npy')
+                if doc_embeddings is None:
+                    doc_embeddings = doc_embed_tmp
+                else:
+                    doc_embeddings = np.append(doc_embeddings, doc_embed_tmp, axis=0)
 
-        doc_embeddings = None
+        if not self.seed_help: seed_keywords = None
+
         word_embeddings = None
 
-        if self.precomputed_course:
-            doc_embeddings = np.load('doc_embeddings.npy')  # TODO: Need to implemented
-            word_embeddings = np.load('word_embeddings.npy')  # TODO: Need to implemented
 
+        # Extract probabilities of keywords
         keywords_relevance = extract_keywords_relevance(course_descriptions, keywords, kw_model,
+                                                        course_codes=course_codes,
+                                                        domain_type=self.domain_type,
+                                                        zero_type=self.zero_type,
+                                                        domain_adapt=self.domain_adapt,
+                                                        zero_adapt=self.zero_adapt,
+                                                        adaptive_thr=self.adaptive_thr,
+                                                        minimal_similarity_zeroshot=self.minimal_similarity_zeroshot,
                                                         doc_embeddings=doc_embeddings,
                                                         word_embeddings=word_embeddings,
-                                                        keyphrase_ngram_range=self.keyphrase_ngram_range,
-                                                        stop_words=self.stop_words,
-                                                        top_n=self.top_n,
-                                                        min_df=self.min_df,
-                                                        use_maxsum=self.use_maxsum,
-                                                        use_mmr=self.use_mmr,
-                                                        diversity=self.diversity,
-                                                        nr_candidates=self.nr_candidates,
-                                                        highlight=self.highlight,
-                                                        seed_keywords=self.seed_keywords,
-                                                        threshold=self.threshold,
-                                                        force_keywords=self.force_keywords)
+                                                        seed_keywords=seed_keywords,
+                                                        top_n=self.top_n)
 
         # Sum all weights of keywords
         recommended_courses = recSys.results['recommended_courses']
         for index, code in enumerate(course_data):
             keywords_weightes = keywords_relevance[index]
-            score = 0
             for i in keywords_weightes:
-                score += i[1] * student_input[i[0]]
-            recommended_courses[code]['score'] = score
+                recommended_courses[code]['score'] += i[1] * student_input[i[0]]
         recSys.results['recommended_courses'] = recommended_courses
 
+
+
+def apply_zero_adaptation(candidate_embeddings, doc_embedding, domain_word_embeddings, adaptive_thr, minimal_similarity_zeroshot):
+    computed_embeddings = []
+    for candidate_embedding in candidate_embeddings:
+        candidate_embedding = candidate_embedding.reshape(1, -1)
+        max_similarity = np.max(cosine_similarity(candidate_embedding, domain_word_embeddings))
+        if max_similarity<minimal_similarity_zeroshot:
+            computed_embeddings.append(candidate_embedding[0])
+        else:
+            temp_embedding = (1-adaptive_thr*max_similarity)*candidate_embedding+adaptive_thr*max_similarity*doc_embedding
+            computed_embeddings.append(temp_embedding[0])
+    computed_embeddings = np.stack(computed_embeddings)
+    return computed_embeddings
 
 def extract_keywords_relevance(
         docs: Union[str, List[str]],
         candidates: List[str],
         keyBERT: KeyBERT,
-        keyphrase_ngram_range: Tuple[int, int] = (1, 1),
-        stop_words: Union[str, List[str]] = "english",
-        top_n: int = 5,
-        min_df: int = 1,
-        use_maxsum: bool = False,
-        use_mmr: bool = False,
-        diversity: float = 0.5,
-        nr_candidates: int = 20,
-        vectorizer: CountVectorizer = None,
-        highlight: bool = False,
+        course_codes: List[str] = None,
+        domain_type: str = 'title',
+        zero_type: str = 'title',
+        domain_adapt: bool = False,
+        zero_adapt: bool = False,
+        adaptive_thr: float = 0.0,
+        minimal_similarity_zeroshot: float = 0.8,
+        top_n: int = 100,
         seed_keywords: Union[List[str], List[List[str]]] = None,
         doc_embeddings: np.array = None,
-        word_embeddings: np.array = None,
-        threshold: float = None,
-        force_keywords=False
+        word_embeddings: np.array = None
 ) -> Union[List[Tuple[str, float]], List[List[Tuple[str, float]]]]:
     """Extract keywords and/or keyphrases
 
@@ -123,32 +144,21 @@ def extract_keywords_relevance(
 
     Arguments:
         docs: The document(s) for which to extract keywords/keyphrases
+
         candidates: Candidate keywords/keyphrases to use instead of extracting them from the document(s)
 
-        keyphrase_ngram_range: Length, in words, of the extracted keywords/keyphrases.
-                               NOTE: This is not used if you passed a `vectorizer`.
-        stop_words: Stopwords to remove from the document.
-                    NOTE: This is not used if you passed a `vectorizer`.
         top_n: Return the top n keywords/keyphrases
-        min_df: Minimum document frequency of a word across all documents
-                if keywords for multiple documents need to be extracted.
-                NOTE: This is not used if you passed a `vectorizer`.
-        use_maxsum: Whether to use Max Sum Distance for the selection
-                    of keywords/keyphrases.
-        use_mmr: Whether to use Maximal Marginal Relevance (MMR) for the
-                 selection of keywords/keyphrases.
-        diversity: The diversity of the results between 0 and 1 if `use_mmr`
-                   is set to True.
-        nr_candidates: The number of candidates to consider if `use_maxsum` is
-                       set to True.
+
         highlight: Whether to print the document and highlight its keywords/keyphrases.
                    NOTE: This does not work if multiple documents are passed.
+
         seed_keywords: Seed keywords that may guide the extraction of keywords by
                        steering the similarities towards the seeded keywords.
                        NOTE: when multiple documents are passed,
                        `seed_keywords`funtions in either of the two ways below:
                        - globally: when a flat list of str is passed, keywords are shared by all documents,
                        - locally: when a nested list of str is passed, keywords differs among documents.
+
         doc_embeddings: The embeddings of each document.
         word_embeddings: The embeddings of each potential keyword/keyphrase across
                          across the vocabulary of the set of input documents.
@@ -169,94 +179,66 @@ def extract_keywords_relevance(
         else:
             return []
 
-    # Extract potential words using a vectorizer / tokenizer
-    try:
-        count = CountVectorizer(
-            ngram_range=keyphrase_ngram_range,
-            stop_words=stop_words,
-            min_df=min_df,
-            vocabulary=candidates,
-        ).fit(docs)
-    except ValueError:
-        return []
 
-    # Scikit-Learn Deprecation: get_feature_names is deprecated in 1.0
-    # and will be removed in 1.2. Please use get_feature_names_out instead.
-    if version.parse(sklearn_version) >= version.parse("1.0.0"):
-        words = count.get_feature_names_out()
-    else:
-        words = count.get_feature_names()
-    df = count.transform(docs)
-
-    # Check if the right number of word embeddings are generated compared with the vectorizer
-    if word_embeddings is not None:
-        if word_embeddings.shape[0] != len(words):
-            raise ValueError("Make sure that the `word_embeddings` are generated from the function "
-                             "`.extract_embeddings`. \nMoreover, the `candidates`, `keyphrase_ngram_range`,"
-                             "`stop_words`, and `min_df` parameters need to have the same values in both "
-                             "`.extract_embeddings` and `.extract_keywords`.")
 
     # Extract embeddings
     if doc_embeddings is None:
         doc_embeddings = keyBERT.model.embed(docs)
     if word_embeddings is None:
-        word_embeddings = keyBERT.model.embed(words)
+        word_embeddings = keyBERT.model.embed(candidates)
 
     # Guided KeyBERT either local (keywords shared among documents) or global (keywords per document)
-    # if seed_keywords is not None:
-    #     if isinstance(seed_keywords[0], str):
-    #         seed_embeddings = self.model.embed(seed_keywords).mean(axis=0, keepdims=True)
-    #     elif len(docs) != len(seed_keywords):
-    #         raise ValueError("The length of docs must match the length of seed_keywords")
-    #     else:
-    #         seed_embeddings = np.vstack([
-    #             self.model.embed(keywords).mean(axis=0, keepdims=True)
-    #             for keywords in seed_keywords
-    #         ])
-    #     doc_embeddings = ((doc_embeddings * 3 + seed_embeddings) / 4)
+    if not domain_adapt and not zero_adapt:
+        if seed_keywords is not None:
+            if isinstance(seed_keywords[0], str):
+                seed_embeddings = keyBERT.model.embed(seed_keywords).mean(axis=0, keepdims=True)
+            elif len(docs) != len(seed_keywords):
+                raise ValueError("The length of docs must match the length of seed_keywords")
+            else:
+                seed_embeddings = np.vstack([
+                    keyBERT.model.embed(keywords).mean(axis=0, keepdims=True)
+                    for keywords in seed_keywords
+                ])
+            doc_embeddings = ((doc_embeddings * 3 + seed_embeddings) / 4)
 
-    # Find keywords
+    # Find probabilities of keywords
     all_keywords = []
     for index, _ in enumerate(docs):
 
         try:
-            # Select embeddings
-            if force_keywords:
-                candidates = words
-                candidate_embeddings = word_embeddings
-            else:
-                candidate_indices = df[index].nonzero()[1]
-                candidates = [words[index] for index in candidate_indices]
-                candidate_embeddings = word_embeddings[candidate_indices]
+            candidate_embeddings = word_embeddings
             doc_embedding = doc_embeddings[index].reshape(1, -1)
 
-            # Maximal Marginal Relevance (MMR)
-            if use_mmr:
-                keywords = mmr(
-                    doc_embedding,
-                    candidate_embeddings,
-                    candidates,
-                    top_n,
-                    diversity,
-                )
+            # Adoptation Layer Extension
+            if domain_adapt or zero_adapt:
+                code = course_codes[index]
+                candidate_embeddings_pt = torch.from_numpy(candidate_embeddings)
 
-            # Max Sum Distance
-            elif use_maxsum:
-                keywords = max_sum_distance(
-                    doc_embedding,
-                    candidate_embeddings,
-                    candidates,
-                    top_n,
-                    nr_candidates,
-                )
+                if domain_adapt:
+                    attention_layer = torch.load(f'rec_sys_uni/datasets/data/adoptation_model/MiniLM_L12/{domain_type}_training/attention_layer/attention_layer_{code}.pth')
+                    target_word_embeddings_pt = torch.load(f'rec_sys_uni/datasets/data/adoptation_model/MiniLM_L12/{domain_type}_training/target_embed/target_embed_{code}.pth')
+                    attention_layer.eval()
+                    candidate_embeddings_ = attention_layer(candidate_embeddings_pt, target_word_embeddings_pt).detach().numpy()
+                    candidate_embeddings = np.average([candidate_embeddings, candidate_embeddings_], axis=0, weights=[2, 1])
+                if zero_adapt:
+                    domain_word_embeddings = np.load(f'rec_sys_uni/datasets/data/adoptation_model/MiniLM_L12/{zero_type}_training/domain_word/domain_embed_{code}.pth.npy')
+                    candidate_embeddings = apply_zero_adaptation(candidate_embeddings, doc_embedding,
+                                                                 domain_word_embeddings, adaptive_thr,
+                                                                 minimal_similarity_zeroshot)
 
-            # Cosine-based keyword extraction
-            else:
-                distances = cosine_similarity(doc_embedding, candidate_embeddings)
-                keywords = [
-                               (candidates[index], round(float(distances[0][index]), 4))
-                               for index in distances.argsort()[0][-top_n:]
-                           ][::-1]
+
+                if seed_keywords is not None:
+                    seed_embeddings = keyBERT.model.embed([" ".join(seed_keywords[index])])
+                    doc_embedding = np.average(
+                        [doc_embedding, seed_embeddings], axis=0, weights=[3, 1]
+                    )
+
+            # Compute distances and extract keywords
+            distances = cosine_similarity(doc_embedding, candidate_embeddings)
+            keywords = [
+                           (candidates[index], round(float(distances[0][index]), 4))
+                           for index in distances.argsort()[0][-top_n:]
+                       ][::-1]
 
             all_keywords.append(keywords)
 
@@ -264,25 +246,7 @@ def extract_keywords_relevance(
         except ValueError:
             all_keywords.append([])
 
-    # Highlight keywords in the document
-    # if len(all_keywords) == 1:
-    #     if highlight:
-    #         highlight_document(docs[0], all_keywords[0], count)
-    #     all_keywords = all_keywords[0]
 
-    # Fine-tune keywords using an LLM
-    # if self.llm is not None:
-    #     import torch
-    #     doc_embeddings = torch.from_numpy(doc_embeddings).float().to("cuda")
-    #     if isinstance(all_keywords[0], tuple):
-    #         candidate_keywords = [[keyword[0] for keyword in all_keywords]]
-    #     else:
-    #         candidate_keywords = [[keyword[0] for keyword in keywords] for keywords in all_keywords]
-    #     keywords = self.llm.extract_keywords(
-    #         docs,
-    #         embeddings=doc_embeddings,
-    #         candidate_keywords=candidate_keywords,
-    #         threshold=threshold
-    #     )
-    #     return keywords
     return all_keywords
+
+
