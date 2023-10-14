@@ -1,6 +1,7 @@
 import torch
 import torch.nn.functional as f
 
+
 class DomainAttentionLayer(torch.nn.Module):
     def __init__(self, embedding_dim):
         super(DomainAttentionLayer, self).__init__()
