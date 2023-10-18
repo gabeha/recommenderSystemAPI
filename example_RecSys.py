@@ -21,8 +21,8 @@ def recommend_courses(student_input):
     try:
         results = rs.get_recommendation(student_input)
         output = {'structured_recommendation': results.get('structured_recommendation'),
-        'explanation': results.get('explanation')}
-        # print (output)
+        'explanation': results.get('explanation'), "student_input": student_input}
+        print (output)
     except Exception as e:
         output = {'error': str(e)}
     finally:
