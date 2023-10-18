@@ -158,7 +158,7 @@ class RecSys:
         for i in sorted_recommendation_list:
             period = course_data[i[0]]['period']
             for j in period:
-                course_tmp = {'course_code': i[0], 'course_name:': course_data[i[0]]['course_name']}
+                course_tmp = {'course_code': i[0], 'course_name': course_data[i[0]]['course_name']}
                 if isinstance(j, list) and len(structured_recommendation['semester']) == 0:
                     structured_recommendation['semester'].append(course_tmp)
                     break
