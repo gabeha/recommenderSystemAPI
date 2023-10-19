@@ -1,6 +1,7 @@
 from helpers.cast_int_to_float import recursive_cast_to_float
 from rec_sys_uni.recommender_system import RecSys
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
+from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
 
 def recommend_courses(student_input):
     
@@ -20,11 +21,14 @@ def recommend_courses(student_input):
                                     zero_type='title',
                                     precomputed_course=True)
     
+    bloom_based = BloomBasedRecSys()
+    
     student_input = recursive_cast_to_float(student_input)
 
 
 
-    rs = RecSys(course_based=course_based)
+    rs = RecSys(course_based=course_based,
+                bloom_based=bloom_based)
     
     output = {}
 

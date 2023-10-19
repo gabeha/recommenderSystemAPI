@@ -2,8 +2,8 @@
 def compute_recommendation(recSys):
     recSys.course_based.recommend(recSys) # Change scores of each course based on the keywords
 
-
-    pass
+    if recSys.bloom_based is not None:
+        recSys.bloom_based.recommend(recSys)
 
 
 
