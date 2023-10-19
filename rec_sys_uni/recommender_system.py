@@ -3,17 +3,20 @@ from rec_sys_uni.datasets.datasets import get_course_data
 from rec_sys_uni._helpers_rec_sys import make_results_template, semester_course_cleaning
 from rec_sys_uni.rec_systems._systems import *
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
+from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
 
 
 class RecSys:
 
     def __init__(self,
-                 course_based: CourseBasedRecSys = None):
+                 course_based: CourseBasedRecSys = None,
+                 bloom_based: BloomBasedRecSys = None):
         self.constraints = False
         self.top_n = 20
         self.validate_input = True
         self.system_course_data = True
         self.course_based = course_based
+        self.bloom_based = bloom_based
 
 
     def validate_system_input(self,
