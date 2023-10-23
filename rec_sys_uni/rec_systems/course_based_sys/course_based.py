@@ -50,6 +50,13 @@ class CourseBasedRecSys:
         self.minimal_similarity_zeroshot = minimal_similarity_zeroshot
         self.precomputed_course = precomputed_course
 
+    def print_config(self):
+        print(f"CourseBasedRecSys config: \n"+
+              f"model_name: {self.model_name}\n"+
+              f"seed_help: {self.seed_help}\n"+
+              f"domain_adapt: {self.domain_adapt}\n"+
+              f"zero_adapt: {self.zero_adapt}\n")
+
     def recommend(self, recSys):
 
         # Initiate KeyBERT model

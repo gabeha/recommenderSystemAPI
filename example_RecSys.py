@@ -21,6 +21,8 @@ def recommend_courses(student_input):
                                     zero_type='title',
                                     precomputed_course=True)
     
+    course_based.print_config()
+    
     bloom_based = BloomBasedRecSys()
     
     student_input = recursive_cast_to_float(student_input)
