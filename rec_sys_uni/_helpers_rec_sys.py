@@ -25,5 +25,6 @@ def semester_course_cleaning(course_data, semester):
             else:
                 if i in range_semester:
                     new_course_data[course] = course_data[course]
-
     return new_course_data
+
+#%%

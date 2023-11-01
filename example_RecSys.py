@@ -61,4 +61,15 @@ def recommend_courses(student_input):
     #         print(i + ": " + str(rs.course_data[i]['course_name']) + " || Score: "+ str(results['recommended_courses'][i]['score']))
     #     print()
 
-# recommend_courses()
+# input = {
+#     "config": {"model_name": "BAAI/bge-large-en-v1.5", "seed_help": True, "domain_adapt": True, "zero_adapt": True},
+#     "keywords":{'artificial':0.5, 'math':0.5,  'statistics':0.5, 'data analyze':0.5},
+#     "blooms":{'create': 0.0,
+#               'understand': 0.0,
+#               'apply': 0.0,
+#               'analyze': 0.0,
+#               'evaluate': 0.0,
+#               'remember': 0.0},
+#     "semester": 2.0
+# }
+# print(recommend_courses(input))

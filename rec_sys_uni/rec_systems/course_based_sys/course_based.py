@@ -3,9 +3,11 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 from typing import List, Union, Tuple
 import torch
+import os
 
 from sklearn.metrics.pairwise import cosine_similarity
-from rec_sys_uni.datasets.datasets import get_domains_data
+from rec_sys_uni.datasets.datasets import get_domains_data_GPT
+from rec_sys_uni.errors_checker.exceptions.rec_sys_errors import ModelDoesNotExistError, PrecomputedCoursesError, AdaptationLayerError
 
 
 class CourseBasedRecSys:
@@ -37,7 +39,11 @@ class CourseBasedRecSys:
         :param minimal_similarity_zeroshot: minimal similarity between a candidate and a domain word for the zero-shot adaptation
         :param precomputed_course: use precomputed course embeddings or not
         """
-        self.course_based_model = SentenceTransformer(model_name)
+        try:
+            self.course_based_model = SentenceTransformer(model_name)
+        except Exception:
+            raise ModelDoesNotExistError("Such Model Name does not exist")
+
         self.model_name = model_name
         self.top_n = top_n
         self.seed_help = seed_help
@@ -49,6 +55,19 @@ class CourseBasedRecSys:
         self.adaptive_thr = adaptive_thr
         self.minimal_similarity_zeroshot = minimal_similarity_zeroshot
         self.precomputed_course = precomputed_course
+
+        # Settings check
+        if precomputed_course:
+            if not os.path.exists(f'rec_sys_uni/datasets/data/course/precomputed_courses/{self.model_name}'):
+                raise PrecomputedCoursesError(f"You did not compute embeddings for such model -> {self.model_name}")
+        if domain_adapt:
+            if not os.path.exists(f'rec_sys_uni/datasets/data/adaptation_model/{self.model_name}/{domain_type}_training/target_embed'):
+                raise AdaptationLayerError(f"You did not compute target embed embeddings with type {domain_type} for such model -> {self.model_name}")
+            if not os.path.exists(f'rec_sys_uni/datasets/data/adaptation_model/{self.model_name}/{domain_type}_training/attention_layer'):
+                raise AdaptationLayerError(f"You did not compute attention layer with type {domain_type} for such model -> {self.model_name}")
+        if zero_adapt:
+            if not os.path.exists(f'rec_sys_uni/datasets/data/adaptation_model/{self.model_name}/{zero_type}_training/domain_word'):
+                raise AdaptationLayerError(f"You did not compute domain word embeddings with type {zero_type} for such model -> {self.model_name}")
 
     def print_config(self):
         print(f"CourseBasedRecSys config: \n"+
@@ -64,7 +83,7 @@ class CourseBasedRecSys:
 
         course_data = recSys.course_data  # Get course data
         student_input = recSys.student_input['keywords']  # Get student input
-        domains_data = get_domains_data()  # Get domains data
+        domains_data = get_domains_data_GPT()  # Get domains data
 
         # Put keywords in a list
         keywords = []
@@ -236,9 +255,9 @@ def extract_keywords_relevance(
 
                 if domain_adapt:
                     attention_layer = torch.load(
-                        f'rec_sys_uni/datasets/data/adoptation_model/{model_name}/{domain_type}_training/attention_layer/attention_layer_{code}.pth')
+                        f'rec_sys_uni/datasets/data/adaptation_model/{model_name}/{domain_type}_training/attention_layer/attention_layer_{code}.pth')
                     target_word_embeddings_pt = torch.load(
-                        f'rec_sys_uni/datasets/data/adoptation_model/{model_name}/{domain_type}_training/target_embed/target_embed_{code}.pth')
+                        f'rec_sys_uni/datasets/data/adaptation_model/{model_name}/{domain_type}_training/target_embed/target_embed_{code}.pth')
                     attention_layer.eval()
                     candidate_embeddings_ = attention_layer(candidate_embeddings_pt,
                                                             target_word_embeddings_pt).detach().numpy()
@@ -246,7 +265,7 @@ def extract_keywords_relevance(
                                                       weights=[2, 1])
                 if zero_adapt:
                     domain_word_embeddings = np.load(
-                        f'rec_sys_uni/datasets/data/adoptation_model/{model_name}/{zero_type}_training/domain_word/domain_embed_{code}.pth.npy')
+                        f'rec_sys_uni/datasets/data/adaptation_model/{model_name}/{zero_type}_training/domain_word/domain_embed_{code}.npy')
                     candidate_embeddings = apply_zero_adaptation(candidate_embeddings, doc_embedding,
                                                                  domain_word_embeddings, adaptive_thr,
                                                                  minimal_similarity_zeroshot)

@@ -12,7 +12,6 @@ class RecSys:
                  course_based: CourseBasedRecSys = None,
                  bloom_based: BloomBasedRecSys = None):
         self.constraints = False
-        self.top_n = 20
         self.validate_input = True
         self.system_course_data = True
         self.course_based = course_based
@@ -125,7 +124,6 @@ class RecSys:
                                                                                     course_data,
                                                                                     student_data)
         course_data = semester_course_cleaning(course_data, student_intput['semester'])
-        
 
         results = {"recommended_courses": {},
                    "sorted_recommended_courses": [],
@@ -154,27 +152,21 @@ class RecSys:
 
         # structured recommendation dictionary
         structured_recommendation = {'period_1': [],
-                                     'period_2': [],
-                                     'period_3': [],
-                                     'semester': []}
+                                     'period_2': []
+                                     }
 
         for i in sorted_recommendation_list:
             period = course_data[i[0]]['period']
             for j in period:
                 course_tmp = {'course_code': i[0], 'course_name': course_data[i[0]]['course_name']}
-                if isinstance(j, list) and len(structured_recommendation['semester']) == 0:
-                    structured_recommendation['semester'].append(course_tmp)
-                    break
                 if (j == 1 or j ==4) and len(structured_recommendation['period_1']) <= 5:
                     structured_recommendation['period_1'].append(course_tmp)
                     break
                 if (j == 2 or j == 5) and len(structured_recommendation['period_2']) <= 5:
                     structured_recommendation['period_2'].append(course_tmp)
                     break
-                if (j == 3 or j == 6) and len(structured_recommendation['period_3']) == 0:
-                    structured_recommendation['period_3'].append(course_tmp)
-                    break
             final_recommendation_list.append(i[0])
+
         self.results['structured_recommendation'] = structured_recommendation
         self.results['sorted_recommended_courses'] = final_recommendation_list
 
@@ -183,6 +175,5 @@ class RecSys:
 
     def _settings_(self):
         print(f"Contraints: {self.constraints} \n" +
-              f"Top_n: {self.top_n} \n" +
               f"Validate_input: {self.validate_input} \n" +
               f"System_course_data: {self.system_course_data} \n")
