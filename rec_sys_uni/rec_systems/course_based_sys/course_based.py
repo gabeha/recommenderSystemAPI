@@ -40,10 +40,12 @@ class CourseBasedRecSys:
         :param precomputed_course: use precomputed course embeddings or not
         """
         try:
-            self.course_based_model = SentenceTransformer(model_name)
+            course_based_model = SentenceTransformer(model_name)
         except Exception:
             raise ModelDoesNotExistError("Such Model Name does not exist")
 
+        # Initiate KeyBERT model
+        self.kw_model = KeyBERT(model=course_based_model)
         self.model_name = model_name
         self.top_n = top_n
         self.seed_help = seed_help
@@ -76,18 +78,15 @@ class CourseBasedRecSys:
               f"domain_adapt: {self.domain_adapt}\n"+
               f"zero_adapt: {self.zero_adapt}\n")
 
-    def recommend(self, recSys):
+    def recommend(self, student_info):
 
-        # Initiate KeyBERT model
-        kw_model = KeyBERT(model=self.course_based_model)
-
-        course_data = recSys.course_data  # Get course data
-        student_input = recSys.student_input['keywords']  # Get student input
+        course_data = student_info.course_data  # Get course data
+        student_keywords = student_info.student_input['keywords']  # Get student input
         domains_data = get_domains_data_GPT()  # Get domains data
 
         # Put keywords in a list
         keywords = []
-        for i in student_input:
+        for i in student_keywords:
             keywords.append(i)
 
         # Get seed keywords, course descriptions, course codes, and doc embeddings
@@ -116,7 +115,7 @@ class CourseBasedRecSys:
         # Extract probabilities of keywords
         keywords_relevance = extract_keywords_relevance(docs=course_descriptions,
                                                         candidates=keywords,
-                                                        keyBERT=kw_model,
+                                                        keyBERT=self.kw_model,
                                                         model_name=self.model_name,
                                                         course_codes=course_codes,
                                                         domain_type=self.domain_type,
@@ -130,12 +129,13 @@ class CourseBasedRecSys:
                                                         top_n=self.top_n)
 
         # Sum all weights of keywords
-        recommended_courses = recSys.results['recommended_courses']
+        recommended_courses = student_info.results['recommended_courses']
         for index, code in enumerate(course_data):
             keywords_weightes = keywords_relevance[index]
             for i in keywords_weightes:
-                recommended_courses[code]['score'] += i[1] * student_input[i[0]]
-        recSys.results['recommended_courses'] = recommended_courses
+                recommended_courses[code]['score'] += i[1] * student_keywords[i[0]]
+                recommended_courses[code]['keywords'][i[0]] = i[1]
+        student_info.results['recommended_courses'] = recommended_courses
 
 
 def apply_zero_adaptation(candidate_embeddings, doc_embedding, domain_word_embeddings, adaptive_thr,
@@ -226,67 +226,50 @@ def extract_keywords_relevance(
 
     word_embeddings = keyBERT.model.embed(candidates)
 
-    # Guided KeyBERT either local (keywords shared among documents) or global (keywords per document)
-    if not domain_adapt and not zero_adapt:
-        if seed_keywords is not None:
-            if isinstance(seed_keywords[0], str):
-                seed_embeddings = keyBERT.model.embed(seed_keywords).mean(axis=0, keepdims=True)
-            elif len(docs) != len(seed_keywords):
-                raise ValueError("The length of docs must match the length of seed_keywords")
-            else:
-                seed_embeddings = np.vstack([
-                    keyBERT.model.embed(keywords).mean(axis=0, keepdims=True)
-                    for keywords in seed_keywords
-                ])
-            doc_embeddings = ((doc_embeddings * 3 + seed_embeddings) / 4)
 
-    # Find probabilities of keywords
+    # Find cosine similarity between course description and keywords
     all_keywords = []
     for index, _ in enumerate(docs):
 
-        try:
-            candidate_embeddings = word_embeddings
-            doc_embedding = doc_embeddings[index].reshape(1, -1)
+        candidate_embeddings = word_embeddings
+        doc_embedding = doc_embeddings[index].reshape(1, -1)
 
-            # Adoptation Layer Extension
-            if domain_adapt or zero_adapt:
-                code = course_codes[index]
-                candidate_embeddings_pt = torch.from_numpy(candidate_embeddings)
+        # Adoptation Layer Extension
+        if domain_adapt or zero_adapt:
+            code = course_codes[index]
+            candidate_embeddings_pt = torch.from_numpy(candidate_embeddings)
 
-                if domain_adapt:
-                    attention_layer = torch.load(
-                        f'rec_sys_uni/datasets/data/adaptation_model/{model_name}/{domain_type}_training/attention_layer/attention_layer_{code}.pth')
-                    target_word_embeddings_pt = torch.load(
-                        f'rec_sys_uni/datasets/data/adaptation_model/{model_name}/{domain_type}_training/target_embed/target_embed_{code}.pth')
-                    attention_layer.eval()
-                    candidate_embeddings_ = attention_layer(candidate_embeddings_pt,
-                                                            target_word_embeddings_pt).detach().numpy()
-                    candidate_embeddings = np.average([candidate_embeddings, candidate_embeddings_], axis=0,
-                                                      weights=[2, 1])
-                if zero_adapt:
-                    domain_word_embeddings = np.load(
-                        f'rec_sys_uni/datasets/data/adaptation_model/{model_name}/{zero_type}_training/domain_word/domain_embed_{code}.npy')
-                    candidate_embeddings = apply_zero_adaptation(candidate_embeddings, doc_embedding,
-                                                                 domain_word_embeddings, adaptive_thr,
-                                                                 minimal_similarity_zeroshot)
+            if domain_adapt:
+                attention_layer = torch.load(
+                    f'rec_sys_uni/datasets/data/adaptation_model/{model_name}/{domain_type}_training/attention_layer/attention_layer_{code}.pth')
+                target_word_embeddings_pt = torch.load(
+                    f'rec_sys_uni/datasets/data/adaptation_model/{model_name}/{domain_type}_training/target_embed/target_embed_{code}.pth')
+                attention_layer.eval()
+                candidate_embeddings_ = attention_layer(candidate_embeddings_pt,
+                                                        target_word_embeddings_pt).detach().numpy()
+                candidate_embeddings = np.average([candidate_embeddings, candidate_embeddings_], axis=0,
+                                                  weights=[2, 1])
+            if zero_adapt:
+                domain_word_embeddings = np.load(
+                    f'rec_sys_uni/datasets/data/adaptation_model/{model_name}/{zero_type}_training/domain_word/domain_embed_{code}.npy')
+                candidate_embeddings = apply_zero_adaptation(candidate_embeddings, doc_embedding,
+                                                             domain_word_embeddings, adaptive_thr,
+                                                             minimal_similarity_zeroshot)
 
-                if seed_keywords is not None:
-                    seed_embeddings = keyBERT.model.embed([" ".join(seed_keywords[index])])
-                    doc_embedding = np.average(
-                        [doc_embedding, seed_embeddings], axis=0, weights=[3, 1]
-                    )
+        # Seed Filtering
+        if seed_keywords is not None:
+            seed_embeddings = keyBERT.model.embed([" ".join(seed_keywords[index])])
+            doc_embedding = np.average(
+                [doc_embedding, seed_embeddings], axis=0, weights=[3, 1]
+            )
 
-            # Compute distances between keywords and document
-            distances = cosine_similarity(doc_embedding, candidate_embeddings)
-            keywords = [
-                           (candidates[index], round(float(distances[0][index]), 4))
-                           for index in distances.argsort()[0][-top_n:]
-                       ][::-1]
+        # Compute distances between keywords and document
+        distances = cosine_similarity(doc_embedding, candidate_embeddings)
+        keywords = [
+                       (candidates[index], round(float(distances[0][index]), 4))
+                       for index in distances.argsort()[0][-top_n:]
+                   ][::-1]
 
-            all_keywords.append(keywords)
-
-        # Capturing empty keywords
-        except ValueError:
-            all_keywords.append([])
+        all_keywords.append(keywords)
 
     return all_keywords

@@ -16,18 +16,18 @@ class BloomBasedRecSys:
         self.precomputed_blooms = precomputed_blooms
         self.top_n = top_n
 
-    def recommend(self, recSys):
+    def recommend(self, student_info):
         """
         Generates course recommendations based on the student's input and course data.
 
         Args:
-            recSys: The recommendation system object that contains course data and student input.
+            student_info: The recommendation system object that contains course data and student input.
 
         Raises:
             AssertionError: If precomputed_blooms is set to False.
         """
-        course_data = recSys.course_data
-        student_input = recSys.student_input['blooms']
+        course_data = student_info.course_data
+        student_blooms = student_info.student_input['blooms']
 
         if self.precomputed_blooms:
             with open('rec_sys_uni/datasets/data/course/precomputed_blooms.json', 'r') as file:
@@ -36,10 +36,11 @@ class BloomBasedRecSys:
         else:
             raise AssertionError('Opa! Did you assign precomputed_blooms=False? - Dennis')
 
-        recommended_courses = recSys.results['recommended_courses']
+        recommended_courses = student_info.results['recommended_courses']
         top_scores = sorted([recommended_courses[code]['score'] for code in course_data][-self.top_n:])
         for (idx, code) in enumerate(course_data):
-            for label in student_input:
+            for label in student_blooms:
                 if recommended_courses[code]['score'] in top_scores:
-                    recommended_courses[code]['score'] += blooms[code][label] * student_input[label]
-        recSys.results['recommended_courses'] = recommended_courses
+                    recommended_courses[code]['score'] += blooms[code][label] * student_blooms[label]
+                recommended_courses[code]["blooms"][label] = blooms[code][label]
+        student_info.results['recommended_courses'] = recommended_courses

@@ -1,16 +1,16 @@
 
-def compute_recommendation(recSys):
-    recSys.course_based.recommend(recSys) # Change scores of each course based on the keywords
+def compute_recommendation(recSys, student_info):
+    recSys.course_based.recommend(student_info) # Change scores of each course based on the keywords
 
     if recSys.bloom_based is not None:
-        recSys.bloom_based.recommend(recSys)
+        recSys.bloom_based.recommend(student_info)
 
 
 
-def compute_constraints(recSys):
+def compute_constraints(recSys, student_info):
     pass
 
 
 
-def compute_warnings(recSys):
+def compute_warnings(recSys, student_info):
     pass

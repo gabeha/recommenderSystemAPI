@@ -1,6 +1,6 @@
 from rec_sys_uni.errors_checker.errors import check_student_input, check_student_data, check_course_data
 from rec_sys_uni.datasets.datasets import get_course_data
-from rec_sys_uni._helpers_rec_sys import make_results_template, semester_course_cleaning
+from rec_sys_uni._helpers_rec_sys import make_results_template, semester_course_cleaning, StudentNode, sort_by_periods
 from rec_sys_uni.rec_systems._systems import *
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
@@ -101,9 +101,11 @@ class RecSys:
                         recommended_courses: dictionary {
                                                             course_id(String):
                                                                         {
-                                                                            score: float,
+                                   Total score of each model                score: float,
                                                                             period: [int, ...] or [[int, int], ...],    e.g [1, 4] or [[1, 2, 3], [4, 5, 6]] or [[1,2]], TODO: In the later stage should be an recommended period
                                                                             warning: boolean
+                                   (after applying CourseBased model)       keywords: {scores to each keyword}
+                                   (after applying BloomBased model)        blooms: {scores to each bloom}
                                                                         },
                                                             ...
                                                         },
@@ -131,47 +133,20 @@ class RecSys:
 
         results = make_results_template(results, course_data)
 
-        self.results = results
-        self.student_input = student_intput
-        self.course_data = course_data
-        self.student_data = student_data
+        student_info = StudentNode(results, student_intput, course_data, student_data)
 
-        compute_recommendation(self)
+        compute_recommendation(self, student_info)
 
         if self.constraints:
-            compute_constraints(self)  # recommended_courses
-            compute_warnings(self)  # structured_recommendation
+            compute_constraints(self, student_info)  # recommended_courses
+            compute_warnings(self, student_info)  # structured_recommendation
         else:
-            compute_warnings(self)  # sorted_recommended_courses
+            compute_warnings(self, student_info)  # sorted_recommended_courses
 
-        # Sort recommended courses by score
-        sorted_recommendation_list = sorted(self.results['recommended_courses'].items(), key=lambda x: x[1]['score'], reverse=True)
+        # Sort by periods
+        sort_by_periods(self, student_info, max=6, include_keywords=True, include_blooms=False)
 
-        # Append code of sorted courses to the list
-        final_recommendation_list = []
-
-        # structured recommendation dictionary
-        structured_recommendation = {'period_1': [],
-                                     'period_2': []
-                                     }
-
-        for i in sorted_recommendation_list:
-            period = course_data[i[0]]['period']
-            for j in period:
-                course_tmp = {'course_code': i[0], 'course_name': course_data[i[0]]['course_name']}
-                if (j == 1 or j ==4) and len(structured_recommendation['period_1']) <= 5:
-                    structured_recommendation['period_1'].append(course_tmp)
-                    break
-                if (j == 2 or j == 5) and len(structured_recommendation['period_2']) <= 5:
-                    structured_recommendation['period_2'].append(course_tmp)
-                    break
-            final_recommendation_list.append(i[0])
-
-        self.results['structured_recommendation'] = structured_recommendation
-        self.results['sorted_recommended_courses'] = final_recommendation_list
-
-
-        return self.results
+        return student_info.results
 
     def _settings_(self):
         print(f"Contraints: {self.constraints} \n" +
