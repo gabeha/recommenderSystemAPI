@@ -95,7 +95,11 @@ class CourseBasedRecSys:
         seed_keywords = []
         doc_embeddings = None
         for i in course_data:
-            course_descriptions.append(course_data[i]['description'])
+            # desc = course_data[i]['description']
+            # for j in course_data[i]['ilos']:
+            #     desc += "\n" + j
+            desc = " ".join(course_data[i]['ilos'])
+            course_descriptions.append(desc)
             course_codes.append(i)
             if self.seed_help:
                 if self.seed_type == 'title':

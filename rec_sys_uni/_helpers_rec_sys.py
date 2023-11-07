@@ -50,16 +50,18 @@ def sort_by_periods(recSys, student_info, max=6, include_keywords=False, include
             if include_blooms and recSys.bloom_based:
                 course_tmp['blooms'] = student_info.results['recommended_courses'][i[0]]['blooms']
 
-            if (j == 1 or j ==4) and len(structured_recommendation['period_1']) <= max:
+            if (j == 1 or j ==4) and len(structured_recommendation['period_1']) < max:
                 structured_recommendation['period_1'].append(course_tmp)
                 break
-            if (j == 2 or j == 5) and len(structured_recommendation['period_2']) <= max:
+            if (j == 2 or j == 5) and len(structured_recommendation['period_2']) < max:
                 structured_recommendation['period_2'].append(course_tmp)
                 break
         final_recommendation_list.append(i[0])
 
     student_info.results['structured_recommendation'] = structured_recommendation
     student_info.results['sorted_recommended_courses'] = final_recommendation_list
+    # for i in final_recommendation_list[:20]:
+    #     print(student_info.course_data[i]['course_name'])
 
 class StudentNode:
     def __init__(self, results, student_intput, course_data, student_data):

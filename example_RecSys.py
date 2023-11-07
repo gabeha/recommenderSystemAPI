@@ -2,6 +2,7 @@ from helpers.cast_int_to_float import recursive_cast_to_float
 from rec_sys_uni.recommender_system import RecSys
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
+from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
 
 def recommend_courses(student_input):
     
@@ -26,12 +27,20 @@ def recommend_courses(student_input):
     bloom_based = BloomBasedRecSys()
     # bloom_based = None
 
+    explanation = LLM(
+        url="https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta",
+        token="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",
+        model_id='HuggingFaceH4/zephyr-7b-beta',
+        model_name="all-MiniLM-L12-v2"
+    )
+
     student_input = recursive_cast_to_float(student_input)
 
 
 
     rs = RecSys(course_based=course_based,
-                bloom_based=bloom_based)
+                bloom_based=bloom_based,
+                explanation=explanation)
     
     output = {}
 

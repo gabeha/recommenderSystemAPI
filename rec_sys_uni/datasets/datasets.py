@@ -100,7 +100,7 @@ def calculate_title_zero_shot_adaptation(course_data, model_name,
             np.save(f'{path}/domain_embed_{code}.npy', kw_model.domain_word_embeddings)
 
 def calculate_title_few_shot_adaptation(course_data, model_name,
-                                        lr=1e-4, epochs=100):
+                                        lr=1e-4, epochs=100, start_index=0):
     """
     :param lr: Learning Rate for Attention Layer
     """
@@ -131,14 +131,18 @@ def calculate_title_few_shot_adaptation(course_data, model_name,
             os.makedirs(path_attention)
             print(f"The new directory {path_attention} for {model_name} is created!")
 
-        for code in list_courses:
-            print("Calculating for " + str(code))
-            desc = course_data[code]['description']
-            title = course_data[code]['course_name']
-            kw_model = adaptKeyBERT(model=model_name, domain_adapt=True)
-            kw_model.pre_train([desc], [[title]], lr=lr, epochs=epochs)
-            torch.save(kw_model.attention_layer, f'{path_attention}/attention_layer_{code}.pth')
-            torch.save(kw_model.target_word_embeddings_pt, f'{path_target}/target_embed_{code}.pth')
+        for i, code in enumerate(list_courses):
+            if(i >= start_index):
+                print("Calculating for " + str(code))
+                print("Index " + str(i) + " out of " + str(len(list_courses)))
+                desc = course_data[code]['description']
+                for i in course_data[code]['ilos']:
+                    desc += "\n" + i
+                title = course_data[code]['course_name']
+                kw_model = adaptKeyBERT(model=model_name, domain_adapt=True)
+                kw_model.pre_train([desc], [[title]], lr=lr, epochs=epochs)
+                torch.save(kw_model.attention_layer, f'{path_attention}/attention_layer_{code}.pth')
+                torch.save(kw_model.target_word_embeddings_pt, f'{path_target}/target_embed_{code}.pth')
 
 def calculate_precomputed_courses(course_data, model_name):
     try:
@@ -163,6 +167,8 @@ def calculate_precomputed_courses(course_data, model_name):
     for code in course_data:
         print("Calculating for " + str(code))
         desc = course_data[code]['description']
+        for i in course_data[code]['ilos']:
+            desc += "\n" + i
         embed = kw_model.model.embed([desc])
         np.save(f'{path}/course_embed_{code}.npy', embed)
 

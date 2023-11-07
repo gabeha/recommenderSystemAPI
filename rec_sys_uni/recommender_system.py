@@ -4,18 +4,21 @@ from rec_sys_uni._helpers_rec_sys import make_results_template, semester_course_
 from rec_sys_uni.rec_systems._systems import *
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
+from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
 
 
 class RecSys:
 
     def __init__(self,
                  course_based: CourseBasedRecSys = None,
-                 bloom_based: BloomBasedRecSys = None):
+                 bloom_based: BloomBasedRecSys = None,
+                 explanation: LLM = None):
         self.constraints = False
         self.validate_input = True
         self.system_course_data = True
         self.course_based = course_based
         self.bloom_based = bloom_based
+        self.explanation = explanation
 
 
     def validate_system_input(self,
@@ -144,7 +147,10 @@ class RecSys:
             compute_warnings(self, student_info)  # sorted_recommended_courses
 
         # Sort by periods
-        sort_by_periods(self, student_info, max=6, include_keywords=True, include_blooms=False)
+        sort_by_periods(self, student_info, max=7, include_keywords=True, include_blooms=False)
+
+        if self.explanation is not None:
+            self.explanation.generate_explanation(student_info.results)
 
         return student_info.results
 
