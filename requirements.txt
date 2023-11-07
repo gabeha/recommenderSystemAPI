@@ -48,7 +48,6 @@ packaging==23.1
 parso==0.8.3
 pexpect==4.8.0
 pickleshare==0.7.5
-Pillow @ file:///private/tmp/pillow-20231015-7966-j7gct6/Pillow-10.1.0
 platformdirs==3.10.0
 prompt-toolkit==3.0.39
 psutil==5.9.5
