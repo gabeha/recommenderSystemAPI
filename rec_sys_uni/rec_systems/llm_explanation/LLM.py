@@ -5,11 +5,12 @@ from langchain.document_loaders import TextLoader
 from langchain.llms import HuggingFaceTextGenInference
 from langchain.chains import RetrievalQA
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from rec_sys_uni._helpers_rec_sys import sort_by_periods
 import transformers
 
 
 class LLM:
-    def __init__(self, url:str, token:str, model_id:str, model_name:str):
+    def __init__(self, url: str, token: str, model_id: str, model_name: str):
         self.model_id = model_id
         llm = HuggingFaceTextGenInference(
             inference_server_url=url,
@@ -21,9 +22,9 @@ class LLM:
             repetition_penalty=1.1,
             streaming=True,
         )
-
+        # Authentication
         llm.client.headers = {"Authorization": f"Bearer {token}"}
-
+        # Load local FAISS database
         db = load_local_db_FAISS(model_name)
 
         # RAG Pipeline
@@ -32,62 +33,80 @@ class LLM:
             retriever=db.as_retriever()
         )
 
-    def generate_explanation(self, results):
-        text_promt_1 = generate_prompt(results['structured_recommendation']['period_1'], "1", self.model_id)
-        text_promt_2 = generate_prompt(results['structured_recommendation']['period_2'], "2", self.model_id)
+    def generate_explanation(self, recSys, student_info):
+        """
+        parameters: recSys : RecSys object
+                    student_info : StudentNode object
+                    top_n : int
+        function: generate explanation using LLM for the recommended courses
+        """
+        # Sort by periods
+        sort_by_periods(recSys, student_info, max=recSys.top_n, include_keywords=True, include_blooms=False)
+        courses = student_info.results['structured_recommendation']
+
+        # Generate prompt
+        text_promt_1 = generate_prompt(courses['period_1'], "1", self.model_id)
+        text_promt_2 = generate_prompt(courses['period_2'], "2", self.model_id)
+
+        # Generate explanation
         self.rag(text_promt_1, callbacks=[StreamingStdOutCallbackHandler()])
         self.rag(text_promt_2, callbacks=[StreamingStdOutCallbackHandler()])
 
 
-
-
 def generate_prompt(period, num, model_id):
+    # Define the period of prompt
     text_promt = f"Period {num}:"
     count = 1
     for i in period:
-        text = f"\n{count}. "
+        text = f"\n{count}. "  # Place in the recommended list
         for j in i:
-            if j != 'keywords':
+            if j != 'keywords':  # If the key is not keywords, then it is course_code or course_name
                 text += f"{j}: {i[j]}. "
-            else:
+            else:  # If the key is keywords, then it is a dictionary of keywords
                 text += f"{j}: "
                 for k in i[j]:
-                    text += f"{k}: {i[j][k]}, "
-        text_promt += text + "."
+                    text += f"{k}: {i[j][k]}, "  # Add each keyword and its value to the text
+        text_promt += text + "."  # Finish the line with dot
         count += 1
-
+    # Get the prompt template
     template = get_prompty_template()
+    # Add recommended courses to ask the LLM to generate explanation
     template.append(
         {
-        "role": "user",
-        "content": f'{text_promt}'
+            "role": "user",
+            "content": f'{text_promt}'
         }
     )
+    # Tokenize the template for the LLM
     tokenizer = transformers.AutoTokenizer.from_pretrained(model_id)
+    # Return the tokenized template
     return tokenizer.apply_chat_template(template, tokenize=False, add_generation_prompt=True)
+
 
 def create_knowledge_base(course_data, model_name):
     knowledge_base = []
     index = 0
+    # Create knowledge base
     for code in course_data:
-        title = course_data[code]['course_name']
-        desc = course_data[code]['description']
-        ilos = course_data[code]['ilos']
-        text = "Title of the course: " + title + ". "
+        title = course_data[code]['course_name']  # Title of the course
+        desc = course_data[code]['description']  # Description of the course
+        ilos = course_data[code]['ilos']  # ILOs of the course
+        text = "Title of the course: " + title + ". "  # For each text add the title of the course
         for i in desc.split('.'):
             text_length = len(text)
             i_length = len(i)
-            if text_length + i_length < 1000:
+            if text_length + i_length < 1000:  # Check if the text is less than 1000 characters
                 text += i.strip() + '.'
             else:
-                knowledge_base.append(text.strip())
-                text = "Title of the course: " + title + ". " + i.strip() + '.'
+                knowledge_base.append(text.strip())  # If the text is more than 1000 characters,
+                # add it to the knowledge base
+                text = "Title of the course: " + title + ". " + i.strip() + '.'  # Start a new text
         knowledge_base.append(text)
 
+        # Add ILOs to the knowledge base with the title of the course
         text = f"\nThe {title} has the following ILOs: " + ", ".join(ilos).strip() + ". "
         knowledge_base.append(text)
         index += 1
-
 
     with (open(r'rec_sys_uni/datasets/data/LLM/knowledge_base.txt', 'w')) as fp:
         fp.write('\n'.join(knowledge_base))
@@ -98,22 +117,34 @@ def create_knowledge_base(course_data, model_name):
 
     # Load documents and split them
     documents = TextLoader("rec_sys_uni/datasets/data/LLM/knowledge_base.txt").load()
+    # Initialize text splitter
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    # Split documents into chunks
     docs = text_splitter.split_documents(documents)
 
     # Create local vector database
     db = FAISS.from_documents(docs, embedding_model)
+    # Save local vector database
     db.save_local("rec_sys_uni/datasets/data/LLM/db_FAISS")
 
+
 def load_local_db_FAISS(model_name):
+    """
+    function: load local FAISS database for Retrieval Augmented Generation (RAG)
+    """
+    # Load embedding model
     embedding_model = HuggingFaceEmbeddings(
         model_name=model_name
     )
+    # Load local vector database for RAG
     db = FAISS.load_local("rec_sys_uni/datasets/data/LLM/db_FAISS", embedding_model)
     return db
 
 
 def get_prompty_template():
+    """
+    function: get the prompt template for LLM
+    """
     return [
         {
             "role": "system",

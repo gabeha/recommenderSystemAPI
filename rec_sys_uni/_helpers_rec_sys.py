@@ -29,9 +29,11 @@ def semester_course_cleaning(course_data, semester):
                     new_course_data[course] = course_data[course]
     return new_course_data
 
+
 def sort_by_periods(recSys, student_info, max=6, include_keywords=False, include_blooms=False):
     # Sort recommended courses by score
-    sorted_recommendation_list = sorted(student_info.results['recommended_courses'].items(), key=lambda x: x[1]['score'], reverse=True)
+    sorted_recommendation_list = sorted(student_info.results['recommended_courses'].items(),
+                                        key=lambda x: x[1]['score'], reverse=True)
 
     # Append code of sorted courses to the list
     final_recommendation_list = []
@@ -50,7 +52,7 @@ def sort_by_periods(recSys, student_info, max=6, include_keywords=False, include
             if include_blooms and recSys.bloom_based:
                 course_tmp['blooms'] = student_info.results['recommended_courses'][i[0]]['blooms']
 
-            if (j == 1 or j ==4) and len(structured_recommendation['period_1']) < max:
+            if (j == 1 or j == 4) and len(structured_recommendation['period_1']) < max:
                 structured_recommendation['period_1'].append(course_tmp)
                 break
             if (j == 2 or j == 5) and len(structured_recommendation['period_2']) < max:
@@ -63,6 +65,7 @@ def sort_by_periods(recSys, student_info, max=6, include_keywords=False, include
     # for i in final_recommendation_list[:20]:
     #     print(student_info.course_data[i]['course_name'])
 
+
 class StudentNode:
     def __init__(self, results, student_intput, course_data, student_data):
         self.results = results
@@ -70,4 +73,4 @@ class StudentNode:
         self.course_data = course_data
         self.student_data = student_data
 
-#%%
+# %%

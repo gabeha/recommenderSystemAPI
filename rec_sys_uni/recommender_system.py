@@ -12,14 +12,15 @@ class RecSys:
     def __init__(self,
                  course_based: CourseBasedRecSys = None,
                  bloom_based: BloomBasedRecSys = None,
-                 explanation: LLM = None):
+                 explanation: LLM = None,
+                 top_n=7):
         self.constraints = False
         self.validate_input = True
         self.system_course_data = True
         self.course_based = course_based
         self.bloom_based = bloom_based
         self.explanation = explanation
-
+        self.top_n = top_n
 
     def validate_system_input(self,
                               student_input,
@@ -41,7 +42,6 @@ class RecSys:
             check_student_data(student_data)
 
         return student_input, course_data, student_data
-
 
     def get_recommendation(self,
                            student_intput,
@@ -123,11 +123,10 @@ class RecSys:
 
         """
 
-        
         if self.validate_input:
             student_input, course_data, student_data = self.validate_system_input(student_intput,
-                                                                                    course_data,
-                                                                                    student_data)
+                                                                                  course_data,
+                                                                                  student_data)
         course_data = semester_course_cleaning(course_data, student_intput['semester'])
 
         results = {"recommended_courses": {},
@@ -146,15 +145,19 @@ class RecSys:
         else:
             compute_warnings(self, student_info)  # sorted_recommended_courses
 
-        # Sort by periods
-        sort_by_periods(self, student_info, max=7, include_keywords=True, include_blooms=False)
+        # Sort by periods (moved to example_RecSys.py)
+        # sort_by_periods(self, student_info, max=self.top_n, include_keywords=True, include_blooms=False)
 
-        if self.explanation is not None:
-            self.explanation.generate_explanation(student_info.results)
+        return student_info
 
-        return student_info.results
+    def generate_explanation(self, student_info):
+        self.explanation.generate_explanation(self, student_info)
 
-    def _settings_(self):
-        print(f"Contraints: {self.constraints} \n" +
+    def print_config(self):
+        print(f"RecSys settings: \n" +
+              f"Contraints: {self.constraints} \n" +
               f"Validate_input: {self.validate_input} \n" +
-              f"System_course_data: {self.system_course_data} \n")
+              f"System_course_data: {self.system_course_data} \n" +
+              f"Course_based: {self.course_based} \n" +
+              f"Bloom_based: {self.bloom_based} \n" +
+              f"Top_n: {self.top_n} \n")
