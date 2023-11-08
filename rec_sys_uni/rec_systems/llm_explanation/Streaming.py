@@ -6,6 +6,8 @@ from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import AgentAction, AgentFinish, LLMResult
 from langchain.schema.messages import BaseMessage
 
+from socketio_instance import socketio
+
 
 class StreamingRecSys(BaseCallbackHandler):
     """Callback handler for streaming. Only works with LLMs that support streaming."""
@@ -25,6 +27,9 @@ class StreamingRecSys(BaseCallbackHandler):
 
     def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
         """Run on new LLM token. Only available when streaming is enabled."""
+        # instead of writing to console here, stream it via http to frontend
+        if socketio:
+            socketio.emit('new_token', {'token': token})
         sys.stdout.write(token)
         sys.stdout.flush()
 

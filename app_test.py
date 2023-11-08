@@ -1,12 +1,42 @@
+from flask import Flask, jsonify, request
+from socketio_instance import socketio
+from flask_cors import CORS
+from threading import Thread
+import time
+import random
+
 from helpers.cast_int_to_float import recursive_cast_to_float
-from rec_sys_uni.recommender_system import RecSys
-from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
+from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
+from rec_sys_uni.recommender_system import RecSys
 from rec_sys_uni._helpers_rec_sys import sort_by_periods
 
+app = Flask(__name__)
+CORS(app)
+socketio.init_app(app, cors_allowed_origins="*")
 
-def recommend_courses(student_input):
+def dummy_llm_function(course):
+    # Simulate some processing delay
+    time.sleep(random.randint(1, 3))
+    # Return a dummy explanation
+    return f"This is a dummy explanation for {course['title']}."
+
+def generate_explanations_and_emit(rs, student_info):
+    # Get Explanation of top_n courses based on StudentNode object
+    if rs.explanation:
+        rs.generate_explanation(student_info)
+    # for course in courses:
+    #     explanation = dummy_llm_function(course)
+    #     socketio.emit('explanation', {'course_id': course['id'], 'explanation': explanation})
+
+@app.route('/api/recommend', methods=['POST'])
+def recommend():
+
+    print("get_recommendations")
+
+    student_input = request.get_json()
+
     model_name = student_input["config"]["model_name"]
     seed_help = student_input["config"]["seed_help"]
     domain_adapt = student_input["config"]["domain_adapt"]
@@ -50,9 +80,7 @@ def recommend_courses(student_input):
         student_info = rs.get_recommendation(student_input)
 
         # maybe move this to somewhere else to make sure that the recommendations are sent to frontend asap
-        # Get Explanation of top_n courses based on StudentNode object
-        # if rs.explanation:
-        #     rs.generate_explanation(student_info)
+
 
         # Sort recommended courses by score without keywords and blooms in the output
         sort_by_periods(rs, student_info, max=rs.top_n)
@@ -61,35 +89,17 @@ def recommend_courses(student_input):
 
         output = {'structured_recommendation': results.get('structured_recommendation'),
                   'explanation': results.get('explanation'), "student_input": student_input}
+        socketio.emit('recommendations', {'recommended_courses': output})
+
         # print (output)
     except Exception as e:
         output = {'error': str(e)}
+        socketio.emit('error', {'error': str(e)})
     finally:
-        return output, student_info, rs
+        Thread(target=generate_explanations_and_emit, args=(rs, student_info,)).start()
+        # The response is now being sent via Socket.IO, so we might not need to return anything here.
+        # But if you still want to return something via HTTP:
+        return jsonify({'recommended_courses': output})
 
-    # Example of the output
-    # print(str(results) + "\n")
-
-    # Example of top 10 recommended courses
-    # for i in results['sorted_recommended_courses'][:10]:
-    #     print(i + ": " + str(rs.course_data[i]['course_name']) + " || Score: "+ str(results['recommended_courses'][i]['score']))
-
-    # Example of structured recommended courses
-    # for period in results['structured_recommendation']:
-    #     print(period)
-    #     for i in results['structured_recommendation'][period]:
-    #         print(i + ": " + str(rs.course_data[i]['course_name']) + " || Score: "+ str(results['recommended_courses'][i]['score']))
-    #     print()
-
-# input = {
-#     "config": {"model_name": "all-MiniLM-L12-v2", "seed_help": True, "domain_adapt": True, "zero_adapt": True},
-#     "keywords":{'artificial':0.5, 'math':0.5,  'statistics':0.5, 'data analyze':0.5},
-#     "blooms":{'create': 0.0,
-#               'understand': 0.0,
-#               'apply': 0.0,
-#               'analyze': 0.0,
-#               'evaluate': 0.0,
-#               'remember': 0.0},
-#     "semester": 2.0
-# }
-# print(recommend_courses(input))
+if __name__ == '__main__':
+    socketio.run(app, debug=True)
