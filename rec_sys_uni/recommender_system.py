@@ -99,13 +99,14 @@ class RecSys:
                                                         },
                                                     ...
                                                 }
-        return: dictionary of recommended courses
+        return: StudentNode object, which contains: (check _helpers_rec_sys.py)
+                results: dictionary of recommended courses
                 e.g. {
                         recommended_courses: dictionary {
                                                             course_id(String):
                                                                         {
                                    Total score of each model                score: float,
-                                                                            period: [int, ...] or [[int, int], ...],    e.g [1, 4] or [[1, 2, 3], [4, 5, 6]] or [[1,2]], TODO: In the later stage should be an recommended period
+                                   Course periods                           period: [int, ...] or [[int, int], ...],    e.g [1, 4] or [[1, 2, 3], [4, 5, 6]] or [[1,2]]
                                                                             warning: boolean
                                    (after applying CourseBased model)       keywords: {scores to each keyword}
                                    (after applying BloomBased model)        blooms: {scores to each bloom}
@@ -113,14 +114,16 @@ class RecSys:
                                                             ...
                                                         },
                         sorted_recommended_courses: list of course_id(String) sorted by score,
-                        structured_recommendation: dictionary {
-                                                                period_1: list of course_id(String), condition <= 5
-                                                                period_2: list of course_id(String), condition <= 5
-                                                                period_3: list of course_id(String), condition == 1
-                                                                semester: list of course_id(String), condition == 1
-                        explanation: String
+                        structured_recommendation: dictionary {  (if you apply sort_by_periods function, when you will have structured_recommendation key in the results)
+                                                                period_1: list of course_id(String), condition <= top_n
+                                                                period_2: list of course_id(String), condition <= top_n
+             (if you include in sort_by_periods function)       keywords: {scores to each keyword}
+             (if you include in sort_by_periods function)       blooms: {scores to each bloom}
+                        explanation: String TODO: Depreciated (Do not use this key)
                     }
-
+                student_input: dictionary
+                course_data: dictionary
+                student_data: dictionary
         """
 
         if self.validate_input:
@@ -139,12 +142,6 @@ class RecSys:
 
         compute_recommendation(self, student_info)
 
-        if self.constraints:
-            compute_constraints(self, student_info)  # recommended_courses
-            compute_warnings(self, student_info)  # structured_recommendation
-        else:
-            compute_warnings(self, student_info)  # sorted_recommended_courses
-
         # Sort by periods (moved to example_RecSys.py)
         # sort_by_periods(self, student_info, max=self.top_n, include_keywords=True, include_blooms=False)
 
@@ -152,6 +149,14 @@ class RecSys:
 
     def generate_explanation(self, student_info):
         self.explanation.generate_explanation(self, student_info)
+
+    def compute_constraints(self, student_info):
+        # Here you can call the integer linear programming model
+        pass
+
+    def compute_warnings(self, student_info):
+        # Here you can call the warnings prediction model
+        pass
 
     def print_config(self):
         print(f"RecSys settings: \n" +
