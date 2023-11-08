@@ -4,7 +4,7 @@ from langchain.vectorstores import FAISS
 from langchain.document_loaders import TextLoader
 from langchain.llms import HuggingFaceTextGenInference
 from langchain.chains import RetrievalQA
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from rec_sys_uni.rec_systems.llm_explanation.Streaming import StreamingRecSys
 from rec_sys_uni._helpers_rec_sys import sort_by_periods
 import transformers
 
@@ -49,8 +49,8 @@ class LLM:
         text_promt_2 = generate_prompt(courses['period_2'], "2", self.model_id)
 
         # Generate explanation
-        self.rag(text_promt_1, callbacks=[StreamingStdOutCallbackHandler()])
-        self.rag(text_promt_2, callbacks=[StreamingStdOutCallbackHandler()])
+        self.rag(text_promt_1, callbacks=[StreamingRecSys()])
+        self.rag(text_promt_2, callbacks=[StreamingRecSys()])
 
 
 def generate_prompt(period, num, model_id):
