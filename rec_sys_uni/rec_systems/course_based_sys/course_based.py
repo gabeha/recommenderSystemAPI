@@ -269,11 +269,19 @@ def extract_keywords_relevance(
 
         # Compute distances between keywords and document
         distances = cosine_similarity(doc_embedding, candidate_embeddings)
+
+        # keywords = [
+        #                (candidates[index], round(float(distances[0][index]), 4))
+        #                for index in distances.argsort()[0][-top_n:]
+        #            ][::-1]
         keywords = [
                        (candidates[index], round(float(distances[0][index]), 4))
-                       for index in distances.argsort()[0][-top_n:]
-                   ][::-1]
+                       for index in range(len(candidates))
+                   ]
+
 
         all_keywords.append(keywords)
 
     return all_keywords
+
+#%%

@@ -30,7 +30,8 @@ def recommend_courses(student_input):
         url="https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta",
         token="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",
         model_id='HuggingFaceH4/zephyr-7b-beta',
-        model_name="all-MiniLM-L12-v2"
+        model_name="all-MiniLM-L12-v2",
+        per_periods=True
     )
     # explanation = None
     bloom_based = BloomBasedRecSys()
@@ -83,7 +84,7 @@ def recommend_courses(student_input):
 
 # input = {
 #     "config": {"model_name": "all-MiniLM-L12-v2", "seed_help": True, "domain_adapt": True, "zero_adapt": True},
-#     "keywords":{'artificial':0.5, 'math':0.5,  'statistics':0.5, 'data analyze':0.5},
+#     "keywords":{'law':0.5, 'math':0.5,  'statistics':0.5, 'data analyze':0.5},
 #     "blooms":{'create': 0.0,
 #               'understand': 0.0,
 #               'apply': 0.0,

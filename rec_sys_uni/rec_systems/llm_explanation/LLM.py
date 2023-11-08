@@ -10,8 +10,9 @@ import transformers
 
 
 class LLM:
-    def __init__(self, url: str, token: str, model_id: str, model_name: str):
+    def __init__(self, url: str, token: str, model_id: str, model_name: str, per_periods: bool = False):
         self.model_id = model_id
+        self.per_periods = per_periods
         llm = HuggingFaceTextGenInference(
             inference_server_url=url,
             max_new_tokens=14000,
@@ -44,16 +45,25 @@ class LLM:
         sort_by_periods(recSys, student_info, max=recSys.top_n, include_keywords=True, include_blooms=False)
         courses = student_info.results['structured_recommendation']
 
-        # Generate prompt
-        text_promt_1 = generate_prompt(courses['period_1'], "1", self.model_id)
-        text_promt_2 = generate_prompt(courses['period_2'], "2", self.model_id)
+        if self.per_periods: # Full explanation per period
+            # Generate prompt
+            text_promt_1 = generate_prompt_per_period(courses['period_1'], "1", self.model_id)
+            text_promt_2 = generate_prompt_per_period(courses['period_2'], "2", self.model_id)
 
-        # Generate explanation
-        self.rag(text_promt_1, callbacks=[StreamingRecSys()])
-        self.rag(text_promt_2, callbacks=[StreamingRecSys()])
+            # Generate explanation
+            self.rag(text_promt_1, callbacks=[StreamingRecSys()])
+            self.rag(text_promt_2, callbacks=[StreamingRecSys()])
+        else: # Full explanation per course
+            for i in courses['period_1']:
+                text_promt = generate_prompt_per_course(i, "1", self.model_id)
+                self.rag(text_promt, callbacks=[StreamingRecSys()])
+
+            for i in courses['period_2']:
+                text_promt = generate_prompt_per_course(i, "2", self.model_id)
+                self.rag(text_promt, callbacks=[StreamingRecSys()])
 
 
-def generate_prompt(period, num, model_id):
+def generate_prompt_per_period(period, num, model_id):
     # Define the period of prompt
     text_promt = f"Period {num}:"
     count = 1
@@ -69,7 +79,34 @@ def generate_prompt(period, num, model_id):
         text_promt += text + "."  # Finish the line with dot
         count += 1
     # Get the prompt template
-    template = get_prompty_template()
+    template = get_prompty_template_per_period()
+    # Add recommended courses to ask the LLM to generate explanation
+    template.append(
+        {
+            "role": "user",
+            "content": f'{text_promt}'
+        }
+    )
+    # Tokenize the template for the LLM
+    tokenizer = transformers.AutoTokenizer.from_pretrained(model_id)
+    # Return the tokenized template
+    return tokenizer.apply_chat_template(template, tokenize=False, add_generation_prompt=True)
+
+def generate_prompt_per_course(course, num, model_id):
+    # Define the period of prompt
+    text_promt = "Course:"
+    for i in course:
+        if i == 'course_code':
+            text_promt += (f"\n1. Course code: {course[i]}")
+        elif i == 'course_name':
+            text_promt += (f"\n2. Course name: {course[i]}")
+        elif i == 'keywords':
+            text_promt += f"\n3. Keywords: "
+            for k in course[i]:
+                text_promt += f"{k}: {course[i][k]}, "  # Add each keyword and its value to the text
+        text_promt += "."  # Finish the line with dot
+    # Get the prompt template
+    template = get_prompty_template_per_course()
     # Add recommended courses to ask the LLM to generate explanation
     template.append(
         {
@@ -141,7 +178,7 @@ def load_local_db_FAISS(model_name):
     return db
 
 
-def get_prompty_template():
+def get_prompty_template_per_period():
     """
     function: get the prompt template for LLM
     """
@@ -177,7 +214,7 @@ def get_prompty_template():
                 1. course_code: SCI1010. course_name: Basic Mathematical Tools. keywords: math: 0.5414, statistics: 0.3019, data analyze: 0.2977, artificial intelligence: 0.2915, .
                 2. course_code: SCI3003. course_name: Optimization. keywords: artificial intelligence: 0.4353, math: 0.3381, data analyze: 0.2453, statistics: 0.1996, .
                 3. course_code: SSC2061. course_name: Statistics I. keywords: statistics: 0.7102, data analyze: 0.347, math: 0.3343, artificial intelligence: 0.2078, .
-                4. course_code: SCI2036. course_name: Artificial Intelligence. keywords: artificial intelligence: 0.72, math: 0.3064, statistics: 0.2136, data analyze: 0.1903, .
+                4. course_code: COR1003. course_name: Contemporary World History. keywords: math: 0.229, artificial intelligence: 0.1998, data analyze: 0.2887, statistics: 0.3171, .
                 
                 Student input: 'keywords': math: 0.5, artificial intelligence: 0.5, data analyze: 0.5, statistics: 0.5, .
                 """
@@ -219,6 +256,138 @@ def get_prompty_template():
                 Statistics: It won't likely cover statistical theories or tools such as hypothesis testing, probability distributions, or data visualization techniques that a student interested in statistics would be looking to study.
                 Artificial Intelligence: AI typically involves the use of computer science and mathematics to create systems capable of performing tasks that usually require human intelligence. Contemporary World History does not address these computational or technical aspects and instead focuses on the socio-political development of human societies.
                 Data Analysis: Although historical studies can involve the analysis of data from past events, this course likely focuses more on qualitative analysis and theoretical perspectives rather than the quantitative data analysis the student is interested in.
+                """
+        }
+    ]
+
+def get_prompty_template_per_course():
+    """
+    function: get the prompt template for LLM
+    """
+    return [
+        {
+            "role": "system",
+            "content":
+                """
+                You are tasked with assisting students in choosing academic courses that align closely with their interests and educational aspirations. To facilitate personalized course recommendations, you must leverage the information provided based on a student's specified interests.
+                
+                You will be supplied with a course, which includes the following attributes:
+                
+                1. Course Code.
+                2. Course Title.
+                3. Keywords: A dictionary consisting of relevant keywords associated with the course, along with their values. Be aware that the provided values might not always accurately represent the course content.
+                
+                In addition to the course information, you will receive inputs from students, which include:
+                
+                "keywords": A dictionary of keywords and their associated values that represent the student's areas of interest.
+                
+                Based on the course list and the student input, generate a recommendation for the specified course. For the course you recommend, ensure to include the following details:
+                
+                Course Name: State the full title of the course.
+                Description: Offer a clear and detailed description of the course, including the topics that will be covered and the skills that will be taught.
+                Explanation: Provide a thoughtful analysis explaining how this course aligns with the student's expressed interests.
+                
+                Remember, your goal is to match courses to a student's interests, keywords as accurately as possible, which will require you to interpret the relevance of course in relation to the interests specified by the student.
+                """
+        },
+        {
+            "role": "user",
+            "content":
+                """
+                Course:
+                1. Course Code: SCI1010. 
+                2. Course Name: Basic Mathematical Tools. 
+                3. Keywords: math: 0.5414, artificial intelligence: 0.2915, data analyze: 0.2977, statistics: 0.3019, .
+                
+                Student input: 'keywords': math: 0.5, artificial intelligence: 0.5, data analyze: 0.5, statistics: 0.5, .
+                """
+        },
+        {
+            "role": "assistant",
+            "content":
+                """
+                Course Name: Basic Mathematical Tools (SCI1010)
+                Description: This course provides foundational knowledge in mathematics, covering analysis, algebra, and probability. It starts with a refresher of high school topics and progresses to advanced subjects preparing students for quantitative courses. Skills in solving equations, differentiation, and function analysis are developed.
+                Explanation: 
+                - Math : The student's interest in math correlates with the course's intensive focus on refreshing and building upon mathematical principles and techniques.
+                - Artificial Intelligence : While the course does not directly deal with artificial intelligence, the mathematical foundations taught are essential for understanding AI algorithms and models. Mathematical tools, especially in probability and statistics, are the backbone of machine learning, a subset of AI.
+                - Data Analysis : Data analysis relies heavily on statistics and mathematical models to interpret data. This course provides fundamental skills that will aid in the comprehension and application of data analysis techniques.
+                - Statistics : Given the student's interest in statistics, the course's inclusion of probability theory, which is a bedrock of statistical analysis, makes it a good match.
+                """
+        },
+        {
+            "role": "user",
+            "content":
+                """
+                Course:
+                1. Course Code: SCI3003. 
+                2. Course Name: Optimization. 
+                3. Keywords: math: 0.3381, artificial intelligence: 0.4353,  data analyze: 0.2453, statistics: 0.1996, .
+                
+                Student input: 'keywords': math: 0.5, artificial intelligence: 0.5, data analyze: 0.5, statistics: 0.5, .
+                """
+        },
+        {
+            "role": "assistant",
+            "content":
+                """
+                Course Name: Optimization (SCI3003)
+                Description: Optimization focuses on improving performance by using mathematical models. It covers techniques like gradient methods and Newton's method, exploring both unconstrained and constrained optimization, including linear programming and the Lagrange multiplier method. Practical applications are demonstrated through various examples.\
+                Explanation: 
+                - Math : Given the strong foundation in mathematics that this course provides, it matches the student's interest. Understanding optimization requires a deep grasp of mathematical concepts which the student has shown a significant interest in.
+                - Artificial Intelligence : Optimization is a key component in artificial intelligence for improving algorithms and decision-making processes. The student's interest is reflected in the course's strong connection to AI, particularly in techniques like gradient methods and iterative solutions which are used in machine learning.
+                - Data Analysis : The course's focus on fitting models to data and solving least squares problems is highly relevant to data analysis, a field reliant on optimization for predictive modeling and interpretation.
+                - Statistics : Statistical models often include optimization problems, such as least squares for regression analysis, that are covered in this course.
+                """
+        },
+        {
+            "role": "user",
+            "content":
+                """
+                Course:
+                1. Course Code: SSC2061. 
+                2. Course Name: Statistics I. 
+                3. Keywords: math: 0.3343, artificial intelligence: 0.2078, data analyze: 0.347, statistics: 0.7102, .
+                
+                Student input: 'keywords': math: 0.5, artificial intelligence: 0.5, data analyze: 0.5, statistics: 0.5, .
+                """
+        },
+        {
+            "role": "assistant",
+            "content":
+                """
+                Course Name: Statistics I (SSC2061)
+                Description: An introductory course to statistics tailored for social and life sciences, covering descriptive and inferential statistics. The course aims to make statistics approachable through practical assignments, enabling students to visualize data, test hypotheses, and understand associations between different data types.
+                Explanation: 
+                - Math : The mathematical underpinnings of statistical theory are integral to this course. Given the student's interest in math, there's a clear relevance and applicability for the student wishing to apply mathematical concepts within the context of statistics.
+                - Artificial Intelligence : While AI is not the primary focus of this course, the foundational knowledge in statistics is invaluable for understanding machine learning, a cornerstone of AI. The course includes relevant content that would benefit a student interested in AI, particularly in the application of statistical methods to inform and evaluate AI models.
+                - Data Analysis : With a focus on descriptive and inferential statistics, the course covers the essentials of data analysis, making sense of data which is a significant interest for the student.
+                - Statistics : The student's keen interest in statistics is directly met by this course. This indicates a major focus of the course on statistical principles and methodologies, perfectly aligning with what the student is looking to learn.
+                """
+        },
+        {
+            "role": "user",
+            "content":
+                """
+                Course:
+                1. Course Code: COR1003. 
+                2. Course Name: Contemporary World History. 
+                3. Keywords: math: 0.229, artificial intelligence: 0.1998, data analyze: 0.2887, statistics: 0.3171, .
+                
+                Student input: 'keywords': math: 0.5, artificial intelligence: 0.5, data analyze: 0.5, statistics: 0.5, .
+                """
+        },
+        {
+            "role": "assistant",
+            "content":
+                """
+                Course Name: Basic Mathematical Tools (SCI1010)
+                Description:  This course explores significant historical events and their impacts on the modern world. It employs a philosophical lens to study history, with a focus on state and nation concepts, economic trends, and global power dynamics. Case studies from various periods are used to link the past with current global situations.
+                Explanation: 
+                - Math: This history course likely does not delve into these areas, focusing instead on the narrative, analysis, and interpretation of historical events.
+                - Artificial Intelligence: AI typically involves the use of computer science and mathematics to create systems capable of performing tasks that usually require human intelligence. Contemporary World History does not address these computational or technical aspects and instead focuses on the socio-political development of human societies.
+                - Data Analysis: Although historical studies can involve the analysis of data from past events, this course likely focuses more on qualitative analysis and theoretical perspectives rather than the quantitative data analysis the student is interested in.
+                - Statistics: It won't likely cover statistical theories or tools such as hypothesis testing, probability distributions, or data visualization techniques that a student interested in statistics would be looking to study.
                 """
         }
     ]
