@@ -14,7 +14,7 @@ class LLM:
         llm = HuggingFaceTextGenInference(
             inference_server_url=url,
             max_new_tokens=11000,
-            temperature=0.1,
+            temperature=0.01,
             # top_k=10,
             # top_p=0.95,
             # typical_p=0.95,
@@ -61,10 +61,15 @@ def generate_prompt_per_course(student_input, course):
         text_promt += f"{key}: {course['keywords'][key]/student_input['keywords'][key]}, "
     text_promt += "."  # Finish the line with dot
 
-    text_promt += f"\nStudent input: 'keywords': "
-    for key in student_input['keywords']:
-        text_promt += f"{key}: {round(student_input['keywords'][key] * 100, 2)}, "
-    text_promt += "."  # Finish the line with dot
+    # text_promt += f"\nStudent input: 'keywords': "
+    # for key in student_input['keywords']:
+    #     text_promt += f"{key}: {round(student_input['keywords'][key] * 100, 2)}, "
+    # text_promt += "."  # Finish the line with dot
+
+    text_promt += ("Follow the template:\n"
+                   "Course Name: \n"
+                   "Description: \n"
+                   "Explanation: \n")
     return text_promt
 
 def add_to_template(text_promt, model_id):
@@ -156,17 +161,21 @@ def get_prompt_template_per_course():
                     "You will be supplied with a course, which includes the following attributes:\n" 
                     "1. Course Title.\n" 
                     "2. Keywords: A dictionary consisting of relevant keywords associated with the course, along with "
-                    "their values  (e.g., values from 10 to 20 suggest a small correlation, from 30 to 60 a medium "
-                    "correlation, and from 70 to 100 a large correlation). Be aware that the provided values might not "
+                    "their values  "
+                    "(e.g., values from 10 to 20 suggest a small correlation, from 30 to 60 a medium "
+                    "correlation, and from 70 to 100 a large correlation). "
+                    "Be aware that the provided values might not "
                     "always accurately represent the course content.\n" 
     
-                    "In addition to the course information, you will receive inputs from students, which include:\n" 
-                    "keywords: A dictionary of keywords and their associated values that represent the student's areas of "
-                    "interest (e.g., values from 10 to 20 suggest a small interest, from 30 to 60 a neutral interest, "
-                    "and from 70 to 100 a high interest).\n" 
+                    # "In addition to the course information, you will receive inputs from students, which include:\n" 
+                    # "keywords: A dictionary of keywords and their associated values that represent the student's areas of "
+                    # "interest "
+                    # "(e.g., values from 10 to 20 suggest a small interest, from 30 to 60 a neutral interest, "
+                    # "and from 70 to 100 a high interest)."
+                    "\n" 
     
-                    "Based on the course list and the student input, generate a recommendation for the specified course. "
-                    "For the course you recommend, ensure to include the following details:\n" 
+                    "Based on the course and the student input, generate a recommendation for the specified course. "
+                    "Ensure to include the following details:\n" 
     
                     "Course Name: State the full title of the course.\n" 
                     "Description: Offer a clear and detailed description of the course, including the topics that will be "
@@ -186,8 +195,12 @@ def get_prompt_template_per_course():
                     "Course:\n" 
                     "1. Course Title: Basic Mathematical Tools (SCI1010)\n" 
                     "2. Keywords: math: 54.23, artificial intelligence: 29.53, data analyze: 30.21, statistics: 30.64.\n\n" 
-                    "Student input:\n" 
-                    "'keywords': math: 50, artificial intelligence: 50, data analyze: 50, statistics: 50.\n"
+                    # "Student input:\n" 
+                    # "'keywords': math: 50, artificial intelligence: 50, data analyze: 50, statistics: 50.\n"
+                    "Follow the template:\n"
+                    "Course Name: \n"
+                    "Description: \n"
+                    "Explanation: \n"
                 )
         },
         {
@@ -219,8 +232,12 @@ def get_prompt_template_per_course():
                     "Course:\n"
                     "1. Course Title: Foundations of Cognitive Psychology (SSC2062)\n"
                     "2. Keywords: math: 'math': 26.06, artificial intelligence: 31.64, data analyze: 20.14, statistics: 18.72\n\n"
-                    "Student input:\n"
-                    "'keywords': math: 50, artificial intelligence: 50, data analyze: 50, statistics: 50.\n"
+                    # "Student input:\n"
+                    # "'keywords': math: 50, artificial intelligence: 50, data analyze: 50, statistics: 50.\n"
+                    "Follow the template:\n"
+                    "Course Name: \n"
+                    "Description: \n"
+                    "Explanation: \n"
                 )
         },
         {
@@ -251,7 +268,11 @@ def get_prompt_template_per_course():
                     "Course:\n"
                     "1. Course Title: Optimization (SCI3003)\n"
                     "2. Keywords: math: 34.0, artificial intelligence: 44.34, data analyze: 25.01, statistics: 20.34.\n\n"
-                    "Student input: 'keywords': math: 50, artificial intelligence: 50, data analyze: 50, statistics: 50.\n"
+                    # "Student input: 'keywords': math: 50, artificial intelligence: 50, data analyze: 50, statistics: 50.\n"
+                    "Follow the template:\n"
+                    "Course Name: \n"
+                    "Description: \n"
+                    "Explanation: \n"
                 )
         },
         {
@@ -283,7 +304,11 @@ def get_prompt_template_per_course():
                     "Course:\n"
                     "1. Course Title: Statistics I (SSC2061)\n"
                     "2. Keywords: math: 33.93, artificial intelligence: 21.72, data analyze: 35.55, statistics: 71.36.\n\n"
-                    "Student input: 'keywords': math: 50, artificial intelligence: 50, data analyze: 50, statistics: 50.\n"
+                    # "Student input: 'keywords': math: 50, artificial intelligence: 50, data analyze: 50, statistics: 50.\n"
+                    "Follow the template:\n"
+                    "Course Name: \n"
+                    "Description: \n"
+                    "Explanation: \n"
                 )
         },
         {
@@ -316,7 +341,11 @@ def get_prompt_template_per_course():
                     "Course:\n"
                     "1. Course Title: Contemporary World History (SCI1010)\n"
                     "2. Keywords: math: 23.83, artificial intelligence: 20.72, data analyze: 29.62, statistics: 32.56.\n\n"
-                    "Student input: 'keywords': math: 50, artificial intelligence: 50, data analyze: 50, statistics: 50.\n"
+                    # "Student input: 'keywords': math: 50, artificial intelligence: 50, data analyze: 50, statistics: 50.\n"
+                    "Follow the template:\n"
+                    "Course Name: \n"
+                    "Description: \n"
+                    "Explanation: \n"
                 )
         },
         {
