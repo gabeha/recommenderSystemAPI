@@ -25,6 +25,7 @@ def recommend_courses(student_input):
                                      zero_type='title',
                                      score_alg='sum',
                                      scaler=True,
+                                     sent_splitter=False,
                                      precomputed_course=True)
     # Print a setting of the course_based system
     course_based.print_config()
@@ -54,8 +55,8 @@ def recommend_courses(student_input):
 
         # maybe move this to somewhere else to make sure that the recommendations are sent to frontend asap
         # Get Explanation of top_n courses based on StudentNode object
-        # if rs.explanation:
-        #     rs.generate_explanation(student_info)
+        if rs.explanation:
+            rs.generate_explanation(student_info)
 
         results = student_info.results
 
@@ -64,13 +65,14 @@ def recommend_courses(student_input):
         # print (output)
     except Exception as e:
         output = {'error': str(e)}
+        print(e)
     finally:
         return output, student_info, rs
 
 
 # input = {
 #     "config": {"model_name": "all-MiniLM-L12-v2", "seed_help": True, "domain_adapt": True, "zero_adapt": True},
-#     "keywords":{'mathematics':0.5,  'statistics':0.5, 'data analyze':0.5, 'law':0.1, 'human rights': 0.2},
+#     "keywords":{'math': 0.5, 'artificial intelligence': 0.5, 'data analyze': 0.5, 'statistics': 0.5,},
 #     "blooms":{'create': 0.0,
 #               'understand': 0.0,
 #               'apply': 0.0,

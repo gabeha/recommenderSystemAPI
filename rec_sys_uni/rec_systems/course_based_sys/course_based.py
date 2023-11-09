@@ -5,7 +5,7 @@ from typing import List, Union, Tuple
 import torch
 import os
 from sklearn.preprocessing import MinMaxScaler
-
+import spacy
 from sklearn.metrics.pairwise import cosine_similarity
 from rec_sys_uni.datasets.datasets import get_domains_data_GPT
 from rec_sys_uni.errors_checker.exceptions.rec_sys_errors import ModelDoesNotExistError, PrecomputedCoursesError, \
@@ -27,6 +27,7 @@ class CourseBasedRecSys:
                  minimal_similarity_zeroshot: float = 0.8,
                  score_alg: str = 'rrf',  # 'sum' or 'rrf'
                  scaler: bool = True,
+                 sent_splitter: bool = False,
                  precomputed_course=False
                  ):
         """
@@ -64,6 +65,7 @@ class CourseBasedRecSys:
         self.minimal_similarity_zeroshot = minimal_similarity_zeroshot
         self.score_alg = score_alg
         self.scaler = scaler
+        self.sent_splitter = sent_splitter
         self.precomputed_course = precomputed_course
 
         # Settings check
@@ -128,28 +130,52 @@ class CourseBasedRecSys:
 
         if not self.seed_help: seed_keywords = None
 
-        # Extract probabilities of keywords
-        keywords_relevance = extract_keywords_relevance(docs=course_descriptions,
-                                                        candidates=keywords,
-                                                        keyBERT=self.kw_model,
-                                                        model_name=self.model_name,
-                                                        course_codes=course_codes,
-                                                        domain_type=self.domain_type,
-                                                        zero_type=self.zero_type,
-                                                        domain_adapt=self.domain_adapt,
-                                                        zero_adapt=self.zero_adapt,
-                                                        adaptive_thr=self.adaptive_thr,
-                                                        minimal_similarity_zeroshot=self.minimal_similarity_zeroshot,
-                                                        doc_embeddings=doc_embeddings,
-                                                        seed_keywords=seed_keywords,
-                                                        top_n=self.top_n)
+        if not self.sent_splitter:
+            # Extract probabilities of keywords
+            keywords_relevance = extract_keywords_relevance(docs=course_descriptions,
+                                                            candidates=keywords,
+                                                            keyBERT=self.kw_model,
+                                                            model_name=self.model_name,
+                                                            course_codes=course_codes,
+                                                            domain_type=self.domain_type,
+                                                            zero_type=self.zero_type,
+                                                            domain_adapt=self.domain_adapt,
+                                                            zero_adapt=self.zero_adapt,
+                                                            adaptive_thr=self.adaptive_thr,
+                                                            minimal_similarity_zeroshot=self.minimal_similarity_zeroshot,
+                                                            doc_embeddings=doc_embeddings,
+                                                            seed_keywords=seed_keywords)
 
-        if self.score_alg == 'sum':
-            # Sum all weights of keywords
-            sum_keywords_weight(keywords_relevance, student_info, course_data, student_keywords, self.scaler)
-        if self.score_alg == 'rrf':
-            # Reciprocal Rank Fusion algorithm
-            reciprocal_rank_fusion(keywords_relevance, student_info, course_data, student_keywords)
+            if self.score_alg == 'sum':
+                # Sum all weights of keywords
+                sum_keywords_weight(keywords_relevance, student_info, course_data, student_keywords, self.scaler)
+            elif self.score_alg == 'rrf':
+                # Reciprocal Rank Fusion algorithm
+                reciprocal_rank_fusion(keywords_relevance, student_info, course_data, student_keywords)
+        else:
+            nlp = spacy.load("en_core_web_sm")
+            course_sentences = {}
+            for index, description in enumerate(course_descriptions):
+                doc = nlp(description)
+                doc = [sent.text for sent in doc.sents]
+                code = [course_codes[index] for _ in range(len(doc))]
+                # Extract probabilities of sentences
+                sentence_relevance = extract_keywords_relevance(docs=doc,
+                                                                candidates=keywords,
+                                                                keyBERT=self.kw_model,
+                                                                model_name=self.model_name,
+                                                                course_codes=code,
+                                                                domain_type=self.domain_type,
+                                                                zero_type=self.zero_type,
+                                                                domain_adapt=self.domain_adapt,
+                                                                zero_adapt=self.zero_adapt,
+                                                                adaptive_thr=self.adaptive_thr,
+                                                                minimal_similarity_zeroshot=self.minimal_similarity_zeroshot,
+                                                                seed_keywords=seed_keywords,
+                                                                sent_splitter=self.sent_splitter)
+                course_sentences[course_codes[index]] = sentence_relevance
+            # print(course_sentences)
+            # TODO: Implementation of Linear Programming
 
 
 def sum_keywords_weight(keywords_relevance, student_info, course_data, student_keywords, scaler):
@@ -223,9 +249,9 @@ def extract_keywords_relevance(
         zero_adapt: bool = False,
         adaptive_thr: float = 0.0,
         minimal_similarity_zeroshot: float = 0.8,
-        top_n: int = 100,
         seed_keywords: Union[List[str], List[List[str]]] = None,
         doc_embeddings: np.array = None,
+        sent_splitter: bool = False
 ) -> Union[List[Tuple[str, float]], List[List[Tuple[str, float]]]]:
     """Extract keywords and/or keyphrases
 
@@ -254,8 +280,6 @@ def extract_keywords_relevance(
         adaptive_thr: The threshold for the adaptive weighting of the domain words
 
         minimal_similarity_zeroshot: The minimal similarity between a candidate and a domain word
-
-        top_n: Return the top n keywords/keyphrases with the closest distances to the original document.
 
         seed_keywords: Seed keywords that may guide the extraction of keywords by
                        steering the similarities towards the seeded keywords.
@@ -327,10 +351,16 @@ def extract_keywords_relevance(
         #                (candidates[index], round(float(distances[0][index]), 4))
         #                for index in distances.argsort()[0][-top_n:]
         #            ][::-1]
-        keywords = [
-            (candidates[index], round(float(distances[0][index]), 4))
-            for index in range(len(candidates))
-        ]
+        if not sent_splitter:
+            keywords = [
+                (candidates[index], round(float(distances[0][index]), 4))
+                for index in range(len(candidates))
+            ]
+        else:
+            keywords = {docs[index]:[
+                (candidates[index], round(float(distances[0][index]), 4))
+                for index in range(len(candidates))
+            ]}
 
         all_keywords.append(keywords)
 
