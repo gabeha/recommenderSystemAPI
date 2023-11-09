@@ -6,7 +6,7 @@ from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import AgentAction, AgentFinish, LLMResult
 from langchain.schema.messages import BaseMessage
 
-from socketio_instance import socketio
+from instances.socketio_instance import socketio
 
 
 class StreamingRecSys(BaseCallbackHandler):
