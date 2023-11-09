@@ -14,21 +14,19 @@ from rec_sys_uni._helpers_rec_sys import sort_by_periods
 
 app = Flask(__name__)
 CORS(app)
-socketio.init_app(app, cors_allowed_origins="*")
+socketio.init_app(app)
 
-def dummy_llm_function(course):
-    # Simulate some processing delay
-    time.sleep(random.randint(1, 3))
-    # Return a dummy explanation
-    return f"This is a dummy explanation for {course['title']}."
+def dummy_llm_function():
+    for i in range(10):
+        time.sleep(1)
+        socketio.emit('explanation', {'explanation': f"This is a dummy explanation for course {i}."})
+    socketio.emit('disconnect', {'disconnected': True})
 
 def generate_explanations_and_emit(rs, student_info):
     # Get Explanation of top_n courses based on StudentNode object
     if rs.explanation:
         rs.generate_explanation(student_info)
-    # for course in courses:
-    #     explanation = dummy_llm_function(course)
-    #     socketio.emit('explanation', {'course_id': course['id'], 'explanation': explanation})
+    socketio.emit('disconnect', {'disconnected': True})
 
 @app.route('/api/recommend', methods=['POST'])
 def recommend():
@@ -79,8 +77,6 @@ def recommend():
         # Get the StudentNode object
         student_info = rs.get_recommendation(student_input)
 
-        # maybe move this to somewhere else to make sure that the recommendations are sent to frontend asap
-
 
         # Sort recommended courses by score without keywords and blooms in the output
         sort_by_periods(rs, student_info, max=rs.top_n)
@@ -89,6 +85,8 @@ def recommend():
 
         output = {'structured_recommendation': results.get('structured_recommendation'),
                   'explanation': results.get('explanation'), "student_input": student_input}
+        
+        print("emit recommendations")
         socketio.emit('recommendations', {'recommended_courses': output})
 
         # print (output)
@@ -97,9 +95,10 @@ def recommend():
         socketio.emit('error', {'error': str(e)})
     finally:
         Thread(target=generate_explanations_and_emit, args=(rs, student_info,)).start()
-        # The response is now being sent via Socket.IO, so we might not need to return anything here.
-        # But if you still want to return something via HTTP:
+        
+        # Thread(target=dummy_llm_function, args=()).start()
         return jsonify({'recommended_courses': output})
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

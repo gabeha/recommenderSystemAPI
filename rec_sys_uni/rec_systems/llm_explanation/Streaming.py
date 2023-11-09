@@ -29,7 +29,7 @@ class StreamingRecSys(BaseCallbackHandler):
         """Run on new LLM token. Only available when streaming is enabled."""
         # instead of writing to console here, stream it via http to frontend
         if socketio:
-            socketio.emit('new_token', {'token': token})
+            socketio.emit('explanation', {'explanation': token})
         sys.stdout.write(token)
         sys.stdout.flush()
 
