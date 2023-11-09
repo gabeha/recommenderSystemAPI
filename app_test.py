@@ -51,6 +51,9 @@ def recommend():
                                      domain_type='title',
                                      seed_type='title',
                                      zero_type='title',
+                                     score_alg='sum',
+                                     scaler=True,
+                                     sent_splitter=False,
                                      precomputed_course=True)
     # Print a setting of the course_based system
     course_based.print_config()
@@ -65,7 +68,8 @@ def recommend():
     # bloom_based = None
     rs = RecSys(course_based=course_based,
                 bloom_based=bloom_based,
-                explanation=explanation)
+                explanation=explanation,
+                top_n=7,)
     # Print a setting of the rec_sys object
     rs.print_config()
     # TODO: Should be created before the function call (above)
@@ -76,10 +80,6 @@ def recommend():
     try:
         # Get the StudentNode object
         student_info = rs.get_recommendation(student_input)
-
-
-        # Sort recommended courses by score without keywords and blooms in the output
-        sort_by_periods(rs, student_info, max=rs.top_n)
 
         results = student_info.results
 
