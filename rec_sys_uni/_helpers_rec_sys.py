@@ -8,7 +8,7 @@ def make_results_template(results, course_data):
     return results
 
 
-def semester_course_cleaning(course_data, semester):
+def semester_course_cleaning(course_data, semester): #TODO: DEPRECATED
     """
     course_data: dictionary of course data
     semester: int
@@ -30,7 +30,8 @@ def semester_course_cleaning(course_data, semester):
     return new_course_data
 
 
-def sort_by_periods(recSys, student_info, max=6, include_keywords=False, include_blooms=False):
+def sort_by_periods(recSys, student_info, max, include_keywords=False,
+                    include_blooms=False, include_score=False, percentage=True):
     # Sort recommended courses by score
     sorted_recommendation_list = sorted(student_info.results['recommended_courses'].items(),
                                         key=lambda x: x[1]['score'], reverse=True)
@@ -39,32 +40,87 @@ def sort_by_periods(recSys, student_info, max=6, include_keywords=False, include
     final_recommendation_list = []
 
     # structured recommendation dictionary
-    structured_recommendation = {'period_1': [],
-                                 'period_2': []
-                                 }
+    structured_recommendation = {
+                                'semester_1':
+                                    {
+                                        'period_1': [],
+                                        'period_2': []
+                                    },
+                                'semester_2':
+                                    {
+                                        'period_4': [],
+                                        'period_5': []
+                                    }
+                                }
 
     for i in sorted_recommendation_list:
         period = student_info.course_data[i[0]]['period']
-        for j in period:
-            course_tmp = {'course_code': i[0], 'course_name': student_info.course_data[i[0]]['course_name']}
-            if include_keywords and recSys.course_based:
-                course_tmp['keywords'] = student_info.results['recommended_courses'][i[0]]['keywords']
-            if include_blooms and recSys.bloom_based:
-                course_tmp['blooms'] = student_info.results['recommended_courses'][i[0]]['blooms']
 
-            if (j == 1 or j == 4) and len(structured_recommendation['period_1']) < max:
-                structured_recommendation['period_1'].append(course_tmp)
-                break
-            if (j == 2 or j == 5) and len(structured_recommendation['period_2']) < max:
-                structured_recommendation['period_2'].append(course_tmp)
-                break
-        final_recommendation_list.append(i[0])
+        course_tmp = {'course_code': i[0], 'course_name': student_info.course_data[i[0]]['course_name']}
+
+        for j in period:
+            if j == 1 and len(structured_recommendation['semester_1']['period_1']) < max:
+                structured_recommendation['semester_1']['period_1'].append(course_tmp)
+            if j == 2 and len(structured_recommendation['semester_1']['period_2']) < max:
+                structured_recommendation['semester_1']['period_2'].append(course_tmp)
+            if j == 4 and len(structured_recommendation['semester_2']['period_4']) < max:
+                structured_recommendation['semester_2']['period_4'].append(course_tmp)
+            if j == 5 and len(structured_recommendation['semester_2']['period_5']) < max:
+                structured_recommendation['semester_2']['period_5'].append(course_tmp)
+
+        if include_keywords and recSys.course_based:
+            if percentage:
+                course_tmp['keywords'] = {k: round(v * 100, 2) for k, v in student_info.results['recommended_courses'][i[0]]['keywords'].items()}
+            else:
+                course_tmp['keywords'] = student_info.results['recommended_courses'][i[0]]['keywords']
+        if include_blooms and recSys.bloom_based:
+            if percentage:
+                course_tmp['blooms'] = {k: round(v * 100, 2) for k, v in student_info.results['recommended_courses'][i[0]]['blooms'].items()}
+            else:
+                course_tmp['blooms'] = student_info.results['recommended_courses'][i[0]]['blooms']
+        if include_score:
+            course_tmp['score'] = student_info.results['recommended_courses'][i[0]]['score']
+
+        final_recommendation_list.append(course_tmp)
+
+        if (len(structured_recommendation['semester_1']['period_1']) >= max
+            and len(structured_recommendation['semester_1']['period_2']) >= max
+            and len(structured_recommendation['semester_2']['period_4']) >= max
+            and len(structured_recommendation['semester_2']['period_5']) >= max):
+            break
 
     student_info.results['structured_recommendation'] = structured_recommendation
     student_info.results['sorted_recommended_courses'] = final_recommendation_list
-    # for i in final_recommendation_list[:20]:
-    #     print(student_info.course_data[i]['course_name'])
 
+def print_recommendation(results, include_keywords=False, include_blooms=False, include_score=False):
+    print("\nTop recommended courses:")
+    for i in results['sorted_recommended_courses']:
+        print_text(i, include_keywords, include_blooms, include_score)
+
+    print(f"\n\nSemester 1:")
+    print(f"\nPeriod 1:")
+    for i in results['structured_recommendation']['semester_1']['period_1']:
+        print_text(i, include_keywords, include_blooms, include_score)
+    print(f"\nPeriod 2:")
+    for i in results['structured_recommendation']['semester_1']['period_2']:
+        print_text(i, include_keywords, include_blooms, include_score)
+    print(f"\nSemester 2:")
+    print(f"\nPeriod 4:")
+    for i in results['structured_recommendation']['semester_2']['period_4']:
+        print_text(i, include_keywords, include_blooms, include_score)
+    print(f"\nPeriod 5:")
+    for i in results['structured_recommendation']['semester_2']['period_5']:
+        print_text(i, include_keywords, include_blooms, include_score)
+
+def print_text(i, include_keywords, include_blooms, include_score):
+    text = f"{i['course_code']} - {i['course_name']}"
+    if include_keywords:
+        text += f" - {i['keywords']}"
+    if include_blooms:
+        text += f" - {i['blooms']}"
+    if include_score:
+        text += f" - {i['score']}"
+    print(text)
 
 class StudentNode:
     def __init__(self, results, student_intput, course_data, student_data):

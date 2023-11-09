@@ -69,7 +69,7 @@ class RecSys:
                                                                                         'evaluate': 0.0,
                                                                                         'remember': 1.0
                                                                                         }
-                                                                                semester: 1.0
+                                                                                semester: 1.0 TODO: DEPRECATED (Do not use this key)
                                                                             }
 
                     student_data : dictionary  {
@@ -113,13 +113,22 @@ class RecSys:
                                                                         },
                                                             ...
                                                         },
-                        sorted_recommended_courses: list of course_id(String) sorted by score,
-                        structured_recommendation: dictionary {  (if you apply sort_by_periods function, when you will have structured_recommendation key in the results)
-                                                                period_1: list of course_id(String), condition <= top_n
-                                                                period_2: list of course_id(String), condition <= top_n
-             (if you include in sort_by_periods function)       keywords: {scores to each keyword}
-             (if you include in sort_by_periods function)       blooms: {scores to each bloom}
-                        explanation: String TODO: Depreciated (Do not use this key)
+                        sorted_recommended_courses: list of courses {'course_code': String,
+                                                                     'course_name': String
+Note: if you want include keyword or blooms, check                   'keywords': {keywords(String): weight(float), ...} ,
+rec_sys_uni._helpers_rec_sys.py -> sort_by_periods function          'blooms': {blooms(String): weight(float), ...}
+
+                        structured_recommendation: dictionary {
+                                                                semester_1: dictionary {
+(if you apply sort_by_periods function,                             period_1: list of course_id(String), condition <= top_n
+when you will have structured_recommendation                        period_2: list of course_id(String), condition <= top_n
+and sorted_recommended_courses key in the results)              },
+                                                                semester_2: dictionary {
+                                                                    period_4: list of course_id(String), condition <= top_n
+                                                                    period_5: list of course_id(String), condition <= top_n
+                                                                }
+                                                              },
+                        explanation: String TODO: DEPRECATED (Do not use this key)
                     }
                 student_input: dictionary
                 course_data: dictionary
@@ -130,7 +139,8 @@ class RecSys:
             student_input, course_data, student_data = self.validate_system_input(student_intput,
                                                                                   course_data,
                                                                                   student_data)
-        course_data = semester_course_cleaning(course_data, student_intput['semester'])
+
+        # course_data = semester_course_cleaning(course_data, student_intput['semester']) # TODO: DEPRECATED
 
         results = {"recommended_courses": {},
                    "sorted_recommended_courses": [],
@@ -142,8 +152,9 @@ class RecSys:
 
         compute_recommendation(self, student_info)
 
-        # Sort by periods (moved to example_RecSys.py)
-        # sort_by_periods(self, student_info, max=self.top_n, include_keywords=True, include_blooms=False)
+        # Sort by periods
+        sort_by_periods(self, student_info, self.top_n, include_keywords=True, include_score=True,
+                        include_blooms=False)
 
         return student_info
 

@@ -3,7 +3,7 @@ from rec_sys_uni.recommender_system import RecSys
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
 from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
-from rec_sys_uni._helpers_rec_sys import sort_by_periods
+from rec_sys_uni._helpers_rec_sys import print_recommendation
 
 
 def recommend_courses(student_input):
@@ -23,6 +23,8 @@ def recommend_courses(student_input):
                                      domain_type='title',
                                      seed_type='title',
                                      zero_type='title',
+                                     score_alg='sum',
+                                     scaler=True,
                                      precomputed_course=True)
     # Print a setting of the course_based system
     course_based.print_config()
@@ -30,15 +32,15 @@ def recommend_courses(student_input):
         url="https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta",
         token="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",
         model_id='HuggingFaceH4/zephyr-7b-beta',
-        model_name="all-MiniLM-L12-v2",
-        per_periods=True
+        model_name="all-MiniLM-L12-v2"
     )
     # explanation = None
     bloom_based = BloomBasedRecSys()
     # bloom_based = None
     rs = RecSys(course_based=course_based,
                 bloom_based=bloom_based,
-                explanation=explanation)
+                explanation=explanation,
+                top_n=7,)
     # Print a setting of the rec_sys object
     rs.print_config()
     # TODO: Should be created before the function call (above)
@@ -55,12 +57,9 @@ def recommend_courses(student_input):
         # if rs.explanation:
         #     rs.generate_explanation(student_info)
 
-        # Sort recommended courses by score without keywords and blooms in the output
-        sort_by_periods(rs, student_info, max=rs.top_n)
-
         results = student_info.results
 
-        output = {'structured_recommendation': results.get('structured_recommendation'),
+        output = {'structured_recommendation': results.get('structured_recommendation'), # results['structured_recommendation']['semester_1']['period_1']
                   'explanation': results.get('explanation'), "student_input": student_input}
         # print (output)
     except Exception as e:
@@ -68,29 +67,18 @@ def recommend_courses(student_input):
     finally:
         return output, student_info, rs
 
-    # Example of the output
-    # print(str(results) + "\n")
-
-    # Example of top 10 recommended courses
-    # for i in results['sorted_recommended_courses'][:10]:
-    #     print(i + ": " + str(rs.course_data[i]['course_name']) + " || Score: "+ str(results['recommended_courses'][i]['score']))
-
-    # Example of structured recommended courses
-    # for period in results['structured_recommendation']:
-    #     print(period)
-    #     for i in results['structured_recommendation'][period]:
-    #         print(i + ": " + str(rs.course_data[i]['course_name']) + " || Score: "+ str(results['recommended_courses'][i]['score']))
-    #     print()
 
 # input = {
 #     "config": {"model_name": "all-MiniLM-L12-v2", "seed_help": True, "domain_adapt": True, "zero_adapt": True},
-#     "keywords":{'law':0.5, 'math':0.5,  'statistics':0.5, 'data analyze':0.5},
+#     "keywords":{'mathematics':0.5,  'statistics':0.5, 'data analyze':0.5, 'law':0.1, 'human rights': 0.2},
 #     "blooms":{'create': 0.0,
 #               'understand': 0.0,
 #               'apply': 0.0,
 #               'analyze': 0.0,
 #               'evaluate': 0.0,
-#               'remember': 0.0},
-#     "semester": 2.0
+#               'remember': 0.0}
 # }
-# print(recommend_courses(input))
+# _, student_info, _ = recommend_courses(input)
+# print_recommendation(student_info.results, include_keywords=True, include_blooms=False, include_score=True)
+
+#%%

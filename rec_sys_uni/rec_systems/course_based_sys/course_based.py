@@ -4,10 +4,12 @@ import numpy as np
 from typing import List, Union, Tuple
 import torch
 import os
+from sklearn.preprocessing import MinMaxScaler
 
 from sklearn.metrics.pairwise import cosine_similarity
 from rec_sys_uni.datasets.datasets import get_domains_data_GPT
-from rec_sys_uni.errors_checker.exceptions.rec_sys_errors import ModelDoesNotExistError, PrecomputedCoursesError, AdaptationLayerError
+from rec_sys_uni.errors_checker.exceptions.rec_sys_errors import ModelDoesNotExistError, PrecomputedCoursesError, \
+    AdaptationLayerError
 
 
 class CourseBasedRecSys:
@@ -23,6 +25,8 @@ class CourseBasedRecSys:
                  zero_type: str = 'title',  # 'title' or 'domains'
                  adaptive_thr: float = 0.0,
                  minimal_similarity_zeroshot: float = 0.8,
+                 score_alg: str = 'rrf',  # 'sum' or 'rrf'
+                 scaler: bool = True,
                  precomputed_course=False
                  ):
         """
@@ -37,6 +41,8 @@ class CourseBasedRecSys:
         :param zero_type: type of the zero-shot adaptation either 'title' or 'domains'
         :param adaptive_thr: adaptive threshold for the zero-shot adaptation
         :param minimal_similarity_zeroshot: minimal similarity between a candidate and a domain word for the zero-shot adaptation
+        :param score_alg: score algorithm either 'sum' or 'rrf'
+        :param scaler: apply min-max scaler to the keywords weights
         :param precomputed_course: use precomputed course embeddings or not
         """
         try:
@@ -56,6 +62,8 @@ class CourseBasedRecSys:
         self.zero_adapt = zero_adapt
         self.adaptive_thr = adaptive_thr
         self.minimal_similarity_zeroshot = minimal_similarity_zeroshot
+        self.score_alg = score_alg
+        self.scaler = scaler
         self.precomputed_course = precomputed_course
 
         # Settings check
@@ -63,19 +71,25 @@ class CourseBasedRecSys:
             if not os.path.exists(f'rec_sys_uni/datasets/data/course/precomputed_courses/{self.model_name}'):
                 raise PrecomputedCoursesError(f"You did not compute embeddings for such model -> {self.model_name}")
         if domain_adapt:
-            if not os.path.exists(f'rec_sys_uni/datasets/data/adaptation_model/{self.model_name}/{domain_type}_training/target_embed'):
-                raise AdaptationLayerError(f"You did not compute target embed embeddings with type {domain_type} for such model -> {self.model_name}")
-            if not os.path.exists(f'rec_sys_uni/datasets/data/adaptation_model/{self.model_name}/{domain_type}_training/attention_layer'):
-                raise AdaptationLayerError(f"You did not compute attention layer with type {domain_type} for such model -> {self.model_name}")
+            if not os.path.exists(
+                    f'rec_sys_uni/datasets/data/adaptation_model/{self.model_name}/{domain_type}_training/target_embed'):
+                raise AdaptationLayerError(
+                    f"You did not compute target embed embeddings with type {domain_type} for such model -> {self.model_name}")
+            if not os.path.exists(
+                    f'rec_sys_uni/datasets/data/adaptation_model/{self.model_name}/{domain_type}_training/attention_layer'):
+                raise AdaptationLayerError(
+                    f"You did not compute attention layer with type {domain_type} for such model -> {self.model_name}")
         if zero_adapt:
-            if not os.path.exists(f'rec_sys_uni/datasets/data/adaptation_model/{self.model_name}/{zero_type}_training/domain_word'):
-                raise AdaptationLayerError(f"You did not compute domain word embeddings with type {zero_type} for such model -> {self.model_name}")
+            if not os.path.exists(
+                    f'rec_sys_uni/datasets/data/adaptation_model/{self.model_name}/{zero_type}_training/domain_word'):
+                raise AdaptationLayerError(
+                    f"You did not compute domain word embeddings with type {zero_type} for such model -> {self.model_name}")
 
     def print_config(self):
-        print(f"CourseBasedRecSys config: \n"+
-              f"model_name: {self.model_name}\n"+
-              f"seed_help: {self.seed_help}\n"+
-              f"domain_adapt: {self.domain_adapt}\n"+
+        print(f"CourseBasedRecSys config: \n" +
+              f"model_name: {self.model_name}\n" +
+              f"seed_help: {self.seed_help}\n" +
+              f"domain_adapt: {self.domain_adapt}\n" +
               f"zero_adapt: {self.zero_adapt}\n")
 
     def recommend(self, student_info):
@@ -95,10 +109,8 @@ class CourseBasedRecSys:
         seed_keywords = []
         doc_embeddings = None
         for i in course_data:
-            # desc = course_data[i]['description']
-            # for j in course_data[i]['ilos']:
-            #     desc += "\n" + j
-            desc = " ".join(course_data[i]['ilos'])
+            desc = course_data[i]['description']
+            desc += ", ".join(course_data[i]['ilos'])
             course_descriptions.append(desc)
             course_codes.append(i)
             if self.seed_help:
@@ -132,14 +144,55 @@ class CourseBasedRecSys:
                                                         seed_keywords=seed_keywords,
                                                         top_n=self.top_n)
 
-        # Sum all weights of keywords
-        recommended_courses = student_info.results['recommended_courses']
-        for index, code in enumerate(course_data):
-            keywords_weightes = keywords_relevance[index]
-            for i in keywords_weightes:
-                recommended_courses[code]['score'] += i[1] * student_keywords[i[0]]
-                recommended_courses[code]['keywords'][i[0]] = i[1]
-        student_info.results['recommended_courses'] = recommended_courses
+        if self.score_alg == 'sum':
+            # Sum all weights of keywords
+            sum_keywords_weight(keywords_relevance, student_info, course_data, student_keywords, self.scaler)
+        if self.score_alg == 'rrf':
+            # Reciprocal Rank Fusion algorithm
+            reciprocal_rank_fusion(keywords_relevance, student_info, course_data, student_keywords)
+
+
+def sum_keywords_weight(keywords_relevance, student_info, course_data, student_keywords, scaler):
+    # MinMaxScale keywords weights
+
+    matrix = []
+    for keyword in range(len(course_data)):
+        keywords_weights = keywords_relevance[keyword]
+        matrix.append([])
+        for weight in keywords_weights:
+            matrix[keyword].append(weight[1])
+
+    if scaler:
+        matrix = MinMaxScaler().fit_transform(matrix)
+
+    recommended_courses = student_info.results['recommended_courses']
+    for index, code in enumerate(course_data):
+        keywords_weights = keywords_relevance[index]
+        normalized_weights = matrix[index]
+        for keyword, weight in zip(keywords_weights, normalized_weights):
+            weight = round(weight * student_keywords[keyword[0]], 4)
+            recommended_courses[code]['score'] += weight
+            recommended_courses[code]['keywords'][keyword[0]] = weight
+    student_info.results['recommended_courses'] = recommended_courses
+
+
+def reciprocal_rank_fusion(keywords_relevance, student_info, course_data, student_keywords, k=60):
+    recommended_courses = student_info.results['recommended_courses']
+    for index, code in enumerate(course_data):
+        keywords_weights = keywords_relevance[index]
+        for i in keywords_weights:
+            recommended_courses[code]['keywords'][i[0]] = i[1]
+
+    for keyword in student_keywords:
+        # Sort by keyword score
+        sorted_keyword_list = sorted(recommended_courses.items(),
+                                     key=lambda x: x[1]['keywords'][keyword], reverse=True)
+
+        for rank in range(len(sorted_keyword_list)):
+            # Reciprocal Rank Fusion algorithm
+            recommended_courses[sorted_keyword_list[rank][0]]['score'] += student_keywords[keyword] / (rank + k)
+
+    student_info.results['recommended_courses'] = recommended_courses
 
 
 def apply_zero_adaptation(candidate_embeddings, doc_embedding, domain_word_embeddings, adaptive_thr,
@@ -151,7 +204,8 @@ def apply_zero_adaptation(candidate_embeddings, doc_embedding, domain_word_embed
         if max_similarity < minimal_similarity_zeroshot:
             computed_embeddings.append(candidate_embedding[0])
         else:
-            temp_embedding = (1 - adaptive_thr * max_similarity) * candidate_embedding + adaptive_thr * max_similarity * doc_embedding
+            temp_embedding = (
+                                         1 - adaptive_thr * max_similarity) * candidate_embedding + adaptive_thr * max_similarity * doc_embedding
             computed_embeddings.append(temp_embedding[0])
     computed_embeddings = np.stack(computed_embeddings)
     return computed_embeddings
@@ -230,7 +284,6 @@ def extract_keywords_relevance(
 
     word_embeddings = keyBERT.model.embed(candidates)
 
-
     # Find cosine similarity between course description and keywords
     all_keywords = []
     for index, _ in enumerate(docs):
@@ -275,13 +328,12 @@ def extract_keywords_relevance(
         #                for index in distances.argsort()[0][-top_n:]
         #            ][::-1]
         keywords = [
-                       (candidates[index], round(float(distances[0][index]), 4))
-                       for index in range(len(candidates))
-                   ]
-
+            (candidates[index], round(float(distances[0][index]), 4))
+            for index in range(len(candidates))
+        ]
 
         all_keywords.append(keywords)
 
     return all_keywords
 
-#%%
+# %%

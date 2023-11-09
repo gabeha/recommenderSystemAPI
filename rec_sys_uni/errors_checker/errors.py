@@ -29,8 +29,6 @@ def check_student_input(student_input):
         raise StudentInputFormatError("student_input does not have keywords")
     if not 'blooms' in student_input:
         raise StudentInputFormatError("student_input does not have blooms")
-    if not 'semester' in student_input:
-        raise StudentInputFormatError("student_input does not have semester")
     if not StudentInputFormatError(student_input['keywords'], dict):
         raise StudentInputFormatError("student_input['keywords'] is not a dictionary")
     if not isinstance(student_input['blooms'], dict):
@@ -45,10 +43,7 @@ def check_student_input(student_input):
             raise StudentInputFormatError("student_input['blooms'] has a key that is not a string")
         if not isinstance(student_input['blooms'][key], float):
             raise StudentInputFormatError("student_input['blooms'][key] is not a float")
-    if not isinstance(student_input['semester'], float):
-        raise StudentInputFormatError("student_input['semester'] is not a float")
-    if not student_input['semester'] == 1.0 and not student_input['semester'] == 2.0:
-        raise StudentInputFormatError("student_input['semester'] is not 1.0 or 2.0")
+
 
 
 
