@@ -11,6 +11,9 @@ from instances.socketio_instance import socketio
 
 class StreamingRecSys(BaseCallbackHandler):
     """Callback handler for streaming. Only works with LLMs that support streaming."""
+    def __init__(self, course_code, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self.course_code = course_code
 
     def on_llm_start(
             self, serialized: Dict[str, Any], prompts: List[str], **kwargs: Any
@@ -28,7 +31,7 @@ class StreamingRecSys(BaseCallbackHandler):
     def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
         """Run on new LLM token. Only available when streaming is enabled."""
         # instead of writing to console here, stream it via http to frontend
-        if socketio:
+        if socketio: # You can use self.course_code to find the right socketio.emit
             socketio.emit('explanation', {'explanation': token})
         sys.stdout.write(token)
         sys.stdout.flush()
