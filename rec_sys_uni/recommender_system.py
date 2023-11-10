@@ -69,7 +69,6 @@ class RecSys:
                                                                                         'evaluate': 0.0,
                                                                                         'remember': 1.0
                                                                                         }
-                                                                                semester: 1.0 TODO: DEPRECATED (Do not use this key)
                                                                             }
 
                     student_data : dictionary  {
@@ -127,8 +126,7 @@ and sorted_recommended_courses key in the results)              },
                                                                     period_4: list of course_id(String), condition <= top_n
                                                                     period_5: list of course_id(String), condition <= top_n
                                                                 }
-                                                              },
-                        explanation: String TODO: DEPRECATED (Do not use this key)
+                                                              }
                     }
                 student_input: dictionary
                 course_data: dictionary
@@ -140,11 +138,11 @@ and sorted_recommended_courses key in the results)              },
                                                                                   course_data,
                                                                                   student_data)
 
-        # course_data = semester_course_cleaning(course_data, student_intput['semester']) # TODO: DEPRECATED
-
-        results = {"recommended_courses": {},
-                   "sorted_recommended_courses": [],
-                   "explanation": ""}
+        results = {
+                    "recommended_courses": {},
+                    "sorted_recommended_courses": [],
+                    "explanation": ""
+                   }
 
         results = make_results_template(results, course_data)
 
