@@ -33,7 +33,7 @@ class LLM:
                 # typical_p=0.95,
                 repetition_penalty=1.1,
                 streaming=True,
-                stop_sequences=["\n\n\n\n"],
+                stop_sequences=["\n\n\n\n", "[INST]"],
             )
             # Authentication
             self.llm.client.headers = {"Authorization": f"Bearer {token}"}
@@ -93,6 +93,7 @@ class LLM:
 
 
 
+
     def generate_explanations_GPT(self, recSys, student_info):
         """
         Generate explanations with OpenAI for recommended courses.
@@ -119,9 +120,12 @@ class LLM:
                     max_tokens=4096,
                     top_p=0.95,
                     frequency_penalty=1.1,
-                    presence_penalty=0.95
+                    presence_penalty=0.95,
+                    stream=True
                 )
-                print(response.choices[0].message.content)
+                for t in response:
+                    if t.choices[0].delta.content:
+                        print(t.choices[0].delta.content, end="")
             time.sleep(2)
 
 
@@ -137,7 +141,7 @@ class LLM:
             self.generate_explanations_GPT(recSys, student_info)
 
 
-        print(f"Number of tasks: {len(student_info.results['sorted_recommended_courses'])}")
+        print(f"\nNumber of courses: {len(student_info.results['sorted_recommended_courses'])}")
 
 
 def generate_prompt_per_course(student_input, course, course_description):
@@ -146,7 +150,7 @@ def generate_prompt_per_course(student_input, course, course_description):
 
     text_promt += (f"\n1. Course Title: {course['course_name']} ({course['course_code']})")
 
-    text_promt += f"\n2. Course Description: {course_description}"
+    text_promt += f"\n2. Course Description: {course_description['description']}"
 
     text_promt += f"\n3. Keywords: "
     for key in course['keywords']:

@@ -32,7 +32,6 @@ def get_course_data(only_courses=True):
         if ("SKI" not in course and "PRO" not in course and
             "UGR" not in course and "CAP" not in course and
             "LAN" not in course) or not only_courses:
-
             final_course_data[course] = {
                 'course_name': i['title'],
                 'period': i['period'],
@@ -42,6 +41,7 @@ def get_course_data(only_courses=True):
                 'ilos': i['ilo']
             }
     return final_course_data
+
 
 def get_domains_data_GPT():
     file_name = 'rec_sys_uni/datasets/data/course/domains_course_data.json'
@@ -53,6 +53,7 @@ def get_domains_data_GPT():
         adaptation_data = json.load(fp)
 
     return adaptation_data
+
 
 def get_keyword_data_GPT():
     file_name = 'rec_sys_uni/datasets/data/course/keywords_course_data.json'
@@ -66,10 +67,13 @@ def get_keyword_data_GPT():
     return adaptation_data
 
 
-def calculate_title_zero_shot_adaptation(course_data, model_name,
-                                         adaptive_thr: float = 0.15,
-                                         minimal_similarity_zeroshot: float = 0.8):
+def calculate_zero_shot_adaptation(course_data, model_name, attention,
+                                   adaptive_thr: float = 0.15,
+                                   minimal_similarity_zeroshot: float = 0.8):
     """
+    :param course_data: Course Data
+    :param model_name: Model Name
+    :param attention: Attention Word/s
     :param adaptive_thr: adaptive threshold for the zero-shot adaptation
     :param minimal_similarity_zeroshot: minimal similarity between a candidate and a domain word for the zero-shot adaptation
     """
@@ -92,17 +96,33 @@ def calculate_title_zero_shot_adaptation(course_data, model_name,
             os.makedirs(path)
             print(f"The new directory {path} for {model_name} is created!")
 
+        if isinstance(attention, str):
+            attention = [attention]
+
         for code in list_courses:
             print("Calculating domain word embedding for " + str(code))
-            title = course_data[code]['course_name']
             kw_model = adaptKeyBERT(model=SentenceTransformer(model_name), zero_adapt=True)
-            kw_model.zeroshot_pre_train([title], adaptive_thr=adaptive_thr, minimal_similarity_zeroshot=minimal_similarity_zeroshot)
+            kw_model.zeroshot_pre_train(attention, adaptive_thr=adaptive_thr,
+                                        minimal_similarity_zeroshot=minimal_similarity_zeroshot)
             np.save(f'{path}/domain_embed_{code}.npy', kw_model.domain_word_embeddings)
 
-def calculate_title_few_shot_adaptation(course_data, model_name,
-                                        lr=1e-4, epochs=100, start_index=0):
+
+def calculate_few_shot_adaptation(course_data, model_name, attention,
+                                  lr=1e-4, epochs=100,  # Training Parameters
+                                  start_index=0,
+                                  include_description=True,
+                                  include_title=False,
+                                  include_ilos=False, ):
     """
+    :param course_data: Course Data
+    :param model_name: Model Name
+    :param attention: Attention Word/s
     :param lr: Learning Rate for Attention Layer
+    :param epochs: Number of Epochs for Attention Layer
+    :param start_index: Start Index for the list of courses
+    :param include_description: Include Description in the training
+    :param include_title: Include Title in the training
+    :param include_ilos: Include ILOs in the training
     """
 
     # Model Check
@@ -131,20 +151,32 @@ def calculate_title_few_shot_adaptation(course_data, model_name,
             os.makedirs(path_attention)
             print(f"The new directory {path_attention} for {model_name} is created!")
 
+        if isinstance(attention, str):
+            attention = [attention]
+
         for i, code in enumerate(list_courses):
-            if(i >= start_index):
+            if (i >= start_index):
                 print("Calculating for " + str(code))
                 print("Index " + str(i) + " out of " + str(len(list_courses)))
-                desc = course_data[code]['description']
-                for i in course_data[code]['ilos']:
-                    desc += "\n" + i
-                title = course_data[code]['course_name']
+                desc = ""
+
+                if include_title:
+                    desc += course_data[code]['course_name']
+                if include_description:
+                    desc += course_data[code]['description']
+                if include_ilos:
+                    desc += "\n".join(course_data[code]['ilos'])
+
                 kw_model = adaptKeyBERT(model=model_name, domain_adapt=True)
-                kw_model.pre_train([desc], [[title]], lr=lr, epochs=epochs)
+                kw_model.pre_train([desc], [attention], lr=lr, epochs=epochs)
                 torch.save(kw_model.attention_layer, f'{path_attention}/attention_layer_{code}.pth')
                 torch.save(kw_model.target_word_embeddings_pt, f'{path_target}/target_embed_{code}.pth')
 
-def calculate_precomputed_courses(course_data, model_name):
+
+def calculate_precomputed_courses(course_data, model_name,
+                                  include_description=True,
+                                  include_title=False,
+                                  include_ilos=False, ):
     try:
         SentenceTransformer(model_name)
     except Exception:
@@ -166,12 +198,16 @@ def calculate_precomputed_courses(course_data, model_name):
     kw_model = comKeyBERT(model=model_name)
     for code in course_data:
         print("Calculating for " + str(code))
-        desc = course_data[code]['description']
-        for i in course_data[code]['ilos']:
-            desc += "\n" + i
+        desc = ""
+        if include_title:
+            desc += course_data[code]['course_name']
+        if include_description:
+            desc += course_data[code]['description']
+        if include_ilos:
+            desc += "\n".join(course_data[code]['ilos'])
+
         embed = kw_model.model.embed([desc])
         np.save(f'{path}/course_embed_{code}.npy', embed)
-
 
 
 """

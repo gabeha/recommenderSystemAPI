@@ -18,9 +18,9 @@ course_based = CourseBasedRecSys(model_name="all-MiniLM-L12-v2",
 # Print a setting of the course_based system
 course_based.print_config()
 explanation = LLM(
-    url="https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta",
+    url="https://api-inference.huggingface.co/models/openchat/openchat_3.5",
     token="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",
-    model_id='HuggingFaceH4/zephyr-7b-beta',
+    model_id='openchat/openchat_3.5',
     model_name="all-MiniLM-L12-v2",
     chat_gpt=False,
     thread_mode=False,
