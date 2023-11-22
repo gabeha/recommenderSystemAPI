@@ -3,7 +3,16 @@ from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRec
 from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
 from rec_sys_uni.recommender_system import RecSys
 
-# TODO: Should be created before the function call (below)
+"""
+Asymmetric search:
+    1. sebastian-hofstaetter/distilbert-dot-tas_b-b256-msmarco  (keyBert, Dot Product)
+    2. msmarco-distilbert-base-v4 (keyBert, Cosine Similarity)
+    3. intfloat/e5-base-v2 (keyBert, Cosine Similarity)
+Symmetric search:
+    1. all-MiniLM-L12-v2 (keyBert, Cosine Similarity)
+    2. Intel/bge-base-en-v1.5-int8-static (Intel, Cosine Similarity)
+"""
+
 course_based = CourseBasedRecSys(model_name="all-MiniLM-L12-v2",
                                  seed_help=True,
                                  domain_adapt=True,
@@ -12,6 +21,8 @@ course_based = CourseBasedRecSys(model_name="all-MiniLM-L12-v2",
                                  seed_type='title',
                                  zero_type='title',
                                  score_alg='sum',
+                                 distance='cos',
+                                 backend='keyBert',
                                  scaler=True,
                                  sent_splitter=False,
                                  precomputed_course=True)

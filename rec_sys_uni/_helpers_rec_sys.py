@@ -58,15 +58,23 @@ def sort_by_periods(recSys, student_info, max, include_keywords=False,
 
         course_tmp = {'course_code': i[0], 'course_name': student_info.course_data[i[0]]['course_name']}
 
+        flag = False
         for j in period:
             if j == 1 and len(structured_recommendation['semester_1']['period_1']) < max:
                 structured_recommendation['semester_1']['period_1'].append(course_tmp)
+                flag = True
             if j == 2 and len(structured_recommendation['semester_1']['period_2']) < max:
                 structured_recommendation['semester_1']['period_2'].append(course_tmp)
+                flag = True
             if j == 4 and len(structured_recommendation['semester_2']['period_4']) < max:
                 structured_recommendation['semester_2']['period_4'].append(course_tmp)
+                flag = True
             if j == 5 and len(structured_recommendation['semester_2']['period_5']) < max:
                 structured_recommendation['semester_2']['period_5'].append(course_tmp)
+                flag = True
+
+        if not flag:
+            continue
 
         if include_keywords and recSys.course_based:
             if percentage:
@@ -84,9 +92,9 @@ def sort_by_periods(recSys, student_info, max, include_keywords=False,
         final_recommendation_list.append(course_tmp)
 
         if (len(structured_recommendation['semester_1']['period_1']) >= max
-            and len(structured_recommendation['semester_1']['period_2']) >= max
-            and len(structured_recommendation['semester_2']['period_4']) >= max
-            and len(structured_recommendation['semester_2']['period_5']) >= max):
+                and len(structured_recommendation['semester_1']['period_2']) >= max
+                and len(structured_recommendation['semester_2']['period_4']) >= max
+                and len(structured_recommendation['semester_2']['period_5']) >= max):
             break
 
     student_info.results['structured_recommendation'] = structured_recommendation

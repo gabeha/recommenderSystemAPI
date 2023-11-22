@@ -1,3 +1,4 @@
+# from intel_extension_for_transformers.transformers import OptimizedModel # Do not delete
 from keybert import KeyBERT
 from sentence_transformers import SentenceTransformer
 import numpy as np
@@ -7,15 +8,36 @@ import os
 from sklearn.preprocessing import MinMaxScaler
 import spacy
 from sklearn.metrics.pairwise import cosine_similarity
+from transformers import AutoConfig, AutoTokenizer
+
 from rec_sys_uni.datasets.datasets import get_domains_data_GPT
 from rec_sys_uni.errors_checker.exceptions.rec_sys_errors import ModelDoesNotExistError, PrecomputedCoursesError, \
     AdaptationLayerError
 
 
+class EmbeddingModel:
+    def __init__(self, model_name):
+        pass
+
+    # def __init__(self, model_name):
+    #     try:
+    #         config = AutoConfig.from_pretrained(model_name)
+    #         self.model = OptimizedModel.from_pretrained(model_name, config=config)
+    #         self.model.eval()
+    #         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+    #     except Exception:
+    #         raise ModelDoesNotExistError("Such Model Name does not exist, check INTEL models in the huggingface.co")
+    #
+    # def embed(self, docs):
+    #     input = self.tokenizer(docs, return_tensors="pt", padding=True, truncation=True)
+    #     output = self.model(**input)
+    #     return output[1]
+
+
 class CourseBasedRecSys:
 
     def __init__(self,
-                 model_name: str = 'all-MiniLM-L12-v2',
+                 model_name: str = "all-MiniLM-L12-v2",
                  top_n: int = 100,
                  seed_help: bool = False,
                  domain_adapt: bool = False,
@@ -26,6 +48,8 @@ class CourseBasedRecSys:
                  adaptive_thr: float = 0.0,
                  minimal_similarity_zeroshot: float = 0.8,
                  score_alg: str = 'rrf',  # 'sum' or 'rrf'
+                 distance: str = 'cos',  # 'cos' or 'dot'
+                 backend: str = 'keyBert',  # 'keyBert' or 'Intel'
                  scaler: bool = True,
                  sent_splitter: bool = False,
                  precomputed_course=False
@@ -46,13 +70,19 @@ class CourseBasedRecSys:
         :param scaler: apply min-max scaler to the keywords weights
         :param precomputed_course: use precomputed course embeddings or not
         """
-        try:
-            course_based_model = SentenceTransformer(model_name)
-        except Exception:
-            raise ModelDoesNotExistError("Such Model Name does not exist")
+        if backend == 'keyBert':
+            try:
+                course_based_model = SentenceTransformer(model_name)
+            except Exception:
+                raise ModelDoesNotExistError("Such Model Name does not exist")
 
         # Initiate KeyBERT model
-        self.kw_model = KeyBERT(model=course_based_model)
+        if backend == 'Intel':
+            self.kw_model = EmbeddingModel(model_name)
+        elif backend == 'keyBert':
+            self.kw_model = KeyBERT(model=course_based_model)
+        self.distance = distance
+        self.backend = backend
         self.model_name = model_name
         self.top_n = top_n
         self.seed_help = seed_help
@@ -144,7 +174,8 @@ class CourseBasedRecSys:
                                                             adaptive_thr=self.adaptive_thr,
                                                             minimal_similarity_zeroshot=self.minimal_similarity_zeroshot,
                                                             doc_embeddings=doc_embeddings,
-                                                            seed_keywords=seed_keywords)
+                                                            seed_keywords=seed_keywords,
+                                                            distance=self.distance)
 
             if self.score_alg == 'sum':
                 # Sum all weights of keywords
@@ -172,7 +203,8 @@ class CourseBasedRecSys:
                                                                 adaptive_thr=self.adaptive_thr,
                                                                 minimal_similarity_zeroshot=self.minimal_similarity_zeroshot,
                                                                 seed_keywords=seed_keywords,
-                                                                sent_splitter=self.sent_splitter)
+                                                                sent_splitter=self.sent_splitter,
+                                                                distance=self.distance)
                 course_sentences[course_codes[index]] = sentence_relevance
             # print(course_sentences)
             # TODO: Implementation of Linear Programming
@@ -231,7 +263,7 @@ def apply_zero_adaptation(candidate_embeddings, doc_embedding, domain_word_embed
             computed_embeddings.append(candidate_embedding[0])
         else:
             temp_embedding = (
-                                         1 - adaptive_thr * max_similarity) * candidate_embedding + adaptive_thr * max_similarity * doc_embedding
+                                     1 - adaptive_thr * max_similarity) * candidate_embedding + adaptive_thr * max_similarity * doc_embedding
             computed_embeddings.append(temp_embedding[0])
     computed_embeddings = np.stack(computed_embeddings)
     return computed_embeddings
@@ -240,7 +272,7 @@ def apply_zero_adaptation(candidate_embeddings, doc_embedding, domain_word_embed
 def extract_keywords_relevance(
         docs: Union[str, List[str]],
         candidates: List[str],
-        keyBERT: KeyBERT,
+        keyBERT,
         model_name: str,
         course_codes: List[str] = None,
         domain_type: str = 'title',
@@ -251,7 +283,8 @@ def extract_keywords_relevance(
         minimal_similarity_zeroshot: float = 0.8,
         seed_keywords: Union[List[str], List[List[str]]] = None,
         doc_embeddings: np.array = None,
-        sent_splitter: bool = False
+        sent_splitter: bool = False,
+        distance: str = 'cos'
 ) -> Union[List[Tuple[str, float]], List[List[Tuple[str, float]]]]:
     """Extract keywords and/or keyphrases
 
@@ -304,9 +337,15 @@ def extract_keywords_relevance(
 
     # Extract embeddings
     if doc_embeddings is None:
-        doc_embeddings = keyBERT.model.embed(docs)
+        if isinstance(keyBERT, EmbeddingModel):
+            doc_embeddings = keyBERT.embed(docs)
+        elif isinstance(keyBERT, KeyBERT):
+            doc_embeddings = keyBERT.model.embed(docs)
 
-    word_embeddings = keyBERT.model.embed(candidates)
+    if isinstance(keyBERT, EmbeddingModel):
+        word_embeddings = keyBERT.embed(candidates)
+    elif isinstance(keyBERT, KeyBERT):
+        word_embeddings = keyBERT.model.embed(candidates)
 
     # Find cosine similarity between course description and keywords
     all_keywords = []
@@ -339,13 +378,20 @@ def extract_keywords_relevance(
 
         # Seed Filtering
         if seed_keywords is not None:
-            seed_embeddings = keyBERT.model.embed([" ".join(seed_keywords[index])])
+            if isinstance(keyBERT, EmbeddingModel):
+                seed_embeddings = keyBERT.embed([" ".join(seed_keywords[index])])
+            elif isinstance(keyBERT, KeyBERT):
+                seed_embeddings = keyBERT.model.embed([" ".join(seed_keywords[index])])
+
             doc_embedding = np.average(
                 [doc_embedding, seed_embeddings], axis=0, weights=[3, 1]
             )
 
         # Compute distances between keywords and document
-        distances = cosine_similarity(doc_embedding, candidate_embeddings)
+        if distance == 'cos':
+            distances = cosine_similarity(doc_embedding, candidate_embeddings)
+        elif distance == 'dot':
+            distances = np.dot(doc_embedding, candidate_embeddings.T)
 
         # keywords = [
         #                (candidates[index], round(float(distances[0][index]), 4))
@@ -357,7 +403,7 @@ def extract_keywords_relevance(
                 for index in range(len(candidates))
             ]
         else:
-            keywords = {docs[index]:[
+            keywords = {docs[index]: [
                 (candidates[index], round(float(distances[0][index]), 4))
                 for index in range(len(candidates))
             ]}
