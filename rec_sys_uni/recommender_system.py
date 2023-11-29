@@ -5,6 +5,11 @@ from rec_sys_uni.rec_systems._systems import *
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
 from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
+import json
+from datetime import datetime
+import pymongo
+from bson.objectid import ObjectId
+
 
 
 class RecSys:
@@ -21,6 +26,8 @@ class RecSys:
         self.bloom_based = bloom_based
         self.explanation = explanation
         self.top_n = top_n
+        self.db = pymongo.MongoClient("mongodb://localhost:27017/")["RecSys"]
+
 
     def validate_system_input(self,
                               student_input,
@@ -140,8 +147,7 @@ and sorted_recommended_courses key in the results)              },
 
         results = {
                     "recommended_courses": {},
-                    "sorted_recommended_courses": [],
-                    "explanation": ""
+                    "sorted_recommended_courses": []
                    }
 
         results = make_results_template(results, course_data)
@@ -154,10 +160,66 @@ and sorted_recommended_courses key in the results)              },
         sort_by_periods(self, student_info, self.top_n, include_keywords=True, include_score=True,
                         include_blooms=False)
 
+        now = datetime.now()
+
+        collection = self.db["students_results"]
+        input_dict = {
+            "student_id": "123",
+            "student_input": student_info.student_input,
+            "course_data": student_info.course_data,
+            "student_data": student_info.student_data,
+            "results": student_info.results,
+            "time": now.strftime("%d/%m/%Y %H:%M:%S")
+        }
+        object_db = collection.insert_one(input_dict)
+        student_info.set_id(object_db.inserted_id)
+
         return student_info
 
-    def generate_explanation(self, student_info):
-        self.explanation.generate_explanation(self, student_info)
+    def generate_explanation(self, student_id, course_code):
+        collection = self.db["students_results"]
+        student_info = collection.find({"_id": ObjectId(student_id)})[0]
+        student_input = student_info["student_input"]
+        course_result = student_info["results"]["recommended_courses"][course_code]
+        course = student_info["course_data"][course_code]
+
+        response = self.explanation.generate_explanation(student_input, course_code, course, course_result)
+
+        collection_LLM = self.db["LLM_usage"]
+        llm_usage_old = collection_LLM.find_one({"_id": student_info["student_id"]})
+
+        if llm_usage_old is None:
+            collection_LLM.insert_one({
+                "_id": student_info["student_id"],
+                "completion_tokens": response.usage.completion_tokens,
+                "prompt_tokens": response.usage.prompt_tokens,
+                "total_tokens": response.usage.total_tokens,
+            })
+        else:
+            completion_tokens = llm_usage_old["completion_tokens"] + response.usage.completion_tokens
+            prompt_tokens = llm_usage_old["prompt_tokens"] + response.usage.prompt_tokens
+            total_tokens = llm_usage_old["total_tokens"] + response.usage.total_tokens
+            collection_LLM.update_one({"_id": student_info["student_id"]}, {"$set": {
+                "completion_tokens": completion_tokens,
+                "prompt_tokens": prompt_tokens,
+                "total_tokens": total_tokens,
+            }})
+
+        now = datetime.now()
+
+        self.db["LLM_results"].insert_one({
+            "student_id": student_info["student_id"],
+            "course_code": course_code,
+            "student_input": student_info["student_input"],
+            "course_keywords": course_result['keywords'],
+            "explanation": json.loads(response.choices[0].message.content),
+            "completion_tokens": response.usage.completion_tokens,
+            "prompt_tokens": response.usage.prompt_tokens,
+            "total_tokens": response.usage.total_tokens,
+            "time": now.strftime("%d/%m/%Y %H:%M:%S")
+        })
+
+        return json.loads(response.choices[0].message.content)
 
     def compute_constraints(self, student_info):
         # Here you can call the integer linear programming model
