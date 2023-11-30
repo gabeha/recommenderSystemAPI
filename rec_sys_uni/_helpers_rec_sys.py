@@ -137,4 +137,7 @@ class StudentNode:
         self.course_data = course_data
         self.student_data = student_data
 
+    def set_id(self, id):
+        self.id = id
+
 # %%

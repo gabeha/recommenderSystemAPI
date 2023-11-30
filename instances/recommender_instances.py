@@ -30,10 +30,10 @@ course_based = CourseBasedRecSys(model_name="all-MiniLM-L12-v2",
 course_based.print_config()
 explanation = LLM(
     url="https://api-inference.huggingface.co/models/openchat/openchat_3.5",
-    token="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",
+    token="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",
     model_id='openchat/openchat_3.5',
     model_name="all-MiniLM-L12-v2",
-    chat_gpt=False,
+    chat_gpt=True,
     thread_mode=False,
 )
 # explanation = None
