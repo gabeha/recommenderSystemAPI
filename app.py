@@ -32,25 +32,36 @@ def recommend():
     # Check source code of recSys.recommender_system
     try:
         # Get the StudentNode object
-        student_info = rs.get_recommendation(student_input)
+        student_info = rs.get_recommendation(student_input, system_student_data=student_input['config']['imitate_student'] == 1.0)
 
         results = student_info.results
 
         output = {'structured_recommendation': results.get('structured_recommendation'),
-                  'explanation': results.get('explanation'), "student_input": student_input}
+                  'student_mongo_id': str(student_info.id), "student_input": student_input}
         
         print("emit recommendations")
         socketio.emit('recommendations', {'recommended_courses': output})
 
-        # print (output)
     except Exception as e:
         output = {'error': str(e)}
         socketio.emit('error', {'error': str(e)})
     finally:
-        Thread(target=generate_explanations_and_emit, args=(rs, student_info,)).start()
+        # Thread(target=generate_explanations_and_emit, args=(rs, student_info,)).start()
         
-        # Thread(target=dummy_llm_function, args=()).start()
+        Thread(target=dummy_llm_function, args=()).start()
         return jsonify({'recommended_courses': output})
+
+@app.route('/api/explanation', methods=['POST'])
+def get_explanation():
+    input = request.get_json()
+    student_mongo_id = input['student_mongo_id']
+    course_code = input['course_code']
+
+    print(f"student_mongo_id: {student_mongo_id}")
+
+    explanation = rs.generate_explanation(student_mongo_id, course_code)
+
+    return jsonify({'explanation': explanation})
 
 
 if __name__ == '__main__':

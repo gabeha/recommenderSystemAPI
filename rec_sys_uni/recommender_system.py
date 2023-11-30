@@ -21,7 +21,6 @@ class RecSys:
                  top_n=7):
         self.constraints = False
         self.validate_input = True
-        self.system_course_data = True
         self.course_based = course_based
         self.bloom_based = bloom_based
         self.explanation = explanation
@@ -31,8 +30,10 @@ class RecSys:
 
     def validate_system_input(self,
                               student_input,
-                              course_data=None,
-                              student_data=None):
+                              course_data,
+                              student_data,
+                              system_course_data,
+                              system_student_data):
         """
         function: validate_system_input
         description: validate the format of the input data
@@ -40,7 +41,7 @@ class RecSys:
 
         check_student_input(student_input)
 
-        if self.system_course_data:
+        if system_course_data:
             course_data = get_course_data()
 
         check_course_data(course_data)
@@ -54,6 +55,8 @@ class RecSys:
                            student_intput,
                            course_data=None,
                            student_data=None,
+                           system_course_data=True,
+                           system_student_data=False,
                            ):
         """
         function: get_list_recommended_courses
@@ -143,7 +146,9 @@ and sorted_recommended_courses key in the results)              },
         if self.validate_input:
             student_input, course_data, student_data = self.validate_system_input(student_intput,
                                                                                   course_data,
-                                                                                  student_data)
+                                                                                  student_data,
+                                                                                  system_course_data,
+                                                                                  system_student_data)
 
         results = {
                     "recommended_courses": {},
@@ -233,7 +238,6 @@ and sorted_recommended_courses key in the results)              },
         print(f"RecSys settings: \n" +
               f"Contraints: {self.constraints} \n" +
               f"Validate_input: {self.validate_input} \n" +
-              f"System_course_data: {self.system_course_data} \n" +
               f"Course_based: {self.course_based} \n" +
               f"Bloom_based: {self.bloom_based} \n" +
               f"Top_n: {self.top_n} \n")

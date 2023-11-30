@@ -56,7 +56,7 @@ def sort_by_periods(recSys, student_info, max, include_keywords=False,
     for i in sorted_recommendation_list:
         period = student_info.course_data[i[0]]['period']
 
-        course_tmp = {'course_code': i[0], 'course_name': student_info.course_data[i[0]]['course_name']}
+        course_tmp = {'course_code': i[0], 'course_name': student_info.course_data[i[0]]['course_name'], 'warning': student_info.results['recommended_courses'][i[0]]['warning']}
 
         flag = False
         for j in period:
