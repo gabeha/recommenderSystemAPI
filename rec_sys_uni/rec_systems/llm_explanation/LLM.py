@@ -16,7 +16,10 @@ import os
 
 
 class LLM:
-    def __init__(self, url: str, token: str, model_id: str, model_name: str, chat_gpt: bool = False, thread_mode: bool = False):
+    def __init__(self, url: str, token: str, model_id: str,
+                 model_name: str,
+                 chat_gpt: bool = False,
+                 thread_mode: bool = False):
         self.model_id = model_id
         self.thread_mode = thread_mode
         self.chat_gpt = chat_gpt

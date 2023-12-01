@@ -1,0 +1,52 @@
+{
+    "courses_taken": {
+        "SSC1005": {
+            "passed": true,
+            "grade": 7.1,
+            "year": 2022,
+            "period": 1
+        },
+        "COR1003": {
+            "passed": true,
+            "grade": 6.5,
+            "year": 2022,
+            "period": 1
+        },
+        "SSC1025": {
+            "passed": true,
+            "grade": 7.6,
+            "year": 2022,
+            "period": 2
+        },
+        "SSC2019": {
+            "passed": true,
+            "grade": 6.0,
+            "year": 2022,
+            "period": 2
+        },
+        "SSC2062": {
+            "passed": true,
+            "grade": 6.4,
+            "year": 2023,
+            "period": 5
+        },
+        "SSC1007": {
+            "passed": true,
+            "grade": 7.2,
+            "year": 2023,
+            "period": 4
+        },
+        "COR1004": {
+            "passed": false,
+            "grade": 5.7,
+            "year": 2023,
+            "period": 5
+        },
+        "SSC2004": {
+            "passed": true,
+            "grade": 6.9,
+            "year": 2023,
+            "period": 5
+        }
+    }
+}

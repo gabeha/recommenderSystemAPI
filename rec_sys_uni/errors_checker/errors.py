@@ -67,7 +67,8 @@ def check_student_data(student_data):
         raise StudentDataFormatError("student_data is not a dictionary")
     if not 'courses_taken' in student_data:
         raise StudentDataFormatError("student_data does not have courses_taken")
-    for key in student_data['courses_taken']:
+    for c in student_data['courses_taken']:
+        key = student_data['courses_taken'][c]
         if 'passed' not in key:
             raise StudentDataFormatError(f"{key} does not have key passed")
         if 'grade' not in key:
