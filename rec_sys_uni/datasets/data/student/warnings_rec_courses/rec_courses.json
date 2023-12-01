@@ -1,0 +1,3448 @@
+{
+    "COR1002": {
+        "COR1004": {
+            "cosine_similarity": 0.6862000226974487,
+            "importance": 0.0235,
+            "correlation": 0.117
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6783999800682068,
+            "importance": 0.0337,
+            "correlation": 0.1316
+        },
+        "SSC2019": {
+            "cosine_similarity": 0.6765999794006348,
+            "importance": 0.0121,
+            "correlation": 0.0162
+        },
+        "HUM2046": {
+            "cosine_similarity": 0.6736999750137329,
+            "importance": 0.014,
+            "correlation": 0.0158
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6604999899864197,
+            "importance": 0.019,
+            "correlation": 0.0641
+        }
+    },
+    "COR1003": {
+        "COR1004": {
+            "cosine_similarity": 0.70169997215271,
+            "importance": 0.0389,
+            "correlation": 0.0786
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6973999738693237,
+            "importance": 0.0278,
+            "correlation": 0.0478
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6904000043869019,
+            "importance": 0.0289,
+            "correlation": 0.0009
+        },
+        "COR1002": {
+            "cosine_similarity": 0.6783999800682068,
+            "importance": 0.0141,
+            "correlation": 0.0902
+        },
+        "SCI1016": {
+            "cosine_similarity": 0.6571000218391418,
+            "importance": 0.03,
+            "correlation": 0.114
+        }
+    },
+    "COR1004": {
+        "HUM1007": {
+            "cosine_similarity": 0.7505999803543091,
+            "importance": 0.0442,
+            "correlation": 0.0067
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.7250000238418579,
+            "importance": 0.0381,
+            "correlation": 0.0189
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.7134000062942505,
+            "importance": 0.0338,
+            "correlation": 0.0205
+        },
+        "COR1003": {
+            "cosine_similarity": 0.70169997215271,
+            "importance": 0.0389,
+            "correlation": 0.0952
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.670199990272522,
+            "importance": 0.0276,
+            "correlation": 0.0677
+        }
+    },
+    "COR1006": {
+        "HUM1007": {
+            "cosine_similarity": 0.7179999947547913,
+            "importance": 0.016,
+            "correlation": 0.0334
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6567000150680542,
+            "importance": 0.048,
+            "correlation": 0.0242
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6559000015258789,
+            "importance": 0.0612,
+            "correlation": 0.0845
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6504999995231628,
+            "importance": 0.0285,
+            "correlation": 0.0134
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6168000102043152,
+            "importance": 0.0085,
+            "correlation": 0.05
+        }
+    },
+    "HUM1003": {
+        "HUM2013": {
+            "cosine_similarity": 0.7049000263214111,
+            "importance": 0.0191,
+            "correlation": 0.0592
+        },
+        "HUM2003": {
+            "cosine_similarity": 0.6851999759674072,
+            "importance": 0.0225,
+            "correlation": 0.0333
+        },
+        "SSC2019": {
+            "cosine_similarity": 0.6299999952316284,
+            "importance": 0.0248,
+            "correlation": 0.0636
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6258999705314636,
+            "importance": 0.0328,
+            "correlation": 0.0074
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6212999820709229,
+            "importance": 0.0468,
+            "correlation": 0.1648
+        }
+    },
+    "HUM1007": {
+        "COR1006": {
+            "cosine_similarity": 0.7179999947547913,
+            "importance": 0.0087,
+            "correlation": 0.0706
+        },
+        "SSC3019": {
+            "cosine_similarity": 0.6883999705314636,
+            "importance": 0.006,
+            "correlation": 0.0426
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6617000102996826,
+            "importance": 0.0491,
+            "correlation": 0.1329
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6445000171661377,
+            "importance": 0.1244,
+            "correlation": 0.0812
+        },
+        "HUM3043": {
+            "cosine_similarity": 0.6381000280380249,
+            "importance": 0.0031,
+            "correlation": 0.0267
+        }
+    },
+    "HUM1010": {
+        "COR1003": {
+            "cosine_similarity": 0.6176000237464905,
+            "importance": 0.1417,
+            "correlation": 0.2454
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6169999837875366,
+            "importance": 0.0343,
+            "correlation": 0.1826
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6097999811172485,
+            "importance": 0.0384,
+            "correlation": 0.0713
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.5800999999046326,
+            "importance": 0.0458,
+            "correlation": 0.0337
+        },
+        "SSC3036": {
+            "cosine_similarity": 0.5647000074386597,
+            "importance": 0.0329,
+            "correlation": 0.0642
+        }
+    },
+    "HUM1011": {
+        "HUM2022": {
+            "cosine_similarity": 0.6710000038146973,
+            "importance": 0.0106,
+            "correlation": 0.1604
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.6187000274658203,
+            "importance": 0.0204,
+            "correlation": 0.0373
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6104000210762024,
+            "importance": 0.0942,
+            "correlation": 0.2238
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6057999730110168,
+            "importance": 0.0205,
+            "correlation": 0.1045
+        },
+        "COR1002": {
+            "cosine_similarity": 0.6043999791145325,
+            "importance": 0.0199,
+            "correlation": 0.1175
+        }
+    },
+    "HUM1012": {
+        "HUM1003": {
+            "cosine_similarity": 0.6922000050544739,
+            "importance": 0.0225,
+            "correlation": 0.1543
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6456000208854675,
+            "importance": 0.0492,
+            "correlation": 0.1688
+        },
+        "SSC2018": {
+            "cosine_similarity": 0.6403999924659729,
+            "importance": 0.0122,
+            "correlation": 0.1879
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6133999824523926,
+            "importance": 0.016,
+            "correlation": 0.128
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.597000002861023,
+            "importance": 0.0151,
+            "correlation": 0.0529
+        }
+    },
+    "HUM1013": {
+        "COR1003": {
+            "cosine_similarity": 0.7110000252723694,
+            "importance": 0.4972,
+            "correlation": 0.4816
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6915000081062317,
+            "importance": 0.0087,
+            "correlation": 0.102
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6632000207901001,
+            "importance": 0.0113,
+            "correlation": 0.1233
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6622999906539917,
+            "importance": 0.0269,
+            "correlation": 0.1429
+        },
+        "SSC3030": {
+            "cosine_similarity": 0.6611999869346619,
+            "importance": 0.008,
+            "correlation": 0.054
+        }
+    },
+    "HUM2003": {
+        "COR1003": {
+            "cosine_similarity": 0.6980999708175659,
+            "importance": 0.0715,
+            "correlation": 0.1987
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6782000064849854,
+            "importance": 0.0237,
+            "correlation": 0.1051
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6696000099182129,
+            "importance": 0.0624,
+            "correlation": 0.0719
+        },
+        "COR1002": {
+            "cosine_similarity": 0.6531999707221985,
+            "importance": 0.0232,
+            "correlation": 0.0762
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6419000029563904,
+            "importance": 0.0389,
+            "correlation": 0.0715
+        }
+    },
+    "HUM2005": {
+        "HUM2030": {
+            "cosine_similarity": 0.7249000072479248,
+            "importance": 0.0068,
+            "correlation": 0.1506
+        },
+        "COR1004": {
+            "cosine_similarity": 0.7246999740600586,
+            "importance": 0.0184,
+            "correlation": 0.0727
+        },
+        "HUM1011": {
+            "cosine_similarity": 0.7156999707221985,
+            "importance": 0.0067,
+            "correlation": 0.1205
+        },
+        "HUM2007": {
+            "cosine_similarity": 0.7085000276565552,
+            "importance": 0.0116,
+            "correlation": 0.1907
+        },
+        "COR1003": {
+            "cosine_similarity": 0.695900022983551,
+            "importance": 0.035,
+            "correlation": 0.1718
+        }
+    },
+    "HUM2007": {
+        "COR1003": {
+            "cosine_similarity": 0.7628999948501587,
+            "importance": 0.0178,
+            "correlation": 0.0836
+        },
+        "SSC3012": {
+            "cosine_similarity": 0.7211999893188477,
+            "importance": 0.0122,
+            "correlation": 0.1455
+        },
+        "SSC3055": {
+            "cosine_similarity": 0.7039999961853027,
+            "importance": 0.0129,
+            "correlation": 0.1557
+        },
+        "SSC3036": {
+            "cosine_similarity": 0.6991999745368958,
+            "importance": 0.0177,
+            "correlation": 0.0195
+        },
+        "HUM2003": {
+            "cosine_similarity": 0.6884999871253967,
+            "importance": 0.0091,
+            "correlation": 0.0352
+        }
+    },
+    "HUM2008": {
+        "HUM1007": {
+            "cosine_similarity": 0.7572000026702881,
+            "importance": 0.0373,
+            "correlation": 0.0559
+        },
+        "HUM2054": {
+            "cosine_similarity": 0.756600022315979,
+            "importance": 0.0079,
+            "correlation": 0.1285
+        },
+        "HUM2051": {
+            "cosine_similarity": 0.7465999722480774,
+            "importance": 0.0192,
+            "correlation": 0.1568
+        },
+        "COR1004": {
+            "cosine_similarity": 0.7050999999046326,
+            "importance": 0.0344,
+            "correlation": 0.1022
+        },
+        "COR1003": {
+            "cosine_similarity": 0.614799976348877,
+            "importance": 0.0422,
+            "correlation": 0.1871
+        }
+    },
+    "HUM2013": {
+        "HUM2031": {
+            "cosine_similarity": 0.7820000052452087,
+            "importance": 0.0128,
+            "correlation": 0.1258
+        },
+        "HUM1011": {
+            "cosine_similarity": 0.7746999859809875,
+            "importance": 0.0784,
+            "correlation": 0.192
+        },
+        "HUM2005": {
+            "cosine_similarity": 0.7408999800682068,
+            "importance": 0.0087,
+            "correlation": 0.0803
+        },
+        "HUM3042": {
+            "cosine_similarity": 0.7120000123977661,
+            "importance": 0.0056,
+            "correlation": 0.1009
+        },
+        "HUM2003": {
+            "cosine_similarity": 0.677299976348877,
+            "importance": 0.0074,
+            "correlation": 0.1197
+        }
+    },
+    "HUM2016": {},
+    "HUM2018": {
+        "SSC2046": {
+            "cosine_similarity": 0.7588000297546387,
+            "importance": 0.1058,
+            "correlation": 0.0514
+        },
+        "HUM2003": {
+            "cosine_similarity": 0.7258999943733215,
+            "importance": 0.1565,
+            "correlation": 0.061
+        },
+        "COR1003": {
+            "cosine_similarity": 0.7021999955177307,
+            "importance": 0.1415,
+            "correlation": 0.1458
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6980999708175659,
+            "importance": 0.078,
+            "correlation": 0.0642
+        },
+        "HUM3043": {
+            "cosine_similarity": 0.64410001039505,
+            "importance": 0.0324,
+            "correlation": 0.0209
+        }
+    },
+    "HUM2021": {},
+    "HUM2022": {
+        "HUM3036": {
+            "cosine_similarity": 0.6651999950408936,
+            "importance": 0.0238,
+            "correlation": 0.0541
+        },
+        "HUM1003": {
+            "cosine_similarity": 0.6597999930381775,
+            "importance": 0.0203,
+            "correlation": 0.0483
+        },
+        "HUM2046": {
+            "cosine_similarity": 0.6572999954223633,
+            "importance": 0.0197,
+            "correlation": 0.0699
+        },
+        "SSC2046": {
+            "cosine_similarity": 0.6545000076293945,
+            "importance": 0.0049,
+            "correlation": 0.0441
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6536999940872192,
+            "importance": 0.0196,
+            "correlation": 0.0614
+        }
+    },
+    "HUM2030": {},
+    "HUM2031": {
+        "HUM1003": {
+            "cosine_similarity": 0.8003000020980835,
+            "importance": 0.052,
+            "correlation": 0.1019
+        },
+        "HUM2022": {
+            "cosine_similarity": 0.697700023651123,
+            "importance": 0.0201,
+            "correlation": 0.0986
+        },
+        "SSC2018": {
+            "cosine_similarity": 0.6741999983787537,
+            "importance": 0.021,
+            "correlation": 0.0775
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6582000255584717,
+            "importance": 0.0434,
+            "correlation": 0.0759
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6410999894142151,
+            "importance": 0.0252,
+            "correlation": 0.1568
+        }
+    },
+    "HUM2046": {
+        "SSC2002": {
+            "cosine_similarity": 0.699999988079071,
+            "importance": 0.0284,
+            "correlation": 0.0845
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6664000153541565,
+            "importance": 0.0512,
+            "correlation": 0.1051
+        },
+        "SCI1016": {
+            "cosine_similarity": 0.654699981212616,
+            "importance": 0.0274,
+            "correlation": 0.0411
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6488000154495239,
+            "importance": 0.023,
+            "correlation": 0.0794
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.6464999914169312,
+            "importance": 0.0195,
+            "correlation": 0.072
+        }
+    },
+    "HUM2047": {
+        "HUM2060": {
+            "cosine_similarity": 0.7811999917030334,
+            "importance": 0.0243,
+            "correlation": 0.1204
+        },
+        "HUM1012": {
+            "cosine_similarity": 0.7350000143051147,
+            "importance": 0.0128,
+            "correlation": 0.0788
+        },
+        "HUM1011": {
+            "cosine_similarity": 0.6572999954223633,
+            "importance": 0.0144,
+            "correlation": 0.0788
+        },
+        "HUM2022": {
+            "cosine_similarity": 0.6474999785423279,
+            "importance": 0.03,
+            "correlation": 0.1271
+        },
+        "HUM1003": {
+            "cosine_similarity": 0.6406000256538391,
+            "importance": 0.0181,
+            "correlation": 0.1271
+        }
+    },
+    "HUM2051": {
+        "HUM1007": {
+            "cosine_similarity": 0.722100019454956,
+            "importance": 0.0241,
+            "correlation": 0.0008
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.7016000151634216,
+            "importance": 0.0145,
+            "correlation": 0.0705
+        },
+        "HUM2003": {
+            "cosine_similarity": 0.6538000106811523,
+            "importance": 0.0093,
+            "correlation": 0.0867
+        },
+        "COR1002": {
+            "cosine_similarity": 0.6484000086784363,
+            "importance": 0.0214,
+            "correlation": 0.0599
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6424999833106995,
+            "importance": 0.0504,
+            "correlation": 0.2564
+        }
+    },
+    "HUM2054": {
+        "HUM2051": {
+            "cosine_similarity": 0.7656000256538391,
+            "importance": 0.0288,
+            "correlation": 0.1562
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.7178999781608582,
+            "importance": 0.0425,
+            "correlation": 0.0295
+        },
+        "COR1004": {
+            "cosine_similarity": 0.7067000269889832,
+            "importance": 0.0816,
+            "correlation": 0.2358
+        },
+        "COR1002": {
+            "cosine_similarity": 0.632099986076355,
+            "importance": 0.0287,
+            "correlation": 0.1752
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6154000163078308,
+            "importance": 0.0333,
+            "correlation": 0.1075
+        }
+    },
+    "HUM2056": {
+        "COR1003": {
+            "cosine_similarity": 0.6815000176429749,
+            "importance": 0.0477,
+            "correlation": 0.2151
+        },
+        "HUM2047": {
+            "cosine_similarity": 0.6801999807357788,
+            "importance": 0.0201,
+            "correlation": 0.0679
+        },
+        "HUM3043": {
+            "cosine_similarity": 0.6754999756813049,
+            "importance": 0.0059,
+            "correlation": 0.0756
+        },
+        "HUM2005": {
+            "cosine_similarity": 0.6593999862670898,
+            "importance": 0.0316,
+            "correlation": 0.0756
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6288999915122986,
+            "importance": 0.0448,
+            "correlation": 0.0094
+        }
+    },
+    "HUM2057": {
+        "COR1004": {
+            "cosine_similarity": 0.7207000255584717,
+            "importance": 0.0357,
+            "correlation": 0.2404
+        },
+        "HUM2030": {
+            "cosine_similarity": 0.6743999719619751,
+            "importance": 0.0158,
+            "correlation": 0.0875
+        },
+        "COR1002": {
+            "cosine_similarity": 0.6625999808311462,
+            "importance": 0.0188,
+            "correlation": 0.1683
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.6593999862670898,
+            "importance": 0.035,
+            "correlation": 0.1757
+        },
+        "HUM2005": {
+            "cosine_similarity": 0.654699981212616,
+            "importance": 0.0125,
+            "correlation": 0.1468
+        }
+    },
+    "HUM2058": {
+        "HUM2003": {
+            "cosine_similarity": 0.6891999840736389,
+            "importance": 0.011,
+            "correlation": 0.1325
+        },
+        "HUM2030": {
+            "cosine_similarity": 0.6827999949455261,
+            "importance": 0.0197,
+            "correlation": 0.0956
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6790000200271606,
+            "importance": 0.036,
+            "correlation": 0.1251
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6746000051498413,
+            "importance": 0.0607,
+            "correlation": 0.1422
+        },
+        "HUM1003": {
+            "cosine_similarity": 0.6704000234603882,
+            "importance": 0.0194,
+            "correlation": 0.1396
+        }
+    },
+    "HUM2059": {
+        "HUM1012": {
+            "cosine_similarity": 0.7164999842643738,
+            "importance": 0.0887,
+            "correlation": 0.0606
+        },
+        "HUM1011": {
+            "cosine_similarity": 0.65420001745224,
+            "importance": 0.1073,
+            "correlation": 0.112
+        },
+        "HUM2005": {
+            "cosine_similarity": 0.6503000259399414,
+            "importance": 0.1294,
+            "correlation": 0.0606
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6434000134468079,
+            "importance": 0.1282,
+            "correlation": 0.112
+        },
+        "SSC3006": {
+            "cosine_similarity": 0.632099986076355,
+            "importance": 0.0379,
+            "correlation": 0.0754
+        }
+    },
+    "HUM2060": {},
+    "HUM3014": {},
+    "HUM3019": {},
+    "HUM3029": {
+        "HUM3043": {
+            "cosine_similarity": 0.708899974822998,
+            "importance": 0.0079,
+            "correlation": 0.1607
+        },
+        "SSC3019": {
+            "cosine_similarity": 0.6657000184059143,
+            "importance": 0.0082,
+            "correlation": 0.0258
+        },
+        "HUM2003": {
+            "cosine_similarity": 0.661899983882904,
+            "importance": 0.0148,
+            "correlation": 0.139
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6323000192642212,
+            "importance": 0.0056,
+            "correlation": 0.0741
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.6230000257492065,
+            "importance": 0.0115,
+            "correlation": 0.1535
+        }
+    },
+    "HUM3034": {
+        "COR1003": {
+            "cosine_similarity": 0.7060999870300293,
+            "importance": 0.0382,
+            "correlation": 0.3146
+        },
+        "HUM2021": {
+            "cosine_similarity": 0.6998000144958496,
+            "importance": 0.0139,
+            "correlation": 0.1254
+        },
+        "SSC2039": {
+            "cosine_similarity": 0.6941999793052673,
+            "importance": 0.011,
+            "correlation": 0.1254
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6772000193595886,
+            "importance": 0.0064,
+            "correlation": 0.1108
+        },
+        "HUM2051": {
+            "cosine_similarity": 0.6603999733924866,
+            "importance": 0.0178,
+            "correlation": 0.1468
+        }
+    },
+    "HUM3036": {
+        "HUM2030": {
+            "cosine_similarity": 0.7332000136375427,
+            "importance": 0.0263,
+            "correlation": 0.1047
+        },
+        "HUM1003": {
+            "cosine_similarity": 0.6793000102043152,
+            "importance": 0.05,
+            "correlation": 0.0414
+        },
+        "SSC3038": {
+            "cosine_similarity": 0.6647999882698059,
+            "importance": 0.0536,
+            "correlation": 0.0361
+        },
+        "SSC2037": {
+            "cosine_similarity": 0.6416000127792358,
+            "importance": 0.024,
+            "correlation": 0.0472
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6412000060081482,
+            "importance": 0.1283,
+            "correlation": 0.2615
+        }
+    },
+    "HUM3040": {
+        "HUM2003": {
+            "cosine_similarity": 0.8525000214576721,
+            "importance": 0.0311,
+            "correlation": 0.0213
+        },
+        "SSC3040": {
+            "cosine_similarity": 0.8307999968528748,
+            "importance": 0.0065,
+            "correlation": 0.0751
+        },
+        "HUM2031": {
+            "cosine_similarity": 0.7444000244140625,
+            "importance": 0.0061,
+            "correlation": 0.081
+        },
+        "COR1003": {
+            "cosine_similarity": 0.7304999828338623,
+            "importance": 0.0579,
+            "correlation": 0.0191
+        },
+        "COR1004": {
+            "cosine_similarity": 0.7186999917030334,
+            "importance": 0.048,
+            "correlation": 0.1333
+        }
+    },
+    "HUM3042": {},
+    "HUM3043": {},
+    "HUM3044": {},
+    "HUM3045": {
+        "COR1004": {
+            "cosine_similarity": 0.8112999796867371,
+            "importance": 0.0289,
+            "correlation": 0.0817
+        },
+        "SSC2039": {
+            "cosine_similarity": 0.7559999823570251,
+            "importance": 0.0167,
+            "correlation": 0.0124
+        },
+        "HUM2051": {
+            "cosine_similarity": 0.7279000282287598,
+            "importance": 0.017,
+            "correlation": 0.0882
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.7200999855995178,
+            "importance": 0.0109,
+            "correlation": 0.0744
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.6779000163078308,
+            "importance": 0.0134,
+            "correlation": 0.0615
+        }
+    },
+    "HUM3049": {
+        "SSC2065": {
+            "cosine_similarity": 0.7369999885559082,
+            "importance": 0.0075,
+            "correlation": 0.1076
+        },
+        "COR1002": {
+            "cosine_similarity": 0.7311999797821045,
+            "importance": 0.0143,
+            "correlation": 0.0226
+        },
+        "HUM2030": {
+            "cosine_similarity": 0.727400004863739,
+            "importance": 0.0209,
+            "correlation": 0.0635
+        },
+        "HUM2005": {
+            "cosine_similarity": 0.6973000168800354,
+            "importance": 0.0064,
+            "correlation": 0.126
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6772000193595886,
+            "importance": 0.0256,
+            "correlation": 0.0568
+        }
+    },
+    "HUM3050": {
+        "SSC3038": {
+            "cosine_similarity": 0.7113000154495239,
+            "importance": 0.0224,
+            "correlation": 0.0926
+        },
+        "HUM2005": {
+            "cosine_similarity": 0.695900022983551,
+            "importance": 0.0173,
+            "correlation": 0.0926
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6909000277519226,
+            "importance": 0.0281,
+            "correlation": 0.1381
+        },
+        "HUM2058": {
+            "cosine_similarity": 0.6901999711990356,
+            "importance": 0.0135,
+            "correlation": 0.1227
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.6761000156402588,
+            "importance": 0.0099,
+            "correlation": 0.0576
+        }
+    },
+    "HUM3051": {},
+    "HUM3052": {
+        "HUM2007": {
+            "cosine_similarity": 0.7402999997138977,
+            "importance": 0.0139,
+            "correlation": 0.0431
+        },
+        "SSC3032": {
+            "cosine_similarity": 0.6726999878883362,
+            "importance": 0.032,
+            "correlation": 0.0548
+        },
+        "HUM2005": {
+            "cosine_similarity": 0.6660000085830688,
+            "importance": 0.0143,
+            "correlation": 0.0283
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6471999883651733,
+            "importance": 0.0471,
+            "correlation": 0.0787
+        },
+        "SSC2064": {
+            "cosine_similarity": 0.6462000012397766,
+            "importance": 0.0207,
+            "correlation": 0.0474
+        }
+    },
+    "HUM3053": {
+        "HUM2003": {
+            "cosine_similarity": 0.7135000228881836,
+            "importance": 0.0219,
+            "correlation": 0.1459
+        },
+        "HUM3040": {
+            "cosine_similarity": 0.695900022983551,
+            "importance": 0.0103,
+            "correlation": 0.1032
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6923999786376953,
+            "importance": 0.006,
+            "correlation": 0.1084
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6830999851226807,
+            "importance": 0.032,
+            "correlation": 0.1431
+        },
+        "HUM3019": {
+            "cosine_similarity": 0.6686999797821045,
+            "importance": 0.0096,
+            "correlation": 0.0431
+        }
+    },
+    "SCI1004": {
+        "SCI1009": {
+            "cosine_similarity": 0.7490000128746033,
+            "importance": 0.14,
+            "correlation": 0.2233
+        },
+        "SCI2002": {
+            "cosine_similarity": 0.6793000102043152,
+            "importance": 0.0507,
+            "correlation": 0.044
+        },
+        "SCI2022": {
+            "cosine_similarity": 0.659600019454956,
+            "importance": 0.008,
+            "correlation": 0.1028
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6230000257492065,
+            "importance": 0.1287,
+            "correlation": 0.1547
+        },
+        "COR1006": {
+            "cosine_similarity": 0.6080999970436096,
+            "importance": 0.0943,
+            "correlation": 0.0778
+        }
+    },
+    "SCI1005": {},
+    "SCI1009": {
+        "SSC1005": {
+            "cosine_similarity": 0.670799970626831,
+            "importance": 0.0251,
+            "correlation": 0.1412
+        },
+        "COR1006": {
+            "cosine_similarity": 0.649399995803833,
+            "importance": 0.0664,
+            "correlation": 0.1871
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6330000162124634,
+            "importance": 0.0181,
+            "correlation": 0.1206
+        },
+        "SCI1016": {
+            "cosine_similarity": 0.605400025844574,
+            "importance": 0.0215,
+            "correlation": 0.041
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6032000184059143,
+            "importance": 0.0277,
+            "correlation": 0.106
+        }
+    },
+    "SCI1010": {
+        "SSC1027": {
+            "cosine_similarity": 0.661300003528595,
+            "importance": 0.0299,
+            "correlation": 0.1914
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6553999781608582,
+            "importance": 0.0185,
+            "correlation": 0.0742
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6410999894142151,
+            "importance": 0.0202,
+            "correlation": 0.1092
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6399999856948853,
+            "importance": 0.0381,
+            "correlation": 0.2016
+        },
+        "SSC2064": {
+            "cosine_similarity": 0.6256999969482422,
+            "importance": 0.0164,
+            "correlation": 0.2164
+        }
+    },
+    "SCI1016": {
+        "SSC2046": {
+            "cosine_similarity": 0.698199987411499,
+            "importance": 0.02,
+            "correlation": 0.0244
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6571000218391418,
+            "importance": 0.0568,
+            "correlation": 0.0959
+        },
+        "HUM2046": {
+            "cosine_similarity": 0.654699981212616,
+            "importance": 0.0103,
+            "correlation": 0.0606
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.6234999895095825,
+            "importance": 0.0152,
+            "correlation": 0.0303
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6021000146865845,
+            "importance": 0.0359,
+            "correlation": 0.0451
+        }
+    },
+    "SCI2002": {
+        "SCI2018": {
+            "cosine_similarity": 0.7039999961853027,
+            "importance": 0.0204,
+            "correlation": 0.1688
+        },
+        "SCI2019": {
+            "cosine_similarity": 0.7008000016212463,
+            "importance": 0.0142,
+            "correlation": 0.1307
+        },
+        "SCI2011": {
+            "cosine_similarity": 0.6615999937057495,
+            "importance": 0.0122,
+            "correlation": 0.0089
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6597999930381775,
+            "importance": 0.0233,
+            "correlation": 0.0822
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.625,
+            "importance": 0.0185,
+            "correlation": 0.2942
+        }
+    },
+    "SCI2009": {
+        "SCI1009": {
+            "cosine_similarity": 0.765999972820282,
+            "importance": 0.0256,
+            "correlation": 0.0457
+        },
+        "SCI2034": {
+            "cosine_similarity": 0.7113000154495239,
+            "importance": 0.0338,
+            "correlation": 0.1205
+        },
+        "SCI2037": {
+            "cosine_similarity": 0.6990000009536743,
+            "importance": 0.0221,
+            "correlation": 0.0819
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6358000040054321,
+            "importance": 0.0736,
+            "correlation": 0.1406
+        },
+        "SCI2022": {
+            "cosine_similarity": 0.6324999928474426,
+            "importance": 0.026,
+            "correlation": 0.0261
+        }
+    },
+    "SCI2010": {
+        "SSC1027": {
+            "cosine_similarity": 0.7310000061988831,
+            "importance": 0.0255,
+            "correlation": 0.1894
+        },
+        "SSC2048": {
+            "cosine_similarity": 0.7264999747276306,
+            "importance": 0.0212,
+            "correlation": 0.0902
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6678000092506409,
+            "importance": 0.0282,
+            "correlation": 0.1219
+        },
+        "SCI2018": {
+            "cosine_similarity": 0.651199996471405,
+            "importance": 0.0206,
+            "correlation": 0.2018
+        },
+        "COR1002": {
+            "cosine_similarity": 0.625,
+            "importance": 0.0333,
+            "correlation": 0.0898
+        }
+    },
+    "SCI2011": {
+        "SCI2039": {
+            "cosine_similarity": 0.7053999900817871,
+            "importance": 0.0189,
+            "correlation": 0.1213
+        },
+        "SCI2019": {
+            "cosine_similarity": 0.6793000102043152,
+            "importance": 0.0209,
+            "correlation": 0.2178
+        },
+        "SCI2036": {
+            "cosine_similarity": 0.6298999786376953,
+            "importance": 0.0103,
+            "correlation": 0.0079
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.5867999792098999,
+            "importance": 0.0171,
+            "correlation": 0.0367
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.5802000164985657,
+            "importance": 0.0138,
+            "correlation": 0.1577
+        }
+    },
+    "SCI2017": {
+        "SCI1004": {
+            "cosine_similarity": 0.8447999954223633,
+            "importance": 0.0203,
+            "correlation": 0.1111
+        },
+        "SCI2035": {
+            "cosine_similarity": 0.7501999735832214,
+            "importance": 0.0094,
+            "correlation": 0.0592
+        },
+        "SCI2037": {
+            "cosine_similarity": 0.7419999837875366,
+            "importance": 0.0101,
+            "correlation": 0.0592
+        },
+        "SCI2002": {
+            "cosine_similarity": 0.6656000018119812,
+            "importance": 0.0086,
+            "correlation": 0.1741
+        },
+        "SCI2022": {
+            "cosine_similarity": 0.6554999947547913,
+            "importance": 0.0152,
+            "correlation": 0.1111
+        }
+    },
+    "SCI2018": {
+        "SCI2002": {
+            "cosine_similarity": 0.7039999961853027,
+            "importance": 0.0406,
+            "correlation": 0.1819
+        },
+        "HUM1012": {
+            "cosine_similarity": 0.6498000025749207,
+            "importance": 0.015,
+            "correlation": 0.1106
+        },
+        "SCI1009": {
+            "cosine_similarity": 0.6391000151634216,
+            "importance": 0.0362,
+            "correlation": 0.0915
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6326000094413757,
+            "importance": 0.0306,
+            "correlation": 0.047
+        },
+        "SCI2011": {
+            "cosine_similarity": 0.629800021648407,
+            "importance": 0.0432,
+            "correlation": 0.2284
+        }
+    },
+    "SCI2019": {
+        "SCI2018": {
+            "cosine_similarity": 0.7459999918937683,
+            "importance": 0.033,
+            "correlation": 0.2078
+        },
+        "SCI2002": {
+            "cosine_similarity": 0.7008000016212463,
+            "importance": 0.0197,
+            "correlation": 0.0884
+        },
+        "SCI2010": {
+            "cosine_similarity": 0.6741999983787537,
+            "importance": 0.0281,
+            "correlation": 0.0577
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6399000287055969,
+            "importance": 0.0308,
+            "correlation": 0.103
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.6121000051498413,
+            "importance": 0.0251,
+            "correlation": 0.1905
+        }
+    },
+    "SCI2022": {
+        "SSC2062": {
+            "cosine_similarity": 0.6699000000953674,
+            "importance": 0.0277,
+            "correlation": 0.0654
+        },
+        "SSC2019": {
+            "cosine_similarity": 0.6402999758720398,
+            "importance": 0.0142,
+            "correlation": 0.0714
+        },
+        "SSC2050": {
+            "cosine_similarity": 0.6274999976158142,
+            "importance": 0.011,
+            "correlation": 0.0524
+        },
+        "SSC2018": {
+            "cosine_similarity": 0.6184999942779541,
+            "importance": 0.0113,
+            "correlation": 0.0524
+        },
+        "SCI2034": {
+            "cosine_similarity": 0.6075999736785889,
+            "importance": 0.0317,
+            "correlation": 0.1348
+        }
+    },
+    "SCI2031": {
+        "SCI1009": {
+            "cosine_similarity": 0.7124000191688538,
+            "importance": 0.0162,
+            "correlation": 0.1332
+        },
+        "SCI2037": {
+            "cosine_similarity": 0.7121000289916992,
+            "importance": 0.0476,
+            "correlation": 0.1267
+        },
+        "SCI2040": {
+            "cosine_similarity": 0.6988000273704529,
+            "importance": 0.0277,
+            "correlation": 0.1488
+        },
+        "SCI3007": {
+            "cosine_similarity": 0.669700026512146,
+            "importance": 0.016,
+            "correlation": 0.0555
+        },
+        "SCI2035": {
+            "cosine_similarity": 0.6632000207901001,
+            "importance": 0.0203,
+            "correlation": 0.0961
+        }
+    },
+    "SCI2033": {
+        "SCI2002": {
+            "cosine_similarity": 0.6887999773025513,
+            "importance": 0.0231,
+            "correlation": 0.0857
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.6559000015258789,
+            "importance": 0.0284,
+            "correlation": 0.0298
+        },
+        "SCI2019": {
+            "cosine_similarity": 0.6467999815940857,
+            "importance": 0.0207,
+            "correlation": 0.0971
+        },
+        "SCI2018": {
+            "cosine_similarity": 0.6412000060081482,
+            "importance": 0.0138,
+            "correlation": 0.1268
+        },
+        "SSC2062": {
+            "cosine_similarity": 0.6407999992370605,
+            "importance": 0.0191,
+            "correlation": 0.0572
+        }
+    },
+    "SCI2034": {
+        "SSC3019": {
+            "cosine_similarity": 0.6485999822616577,
+            "importance": 0.0276,
+            "correlation": 0.0991
+        },
+        "SSC2063": {
+            "cosine_similarity": 0.6413999795913696,
+            "importance": 0.0235,
+            "correlation": 0.0433
+        },
+        "SCI2022": {
+            "cosine_similarity": 0.6075999736785889,
+            "importance": 0.0244,
+            "correlation": 0.1347
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.5810999870300293,
+            "importance": 0.014,
+            "correlation": 0.0054
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.5746999979019165,
+            "importance": 0.0366,
+            "correlation": 0.009
+        }
+    },
+    "SCI2035": {
+        "SCI2037": {
+            "cosine_similarity": 0.8051999807357788,
+            "importance": 0.033,
+            "correlation": 0.2495
+        },
+        "SCI1004": {
+            "cosine_similarity": 0.8019999861717224,
+            "importance": 0.0243,
+            "correlation": 0.0245
+        },
+        "SCI1009": {
+            "cosine_similarity": 0.7900000214576721,
+            "importance": 0.0753,
+            "correlation": 0.0083
+        },
+        "SCI2031": {
+            "cosine_similarity": 0.6632000207901001,
+            "importance": 0.024,
+            "correlation": 0.2095
+        },
+        "SCI2034": {
+            "cosine_similarity": 0.6471999883651733,
+            "importance": 0.0293,
+            "correlation": 0.2583
+        }
+    },
+    "SCI2036": {
+        "SSC1007": {
+            "cosine_similarity": 0.6437000036239624,
+            "importance": 0.011,
+            "correlation": 0.0836
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6227999925613403,
+            "importance": 0.0116,
+            "correlation": 0.1319
+        },
+        "HUM2005": {
+            "cosine_similarity": 0.6029000282287598,
+            "importance": 0.0118,
+            "correlation": 0.0357
+        },
+        "COR1006": {
+            "cosine_similarity": 0.6014999747276306,
+            "importance": 0.0205,
+            "correlation": 0.1016
+        },
+        "SCI2037": {
+            "cosine_similarity": 0.5964999794960022,
+            "importance": 0.0054,
+            "correlation": 0.025
+        }
+    },
+    "SCI2037": {
+        "SCI1009": {
+            "cosine_similarity": 0.8133999705314636,
+            "importance": 0.0462,
+            "correlation": 0.0646
+        },
+        "SCI2035": {
+            "cosine_similarity": 0.8051999807357788,
+            "importance": 0.0238,
+            "correlation": 0.0597
+        },
+        "SCI1004": {
+            "cosine_similarity": 0.7681000232696533,
+            "importance": 0.0413,
+            "correlation": 0.0277
+        },
+        "SCI2022": {
+            "cosine_similarity": 0.7421000003814697,
+            "importance": 0.0213,
+            "correlation": 0.1769
+        },
+        "SCI3007": {
+            "cosine_similarity": 0.691100001335144,
+            "importance": 0.0217,
+            "correlation": 0.0725
+        }
+    },
+    "SCI2039": {
+        "SCI2036": {
+            "cosine_similarity": 0.7627999782562256,
+            "importance": 0.0359,
+            "correlation": 0.0084
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6413999795913696,
+            "importance": 0.0093,
+            "correlation": 0.1373
+        },
+        "SCI2010": {
+            "cosine_similarity": 0.6389999985694885,
+            "importance": 0.0099,
+            "correlation": 0.0891
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6223000288009644,
+            "importance": 0.0087,
+            "correlation": 0.0771
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6211000084877014,
+            "importance": 0.0243,
+            "correlation": 0.0903
+        }
+    },
+    "SCI2040": {
+        "SCI3050": {
+            "cosine_similarity": 0.7225000262260437,
+            "importance": 0.0148,
+            "correlation": 0.1116
+        },
+        "SCI1009": {
+            "cosine_similarity": 0.6845999956130981,
+            "importance": 0.0307,
+            "correlation": 0.0379
+        },
+        "SCI2022": {
+            "cosine_similarity": 0.6510999798774719,
+            "importance": 0.0261,
+            "correlation": 0.0487
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6281999945640564,
+            "importance": 0.0154,
+            "correlation": 0.1205
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6263999938964844,
+            "importance": 0.0498,
+            "correlation": 0.1947
+        }
+    },
+    "SCI2041": {
+        "SCI1016": {
+            "cosine_similarity": 0.6712999939918518,
+            "importance": 0.0416,
+            "correlation": 0.1321
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.5902000069618225,
+            "importance": 0.0259,
+            "correlation": 0.0091
+        },
+        "COR1003": {
+            "cosine_similarity": 0.5799000263214111,
+            "importance": 0.0366,
+            "correlation": 0.1047
+        },
+        "SSC2024": {
+            "cosine_similarity": 0.5735999941825867,
+            "importance": 0.0191,
+            "correlation": 0.018
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.5695000290870667,
+            "importance": 0.0197,
+            "correlation": 0.0103
+        }
+    },
+    "SCI2042": {},
+    "SCI3003": {
+        "SCI3006": {
+            "cosine_similarity": 0.8004999756813049,
+            "importance": 0.0091,
+            "correlation": 0.1448
+        },
+        "SCI2018": {
+            "cosine_similarity": 0.7505999803543091,
+            "importance": 0.0261,
+            "correlation": 0.0608
+        },
+        "SSC2048": {
+            "cosine_similarity": 0.6682999730110168,
+            "importance": 0.0111,
+            "correlation": 0.1293
+        },
+        "SCI2017": {
+            "cosine_similarity": 0.5860999822616577,
+            "importance": 0.0066,
+            "correlation": 0.0534
+        },
+        "SSC3011": {
+            "cosine_similarity": 0.583299994468689,
+            "importance": 0.0086,
+            "correlation": 0.0769
+        }
+    },
+    "SCI3005": {},
+    "SCI3006": {
+        "SCI3003": {
+            "cosine_similarity": 0.8004999756813049,
+            "importance": 0.0158,
+            "correlation": 0.0
+        },
+        "SCI2018": {
+            "cosine_similarity": 0.7361999750137329,
+            "importance": 0.025,
+            "correlation": 0.0241
+        },
+        "SSC2062": {
+            "cosine_similarity": 0.6895999908447266,
+            "importance": 0.0049,
+            "correlation": 0.1466
+        },
+        "SCI3046": {
+            "cosine_similarity": 0.6722999811172485,
+            "importance": 0.005,
+            "correlation": 0.125
+        },
+        "SCI3051": {
+            "cosine_similarity": 0.6568999886512756,
+            "importance": 0.0074,
+            "correlation": 0.1667
+        }
+    },
+    "SCI3007": {
+        "SCI2034": {
+            "cosine_similarity": 0.7149999737739563,
+            "importance": 0.0197,
+            "correlation": 0.1809
+        },
+        "SCI2037": {
+            "cosine_similarity": 0.691100001335144,
+            "importance": 0.0265,
+            "correlation": 0.0185
+        },
+        "SCI2031": {
+            "cosine_similarity": 0.669700026512146,
+            "importance": 0.0224,
+            "correlation": 0.0862
+        },
+        "SCI2035": {
+            "cosine_similarity": 0.6654000282287598,
+            "importance": 0.0188,
+            "correlation": 0.1818
+        },
+        "SCI2017": {
+            "cosine_similarity": 0.651199996471405,
+            "importance": 0.0198,
+            "correlation": 0.2081
+        }
+    },
+    "SCI3046": {
+        "SSC2025": {
+            "cosine_similarity": 0.7760000228881836,
+            "importance": 0.0177,
+            "correlation": 0.0235
+        },
+        "SSC3023": {
+            "cosine_similarity": 0.7651000022888184,
+            "importance": 0.0193,
+            "correlation": 0.185
+        },
+        "SSC3019": {
+            "cosine_similarity": 0.7552000284194946,
+            "importance": 0.0211,
+            "correlation": 0.2425
+        },
+        "SCI2034": {
+            "cosine_similarity": 0.7246999740600586,
+            "importance": 0.0417,
+            "correlation": 0.0849
+        },
+        "SSC2006": {
+            "cosine_similarity": 0.6740999817848206,
+            "importance": 0.0233,
+            "correlation": 0.0007
+        }
+    },
+    "SCI3049": {
+        "SCI3050": {
+            "cosine_similarity": 0.7123000025749207,
+            "importance": 0.0084,
+            "correlation": 0.1336
+        },
+        "SCI2035": {
+            "cosine_similarity": 0.6991000175476074,
+            "importance": 0.0122,
+            "correlation": 0.1789
+        },
+        "SCI1004": {
+            "cosine_similarity": 0.6814000010490417,
+            "importance": 0.008,
+            "correlation": 0.1491
+        },
+        "SCI2034": {
+            "cosine_similarity": 0.6718000173568726,
+            "importance": 0.0612,
+            "correlation": 0.1551
+        },
+        "SCI3007": {
+            "cosine_similarity": 0.6665999889373779,
+            "importance": 0.0212,
+            "correlation": 0.0392
+        }
+    },
+    "SCI3050": {
+        "SCI1004": {
+            "cosine_similarity": 0.753000020980835,
+            "importance": 0.0141,
+            "correlation": 0.1021
+        },
+        "SCI2037": {
+            "cosine_similarity": 0.7415000200271606,
+            "importance": 0.0311,
+            "correlation": 0.201
+        },
+        "SCI3049": {
+            "cosine_similarity": 0.7123000025749207,
+            "importance": 0.0175,
+            "correlation": 0.1217
+        },
+        "SCI2031": {
+            "cosine_similarity": 0.6430000066757202,
+            "importance": 0.0199,
+            "correlation": 0.201
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6269999742507935,
+            "importance": 0.0115,
+            "correlation": 0.1217
+        }
+    },
+    "SCI3051": {
+        "SSC3033": {
+            "cosine_similarity": 0.6636999845504761,
+            "importance": 0.0217,
+            "correlation": 0.045
+        },
+        "SCI2036": {
+            "cosine_similarity": 0.6607000231742859,
+            "importance": 0.022,
+            "correlation": 0.1009
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.659500002861023,
+            "importance": 0.0128,
+            "correlation": 0.1443
+        },
+        "SSC3011": {
+            "cosine_similarity": 0.6518999934196472,
+            "importance": 0.0142,
+            "correlation": 0.0668
+        },
+        "SSC3056": {
+            "cosine_similarity": 0.6238999962806702,
+            "importance": 0.0154,
+            "correlation": 0.0385
+        }
+    },
+    "SCI3052": {},
+    "SSC1005": {
+        "COR1006": {
+            "cosine_similarity": 0.6711999773979187,
+            "importance": 0.0269,
+            "correlation": 0.0186
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.6617000102996826,
+            "importance": 0.0267,
+            "correlation": 0.1138
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6348999738693237,
+            "importance": 0.0382,
+            "correlation": 0.077
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6201000213623047,
+            "importance": 0.043,
+            "correlation": 0.0739
+        },
+        "COR1004": {
+            "cosine_similarity": 0.619700014591217,
+            "importance": 0.0607,
+            "correlation": 0.0287
+        }
+    },
+    "SSC1007": {
+        "COR1004": {
+            "cosine_similarity": 0.7250000238418579,
+            "importance": 0.0714,
+            "correlation": 0.0677
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6953999996185303,
+            "importance": 0.0562,
+            "correlation": 0.1059
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6904000043869019,
+            "importance": 0.054,
+            "correlation": 0.1208
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.6873000264167786,
+            "importance": 0.0338,
+            "correlation": 0.0433
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6822999715805054,
+            "importance": 0.0297,
+            "correlation": 0.1066
+        }
+    },
+    "SSC1025": {
+        "COR1004": {
+            "cosine_similarity": 0.7973999977111816,
+            "importance": 0.0752,
+            "correlation": 0.0141
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.7253000140190125,
+            "importance": 0.0154,
+            "correlation": 0.0748
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.7251999974250793,
+            "importance": 0.0197,
+            "correlation": 0.0271
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6973999738693237,
+            "importance": 0.1806,
+            "correlation": 0.2479
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6953999996185303,
+            "importance": 0.0547,
+            "correlation": 0.1022
+        }
+    },
+    "SSC1027": {
+        "SCI2010": {
+            "cosine_similarity": 0.7310000061988831,
+            "importance": 0.0047,
+            "correlation": 0.0327
+        },
+        "SSC1030": {
+            "cosine_similarity": 0.6769000291824341,
+            "importance": 0.0112,
+            "correlation": 0.0319
+        },
+        "COR1004": {
+            "cosine_similarity": 0.670199990272522,
+            "importance": 0.059,
+            "correlation": 0.0194
+        },
+        "SSC2018": {
+            "cosine_similarity": 0.6671000123023987,
+            "importance": 0.0295,
+            "correlation": 0.0078
+        },
+        "SCI1010": {
+            "cosine_similarity": 0.661300003528595,
+            "importance": 0.008,
+            "correlation": 0.0561
+        }
+    },
+    "SSC1029": {
+        "SSC2002": {
+            "cosine_similarity": 0.7336000204086304,
+            "importance": 0.0177,
+            "correlation": 0.068
+        },
+        "SSC2019": {
+            "cosine_similarity": 0.7264999747276306,
+            "importance": 0.0235,
+            "correlation": 0.0582
+        },
+        "COR1004": {
+            "cosine_similarity": 0.7134000062942505,
+            "importance": 0.0463,
+            "correlation": 0.1361
+        },
+        "SSC2064": {
+            "cosine_similarity": 0.6996999979019165,
+            "importance": 0.0101,
+            "correlation": 0.0454
+        },
+        "HUM1003": {
+            "cosine_similarity": 0.6904000043869019,
+            "importance": 0.0139,
+            "correlation": 0.0541
+        }
+    },
+    "SSC1030": {
+        "SSC1027": {
+            "cosine_similarity": 0.6769000291824341,
+            "importance": 0.0052,
+            "correlation": 0.0408
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6008999943733215,
+            "importance": 0.1642,
+            "correlation": 0.1003
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.593500018119812,
+            "importance": 0.0814,
+            "correlation": 0.0495
+        },
+        "SCI1009": {
+            "cosine_similarity": 0.5821999907493591,
+            "importance": 0.1177,
+            "correlation": 0.0198
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.5756999850273132,
+            "importance": 0.1443,
+            "correlation": 0.0474
+        }
+    },
+    "SSC2002": {
+        "COR1003": {
+            "cosine_similarity": 0.7820000052452087,
+            "importance": 0.0591,
+            "correlation": 0.0906
+        },
+        "COR1004": {
+            "cosine_similarity": 0.7312999963760376,
+            "importance": 0.0574,
+            "correlation": 0.019
+        },
+        "SSC2039": {
+            "cosine_similarity": 0.6970000267028809,
+            "importance": 0.017,
+            "correlation": 0.0036
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6869000196456909,
+            "importance": 0.0382,
+            "correlation": 0.0478
+        },
+        "SCI1016": {
+            "cosine_similarity": 0.6833000183105469,
+            "importance": 0.0343,
+            "correlation": 0.0701
+        }
+    },
+    "SSC2004": {
+        "SSC1005": {
+            "cosine_similarity": 0.7105000019073486,
+            "importance": 0.0442,
+            "correlation": 0.0558
+        },
+        "SSC2006": {
+            "cosine_similarity": 0.6725000143051147,
+            "importance": 0.0608,
+            "correlation": 0.0025
+        },
+        "SCI2034": {
+            "cosine_similarity": 0.6467999815940857,
+            "importance": 0.0202,
+            "correlation": 0.0628
+        },
+        "SSC2019": {
+            "cosine_similarity": 0.6407999992370605,
+            "importance": 0.0529,
+            "correlation": 0.03
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.5871999859809875,
+            "importance": 0.0151,
+            "correlation": 0.0742
+        }
+    },
+    "SSC2006": {
+        "SSC3019": {
+            "cosine_similarity": 0.7451000213623047,
+            "importance": 0.0095,
+            "correlation": 0.0871
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6902999877929688,
+            "importance": 0.0835,
+            "correlation": 0.1594
+        },
+        "SCI2034": {
+            "cosine_similarity": 0.6761000156402588,
+            "importance": 0.0338,
+            "correlation": 0.0964
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.633899986743927,
+            "importance": 0.0173,
+            "correlation": 0.1121
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6262999773025513,
+            "importance": 0.0411,
+            "correlation": 0.153
+        }
+    },
+    "SSC2007": {
+        "SSC3041": {
+            "cosine_similarity": 0.766700029373169,
+            "importance": 0.009,
+            "correlation": 0.0329
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6937999725341797,
+            "importance": 0.015,
+            "correlation": 0.071
+        },
+        "SSC2046": {
+            "cosine_similarity": 0.6909000277519226,
+            "importance": 0.0369,
+            "correlation": 0.0569
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6879000067710876,
+            "importance": 0.035,
+            "correlation": 0.1038
+        },
+        "COR1004": {
+            "cosine_similarity": 0.67330002784729,
+            "importance": 0.0314,
+            "correlation": 0.0154
+        }
+    },
+    "SSC2008": {},
+    "SSC2009": {
+        "SSC3017": {
+            "cosine_similarity": 0.7461000084877014,
+            "importance": 0.0292,
+            "correlation": 0.0543
+        },
+        "SSC2018": {
+            "cosine_similarity": 0.6722999811172485,
+            "importance": 0.0355,
+            "correlation": 0.1456
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6525999903678894,
+            "importance": 0.0184,
+            "correlation": 0.1089
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6334999799728394,
+            "importance": 0.0922,
+            "correlation": 0.2586
+        },
+        "SCI1016": {
+            "cosine_similarity": 0.629800021648407,
+            "importance": 0.0155,
+            "correlation": 0.1463
+        }
+    },
+    "SSC2010": {},
+    "SSC2011": {
+        "COR1003": {
+            "cosine_similarity": 0.7621999979019165,
+            "importance": 0.124,
+            "correlation": 0.1056
+        },
+        "HUM1013": {
+            "cosine_similarity": 0.745199978351593,
+            "importance": 0.0113,
+            "correlation": 0.1627
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.7389000058174133,
+            "importance": 0.0402,
+            "correlation": 0.1463
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6654000282287598,
+            "importance": 0.0221,
+            "correlation": 0.1271
+        },
+        "SSC2071": {
+            "cosine_similarity": 0.6622999906539917,
+            "importance": 0.0081,
+            "correlation": 0.1392
+        }
+    },
+    "SSC2018": {
+        "SSC1027": {
+            "cosine_similarity": 0.6671000123023987,
+            "importance": 0.0371,
+            "correlation": 0.0897
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6258000135421753,
+            "importance": 0.129,
+            "correlation": 0.0242
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.614300012588501,
+            "importance": 0.0394,
+            "correlation": 0.0661
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6014000177383423,
+            "importance": 0.0352,
+            "correlation": 0.0283
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6003999710083008,
+            "importance": 0.0518,
+            "correlation": 0.0749
+        }
+    },
+    "SSC2019": {
+        "SSC1005": {
+            "cosine_similarity": 0.7681999802589417,
+            "importance": 0.2231,
+            "correlation": 0.3021
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.7264999747276306,
+            "importance": 0.0339,
+            "correlation": 0.1047
+        },
+        "SSC3019": {
+            "cosine_similarity": 0.6873999834060669,
+            "importance": 0.0291,
+            "correlation": 0.0363
+        },
+        "SSC2063": {
+            "cosine_similarity": 0.6728000044822693,
+            "importance": 0.0277,
+            "correlation": 0.0871
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6556000113487244,
+            "importance": 0.0642,
+            "correlation": 0.0175
+        }
+    },
+    "SSC2020": {
+        "SSC2022": {
+            "cosine_similarity": 0.7132999897003174,
+            "importance": 0.0104,
+            "correlation": 0.0446
+        },
+        "SSC3017": {
+            "cosine_similarity": 0.6255000233650208,
+            "importance": 0.019,
+            "correlation": 0.0446
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.6183000206947327,
+            "importance": 0.0318,
+            "correlation": 0.0845
+        },
+        "SSC1030": {
+            "cosine_similarity": 0.5976999998092651,
+            "importance": 0.0149,
+            "correlation": 0.038
+        },
+        "COR1003": {
+            "cosine_similarity": 0.5932000279426575,
+            "importance": 0.0268,
+            "correlation": 0.1709
+        }
+    },
+    "SSC2022": {
+        "SSC1027": {
+            "cosine_similarity": 0.7222999930381775,
+            "importance": 0.0299,
+            "correlation": 0.1589
+        },
+        "SSC2018": {
+            "cosine_similarity": 0.7092000246047974,
+            "importance": 0.0523,
+            "correlation": 0.0592
+        },
+        "SSC2007": {
+            "cosine_similarity": 0.7002999782562256,
+            "importance": 0.0117,
+            "correlation": 0.122
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6658999919891357,
+            "importance": 0.0191,
+            "correlation": 0.1747
+        },
+        "SCI2033": {
+            "cosine_similarity": 0.6452000141143799,
+            "importance": 0.0119,
+            "correlation": 0.122
+        }
+    },
+    "SSC2024": {
+        "SSC1007": {
+            "cosine_similarity": 0.7214000225067139,
+            "importance": 0.0505,
+            "correlation": 0.2173
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.7184000015258789,
+            "importance": 0.0461,
+            "correlation": 0.0743
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6615999937057495,
+            "importance": 0.0436,
+            "correlation": 0.1326
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6553000211715698,
+            "importance": 0.0243,
+            "correlation": 0.1473
+        },
+        "COR1004": {
+            "cosine_similarity": 0.646399974822998,
+            "importance": 0.0294,
+            "correlation": 0.0704
+        }
+    },
+    "SSC2025": {
+        "SSC3019": {
+            "cosine_similarity": 0.7318000197410583,
+            "importance": 0.0208,
+            "correlation": 0.1827
+        },
+        "SCI2034": {
+            "cosine_similarity": 0.7261999845504761,
+            "importance": 0.0357,
+            "correlation": 0.1246
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6592000126838684,
+            "importance": 0.0216,
+            "correlation": 0.07
+        },
+        "SSC2063": {
+            "cosine_similarity": 0.6561999917030334,
+            "importance": 0.0102,
+            "correlation": 0.1294
+        },
+        "SSC2004": {
+            "cosine_similarity": 0.5946999788284302,
+            "importance": 0.0121,
+            "correlation": 0.1334
+        }
+    },
+    "SSC2027": {
+        "SSC1007": {
+            "cosine_similarity": 0.763700008392334,
+            "importance": 0.0328,
+            "correlation": 0.0038
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.7469000220298767,
+            "importance": 0.0254,
+            "correlation": 0.1234
+        },
+        "SSC3032": {
+            "cosine_similarity": 0.7032999992370605,
+            "importance": 0.0281,
+            "correlation": 0.1387
+        },
+        "SSC2060": {
+            "cosine_similarity": 0.6973000168800354,
+            "importance": 0.0177,
+            "correlation": 0.0662
+        },
+        "SSC2024": {
+            "cosine_similarity": 0.6898999810218811,
+            "importance": 0.0369,
+            "correlation": 0.1278
+        }
+    },
+    "SSC2028": {
+        "SSC3038": {
+            "cosine_similarity": 0.8496999740600586,
+            "importance": 0.0085,
+            "correlation": 0.055
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.7746000289916992,
+            "importance": 0.0214,
+            "correlation": 0.0579
+        },
+        "SSC2065": {
+            "cosine_similarity": 0.7246000170707703,
+            "importance": 0.0064,
+            "correlation": 0.0983
+        },
+        "COR1002": {
+            "cosine_similarity": 0.7196999788284302,
+            "importance": 0.0089,
+            "correlation": 0.0841
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6909999847412109,
+            "importance": 0.0352,
+            "correlation": 0.0347
+        }
+    },
+    "SSC2037": {
+        "SSC3032": {
+            "cosine_similarity": 0.7519000172615051,
+            "importance": 0.0198,
+            "correlation": 0.0
+        },
+        "COR1003": {
+            "cosine_similarity": 0.741599977016449,
+            "importance": 0.045,
+            "correlation": 0.0932
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6922000050544739,
+            "importance": 0.0452,
+            "correlation": 0.0902
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6820999979972839,
+            "importance": 0.0157,
+            "correlation": 0.1111
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6801999807357788,
+            "importance": 0.0325,
+            "correlation": 0.0642
+        }
+    },
+    "SSC2039": {
+        "SSC1025": {
+            "cosine_similarity": 0.7414000034332275,
+            "importance": 0.0077,
+            "correlation": 0.057
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6920999884605408,
+            "importance": 0.0059,
+            "correlation": 0.0608
+        },
+        "SSC3008": {
+            "cosine_similarity": 0.6744999885559082,
+            "importance": 0.0058,
+            "correlation": 0.0204
+        },
+        "SSC2037": {
+            "cosine_similarity": 0.6723999977111816,
+            "importance": 0.0078,
+            "correlation": 0.0204
+        },
+        "SSC2064": {
+            "cosine_similarity": 0.6452000141143799,
+            "importance": 0.0059,
+            "correlation": 0.0266
+        }
+    },
+    "SSC2043": {
+        "SSC1027": {
+            "cosine_similarity": 0.7649000287055969,
+            "importance": 0.0658,
+            "correlation": 0.0393
+        },
+        "COR1003": {
+            "cosine_similarity": 0.755299985408783,
+            "importance": 0.0987,
+            "correlation": 0.1877
+        },
+        "SSC3011": {
+            "cosine_similarity": 0.7099000215530396,
+            "importance": 0.0182,
+            "correlation": 0.1371
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6942999958992004,
+            "importance": 0.0157,
+            "correlation": 0.1071
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6862999796867371,
+            "importance": 0.046,
+            "correlation": 0.0916
+        }
+    },
+    "SSC2046": {
+        "SSC2002": {
+            "cosine_similarity": 0.7383999824523926,
+            "importance": 0.0904,
+            "correlation": 0.0073
+        },
+        "COR1003": {
+            "cosine_similarity": 0.7257999777793884,
+            "importance": 0.0696,
+            "correlation": 0.0861
+        },
+        "SSC2064": {
+            "cosine_similarity": 0.7021999955177307,
+            "importance": 0.0314,
+            "correlation": 0.0107
+        },
+        "SCI1016": {
+            "cosine_similarity": 0.698199987411499,
+            "importance": 0.0291,
+            "correlation": 0.0173
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6766999959945679,
+            "importance": 0.0382,
+            "correlation": 0.107
+        }
+    },
+    "SSC2048": {
+        "SSC1027": {
+            "cosine_similarity": 0.8569999933242798,
+            "importance": 0.0444,
+            "correlation": 0.3081
+        },
+        "SCI3051": {
+            "cosine_similarity": 0.6818000078201294,
+            "importance": 0.007,
+            "correlation": 0.0224
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6660000085830688,
+            "importance": 0.0262,
+            "correlation": 0.112
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6363000273704529,
+            "importance": 0.0135,
+            "correlation": 0.1586
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.6316999793052673,
+            "importance": 0.0093,
+            "correlation": 0.138
+        }
+    },
+    "SSC2050": {
+        "SSC1007": {
+            "cosine_similarity": 0.7371000051498413,
+            "importance": 0.0606,
+            "correlation": 0.0555
+        },
+        "SSC2006": {
+            "cosine_similarity": 0.6470999717712402,
+            "importance": 0.0195,
+            "correlation": 0.0674
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6402999758720398,
+            "importance": 0.0216,
+            "correlation": 0.0087
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6234999895095825,
+            "importance": 0.0719,
+            "correlation": 0.2612
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6190000176429749,
+            "importance": 0.0258,
+            "correlation": 0.1076
+        }
+    },
+    "SSC2053": {
+        "SCI2042": {
+            "cosine_similarity": 0.7651000022888184,
+            "importance": 0.0359,
+            "correlation": 0.0444
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.684499979019165,
+            "importance": 0.0344,
+            "correlation": 0.0898
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6650000214576721,
+            "importance": 0.0231,
+            "correlation": 0.1399
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6421999931335449,
+            "importance": 0.0334,
+            "correlation": 0.1581
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6413999795913696,
+            "importance": 0.0279,
+            "correlation": 0.0655
+        }
+    },
+    "SSC2055": {
+        "SSC1027": {
+            "cosine_similarity": 0.6503999829292297,
+            "importance": 0.0369,
+            "correlation": 0.0519
+        },
+        "SSC2018": {
+            "cosine_similarity": 0.6258999705314636,
+            "importance": 0.0182,
+            "correlation": 0.0506
+        },
+        "SSC3006": {
+            "cosine_similarity": 0.6189000010490417,
+            "importance": 0.0254,
+            "correlation": 0.0305
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.613099992275238,
+            "importance": 0.025,
+            "correlation": 0.0607
+        },
+        "COR1003": {
+            "cosine_similarity": 0.5989000201225281,
+            "importance": 0.1289,
+            "correlation": 0.0953
+        }
+    },
+    "SSC2060": {
+        "SSC1007": {
+            "cosine_similarity": 0.7786999940872192,
+            "importance": 0.0568,
+            "correlation": 0.1455
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.7660999894142151,
+            "importance": 0.0396,
+            "correlation": 0.0403
+        },
+        "SSC2011": {
+            "cosine_similarity": 0.7121999859809875,
+            "importance": 0.0214,
+            "correlation": 0.1364
+        },
+        "HUM1010": {
+            "cosine_similarity": 0.7016000151634216,
+            "importance": 0.0311,
+            "correlation": 0.1528
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6761000156402588,
+            "importance": 0.0187,
+            "correlation": 0.0747
+        }
+    },
+    "SSC2061": {
+        "SSC1005": {
+            "cosine_similarity": 0.7034000158309937,
+            "importance": 0.0412,
+            "correlation": 0.0134
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.64410001039505,
+            "importance": 0.0173,
+            "correlation": 0.0095
+        },
+        "SSC3019": {
+            "cosine_similarity": 0.6345999836921692,
+            "importance": 0.0204,
+            "correlation": 0.0195
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6312999725341797,
+            "importance": 0.0253,
+            "correlation": 0.0023
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6136000156402588,
+            "importance": 0.0518,
+            "correlation": 0.1341
+        }
+    },
+    "SSC2062": {
+        "SSC1005": {
+            "cosine_similarity": 0.7483999729156494,
+            "importance": 0.0376,
+            "correlation": 0.0399
+        },
+        "SSC2019": {
+            "cosine_similarity": 0.6990000009536743,
+            "importance": 0.0445,
+            "correlation": 0.032
+        },
+        "SCI2034": {
+            "cosine_similarity": 0.6786999702453613,
+            "importance": 0.059,
+            "correlation": 0.1166
+        },
+        "SSC2018": {
+            "cosine_similarity": 0.6513000130653381,
+            "importance": 0.0289,
+            "correlation": 0.0231
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6509000062942505,
+            "importance": 0.0456,
+            "correlation": 0.023
+        }
+    },
+    "SSC2063": {
+        "SSC2019": {
+            "cosine_similarity": 0.6728000044822693,
+            "importance": 0.0129,
+            "correlation": 0.048
+        },
+        "SSC2061": {
+            "cosine_similarity": 0.6646000146865845,
+            "importance": 0.0099,
+            "correlation": 0.0448
+        },
+        "SSC3023": {
+            "cosine_similarity": 0.6552000045776367,
+            "importance": 0.015,
+            "correlation": 0.018
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.6150000095367432,
+            "importance": 0.0095,
+            "correlation": 0.0232
+        },
+        "COR1004": {
+            "cosine_similarity": 0.614799976348877,
+            "importance": 0.0145,
+            "correlation": 0.0634
+        }
+    },
+    "SSC2064": {
+        "SSC3047": {
+            "cosine_similarity": 0.715499997138977,
+            "importance": 0.0111,
+            "correlation": 0.0691
+        },
+        "SSC2046": {
+            "cosine_similarity": 0.7021999955177307,
+            "importance": 0.0077,
+            "correlation": 0.0136
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6996999979019165,
+            "importance": 0.0117,
+            "correlation": 0.0495
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6901000142097473,
+            "importance": 0.0108,
+            "correlation": 0.017
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6586999893188477,
+            "importance": 0.0696,
+            "correlation": 0.035
+        }
+    },
+    "SSC2065": {
+        "HUM3045": {
+            "cosine_similarity": 0.6937000155448914,
+            "importance": 0.0036,
+            "correlation": 0.0362
+        },
+        "SSC2008": {
+            "cosine_similarity": 0.6678000092506409,
+            "importance": 0.0138,
+            "correlation": 0.0494
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6662999987602234,
+            "importance": 0.0131,
+            "correlation": 0.0972
+        },
+        "COR1003": {
+            "cosine_similarity": 0.656000018119812,
+            "importance": 0.0316,
+            "correlation": 0.0624
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6337000131607056,
+            "importance": 0.0832,
+            "correlation": 0.0679
+        }
+    },
+    "SSC2070": {
+        "SSC1027": {
+            "cosine_similarity": 0.6879000067710876,
+            "importance": 0.0132,
+            "correlation": 0.0898
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6604999899864197,
+            "importance": 0.0352,
+            "correlation": 0.2376
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6518999934196472,
+            "importance": 0.0111,
+            "correlation": 0.0835
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6498000025749207,
+            "importance": 0.0373,
+            "correlation": 0.1675
+        },
+        "SCI1005": {
+            "cosine_similarity": 0.6407999992370605,
+            "importance": 0.0169,
+            "correlation": 0.0449
+        }
+    },
+    "SSC2071": {
+        "COR1003": {
+            "cosine_similarity": 0.741599977016449,
+            "importance": 0.1736,
+            "correlation": 0.4333
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.7200999855995178,
+            "importance": 0.0143,
+            "correlation": 0.1543
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.7145000100135803,
+            "importance": 0.034,
+            "correlation": 0.0598
+        },
+        "HUM2003": {
+            "cosine_similarity": 0.7141000032424927,
+            "importance": 0.0101,
+            "correlation": 0.1244
+        },
+        "SSC2046": {
+            "cosine_similarity": 0.6996999979019165,
+            "importance": 0.0208,
+            "correlation": 0.1457
+        }
+    },
+    "SSC3002": {
+        "SSC3036": {
+            "cosine_similarity": 0.7993999719619751,
+            "importance": 0.0178,
+            "correlation": 0.1508
+        },
+        "SSC3055": {
+            "cosine_similarity": 0.7669000029563904,
+            "importance": 0.0172,
+            "correlation": 0.0857
+        },
+        "COR1003": {
+            "cosine_similarity": 0.7069000005722046,
+            "importance": 0.0391,
+            "correlation": 0.093
+        },
+        "SSC2060": {
+            "cosine_similarity": 0.6868000030517578,
+            "importance": 0.0151,
+            "correlation": 0.041
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6743000149726868,
+            "importance": 0.0207,
+            "correlation": 0.1297
+        }
+    },
+    "SSC3003": {
+        "SSC2002": {
+            "cosine_similarity": 0.7348999977111816,
+            "importance": 0.0999,
+            "correlation": 0.461
+        },
+        "SSC3049": {
+            "cosine_similarity": 0.7024999856948853,
+            "importance": 0.0125,
+            "correlation": 0.125
+        },
+        "SSC2060": {
+            "cosine_similarity": 0.7006999850273132,
+            "importance": 0.0275,
+            "correlation": 0.1936
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6416000127792358,
+            "importance": 0.014,
+            "correlation": 0.1581
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6144000291824341,
+            "importance": 0.02,
+            "correlation": 0.1414
+        }
+    },
+    "SSC3006": {
+        "SCI2041": {
+            "cosine_similarity": 0.7182999849319458,
+            "importance": 0.0231,
+            "correlation": 0.059
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.7084000110626221,
+            "importance": 0.0141,
+            "correlation": 0.0289
+        },
+        "SSC2065": {
+            "cosine_similarity": 0.7059999704360962,
+            "importance": 0.0138,
+            "correlation": 0.0601
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.7028999924659729,
+            "importance": 0.0335,
+            "correlation": 0.1111
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6973999738693237,
+            "importance": 0.0522,
+            "correlation": 0.048
+        }
+    },
+    "SSC3008": {
+        "SSC2002": {
+            "cosine_similarity": 0.7350000143051147,
+            "importance": 0.0073,
+            "correlation": 0.0614
+        },
+        "COR1004": {
+            "cosine_similarity": 0.7128999829292297,
+            "importance": 0.0204,
+            "correlation": 0.1049
+        },
+        "SSC3036": {
+            "cosine_similarity": 0.6819000244140625,
+            "importance": 0.0227,
+            "correlation": 0.1457
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6647999882698059,
+            "importance": 0.0093,
+            "correlation": 0.0968
+        },
+        "SSC3006": {
+            "cosine_similarity": 0.6632999777793884,
+            "importance": 0.0149,
+            "correlation": 0.0794
+        }
+    },
+    "SSC3009": {
+        "SSC2007": {
+            "cosine_similarity": 0.7595999836921692,
+            "importance": 0.0134,
+            "correlation": 0.0174
+        },
+        "SSC3011": {
+            "cosine_similarity": 0.7354999780654907,
+            "importance": 0.0107,
+            "correlation": 0.1612
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6466000080108643,
+            "importance": 0.0258,
+            "correlation": 0.0704
+        },
+        "SSC2020": {
+            "cosine_similarity": 0.6442999839782715,
+            "importance": 0.0221,
+            "correlation": 0.1741
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6402000188827515,
+            "importance": 0.0096,
+            "correlation": 0.1348
+        }
+    },
+    "SSC3011": {
+        "SSC1029": {
+            "cosine_similarity": 0.6705999970436096,
+            "importance": 0.0412,
+            "correlation": 0.0158
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6690999865531921,
+            "importance": 0.0734,
+            "correlation": 0.0618
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.654699981212616,
+            "importance": 0.0286,
+            "correlation": 0.0579
+        },
+        "SSC2037": {
+            "cosine_similarity": 0.6417999863624573,
+            "importance": 0.0163,
+            "correlation": 0.0548
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6407999992370605,
+            "importance": 0.025,
+            "correlation": 0.0447
+        }
+    },
+    "SSC3012": {
+        "COR1003": {
+            "cosine_similarity": 0.7297999858856201,
+            "importance": 0.0289,
+            "correlation": 0.1157
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.7121000289916992,
+            "importance": 0.0328,
+            "correlation": 0.1397
+        },
+        "SSC3036": {
+            "cosine_similarity": 0.6794999837875366,
+            "importance": 0.0166,
+            "correlation": 0.2011
+        },
+        "SSC3032": {
+            "cosine_similarity": 0.6751000285148621,
+            "importance": 0.025,
+            "correlation": 0.1801
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6452999711036682,
+            "importance": 0.031,
+            "correlation": 0.1333
+        }
+    },
+    "SSC3017": {
+        "SSC2055": {
+            "cosine_similarity": 0.7468000054359436,
+            "importance": 0.0185,
+            "correlation": 0.0413
+        },
+        "SSC2008": {
+            "cosine_similarity": 0.6735000014305115,
+            "importance": 0.0249,
+            "correlation": 0.0267
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.6668999791145325,
+            "importance": 0.0242,
+            "correlation": 0.0369
+        },
+        "SSC3047": {
+            "cosine_similarity": 0.6342999935150146,
+            "importance": 0.0233,
+            "correlation": 0.0257
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.6165000200271606,
+            "importance": 0.0169,
+            "correlation": 0.0374
+        }
+    },
+    "SSC3018": {
+        "SSC2061": {
+            "cosine_similarity": 0.881600022315979,
+            "importance": 0.0213,
+            "correlation": 0.0338
+        },
+        "SSC1005": {
+            "cosine_similarity": 0.6388000249862671,
+            "importance": 0.0244,
+            "correlation": 0.0525
+        },
+        "SSC2019": {
+            "cosine_similarity": 0.6114000082015991,
+            "importance": 0.026,
+            "correlation": 0.0267
+        },
+        "SSC3019": {
+            "cosine_similarity": 0.6111000180244446,
+            "importance": 0.0176,
+            "correlation": 0.0728
+        },
+        "SSC2062": {
+            "cosine_similarity": 0.6000999808311462,
+            "importance": 0.015,
+            "correlation": 0.0604
+        }
+    },
+    "SSC3019": {
+        "SSC1007": {
+            "cosine_similarity": 0.7111999988555908,
+            "importance": 0.0219,
+            "correlation": 0.0011
+        },
+        "SSC2050": {
+            "cosine_similarity": 0.7063000202178955,
+            "importance": 0.018,
+            "correlation": 0.1234
+        },
+        "SSC2019": {
+            "cosine_similarity": 0.6873999834060669,
+            "importance": 0.0209,
+            "correlation": 0.0455
+        },
+        "SSC2018": {
+            "cosine_similarity": 0.6747999787330627,
+            "importance": 0.0181,
+            "correlation": 0.1027
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6503999829292297,
+            "importance": 0.0323,
+            "correlation": 0.0822
+        }
+    },
+    "SSC3023": {
+        "SSC2062": {
+            "cosine_similarity": 0.8012999892234802,
+            "importance": 0.033,
+            "correlation": 0.0318
+        },
+        "SSC2025": {
+            "cosine_similarity": 0.7178000211715698,
+            "importance": 0.0371,
+            "correlation": 0.0007
+        },
+        "SSC3019": {
+            "cosine_similarity": 0.7159000039100647,
+            "importance": 0.0234,
+            "correlation": 0.1465
+        },
+        "SCI2034": {
+            "cosine_similarity": 0.7056000232696533,
+            "importance": 0.0497,
+            "correlation": 0.0789
+        },
+        "HUM1007": {
+            "cosine_similarity": 0.6972000002861023,
+            "importance": 0.0365,
+            "correlation": 0.0074
+        }
+    },
+    "SSC3030": {
+        "SSC1007": {
+            "cosine_similarity": 0.7919999957084656,
+            "importance": 0.0213,
+            "correlation": 0.1066
+        },
+        "SSC2024": {
+            "cosine_similarity": 0.7425000071525574,
+            "importance": 0.0221,
+            "correlation": 0.1153
+        },
+        "SSC2060": {
+            "cosine_similarity": 0.7383000254631042,
+            "importance": 0.0169,
+            "correlation": 0.175
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6597999930381775,
+            "importance": 0.0648,
+            "correlation": 0.3275
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6428999900817871,
+            "importance": 0.025,
+            "correlation": 0.0467
+        }
+    },
+    "SSC3032": {
+        "SSC2002": {
+            "cosine_similarity": 0.7601000070571899,
+            "importance": 0.0162,
+            "correlation": 0.0117
+        },
+        "COR1003": {
+            "cosine_similarity": 0.72079998254776,
+            "importance": 0.0559,
+            "correlation": 0.2393
+        },
+        "SSC3019": {
+            "cosine_similarity": 0.6811000108718872,
+            "importance": 0.0165,
+            "correlation": 0.0321
+        },
+        "SSC3036": {
+            "cosine_similarity": 0.6703000068664551,
+            "importance": 0.0214,
+            "correlation": 0.011
+        },
+        "SSC2046": {
+            "cosine_similarity": 0.6679999828338623,
+            "importance": 0.0178,
+            "correlation": 0.0564
+        }
+    },
+    "SSC3033": {
+        "SSC3019": {
+            "cosine_similarity": 0.785099983215332,
+            "importance": 0.0171,
+            "correlation": 0.1878
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.7495999932289124,
+            "importance": 0.024,
+            "correlation": 0.122
+        },
+        "SSC2020": {
+            "cosine_similarity": 0.7027000188827515,
+            "importance": 0.0078,
+            "correlation": 0.1282
+        },
+        "SSC2063": {
+            "cosine_similarity": 0.6826000213623047,
+            "importance": 0.0098,
+            "correlation": 0.1132
+        },
+        "SSC2019": {
+            "cosine_similarity": 0.6801999807357788,
+            "importance": 0.0065,
+            "correlation": 0.0894
+        }
+    },
+    "SSC3034": {
+        "SSC1027": {
+            "cosine_similarity": 0.754800021648407,
+            "importance": 0.0107,
+            "correlation": 0.1667
+        },
+        "SSC2048": {
+            "cosine_similarity": 0.7325000166893005,
+            "importance": 0.014,
+            "correlation": 0.1336
+        },
+        "SSC2060": {
+            "cosine_similarity": 0.6960999965667725,
+            "importance": 0.0099,
+            "correlation": 0.1961
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6865000128746033,
+            "importance": 0.1236,
+            "correlation": 0.7845
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6847000122070312,
+            "importance": 0.012,
+            "correlation": 0.3536
+        }
+    },
+    "SSC3036": {
+        "COR1003": {
+            "cosine_similarity": 0.720300018787384,
+            "importance": 0.0642,
+            "correlation": 0.2423
+        },
+        "SSC3008": {
+            "cosine_similarity": 0.6819000244140625,
+            "importance": 0.0064,
+            "correlation": 0.0625
+        },
+        "SSC3032": {
+            "cosine_similarity": 0.6703000068664551,
+            "importance": 0.0114,
+            "correlation": 0.098
+        },
+        "SSC3011": {
+            "cosine_similarity": 0.6690000295639038,
+            "importance": 0.0093,
+            "correlation": 0.0732
+        },
+        "SSC2037": {
+            "cosine_similarity": 0.6510999798774719,
+            "importance": 0.0206,
+            "correlation": 0.0602
+        }
+    },
+    "SSC3038": {
+        "SSC2028": {
+            "cosine_similarity": 0.8496999740600586,
+            "importance": 0.0196,
+            "correlation": 0.0766
+        },
+        "SSC1029": {
+            "cosine_similarity": 0.775600016117096,
+            "importance": 0.0184,
+            "correlation": 0.0192
+        },
+        "HUM3040": {
+            "cosine_similarity": 0.7458999752998352,
+            "importance": 0.0202,
+            "correlation": 0.128
+        },
+        "COR1002": {
+            "cosine_similarity": 0.7441999912261963,
+            "importance": 0.0413,
+            "correlation": 0.1255
+        },
+        "COR1004": {
+            "cosine_similarity": 0.7192000150680542,
+            "importance": 0.0146,
+            "correlation": 0.1527
+        }
+    },
+    "SSC3040": {
+        "HUM2003": {
+            "cosine_similarity": 0.7590000033378601,
+            "importance": 0.0163,
+            "correlation": 0.0439
+        },
+        "SSC2019": {
+            "cosine_similarity": 0.7177000045776367,
+            "importance": 0.0151,
+            "correlation": 0.0619
+        },
+        "COR1004": {
+            "cosine_similarity": 0.7099999785423279,
+            "importance": 0.0276,
+            "correlation": 0.0203
+        },
+        "HUM1003": {
+            "cosine_similarity": 0.6905999779701233,
+            "importance": 0.0168,
+            "correlation": 0.0841
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6762999892234802,
+            "importance": 0.0268,
+            "correlation": 0.0981
+        }
+    },
+    "SSC3041": {
+        "SSC2043": {
+            "cosine_similarity": 0.7806000113487244,
+            "importance": 0.0128,
+            "correlation": 0.1287
+        },
+        "COR1003": {
+            "cosine_similarity": 0.7310000061988831,
+            "importance": 0.0967,
+            "correlation": 0.3806
+        },
+        "SSC3059": {
+            "cosine_similarity": 0.7271000146865845,
+            "importance": 0.0107,
+            "correlation": 0.1011
+        },
+        "SSC3006": {
+            "cosine_similarity": 0.7027999758720398,
+            "importance": 0.0104,
+            "correlation": 0.086
+        },
+        "SCI1016": {
+            "cosine_similarity": 0.6349999904632568,
+            "importance": 0.019,
+            "correlation": 0.1948
+        }
+    },
+    "SSC3047": {
+        "SSC2046": {
+            "cosine_similarity": 0.7820000052452087,
+            "importance": 0.0283,
+            "correlation": 0.0421
+        },
+        "SSC2064": {
+            "cosine_similarity": 0.715499997138977,
+            "importance": 0.0124,
+            "correlation": 0.0695
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6801999807357788,
+            "importance": 0.014,
+            "correlation": 0.0875
+        },
+        "SCI1016": {
+            "cosine_similarity": 0.6660000085830688,
+            "importance": 0.0343,
+            "correlation": 0.1518
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6632000207901001,
+            "importance": 0.0193,
+            "correlation": 0.0703
+        }
+    },
+    "SSC3049": {
+        "SSC2027": {
+            "cosine_similarity": 0.7493000030517578,
+            "importance": 0.0119,
+            "correlation": 0.0604
+        },
+        "SSC3052": {
+            "cosine_similarity": 0.7297999858856201,
+            "importance": 0.011,
+            "correlation": 0.0633
+        },
+        "HUM3019": {
+            "cosine_similarity": 0.703499972820282,
+            "importance": 0.0082,
+            "correlation": 0.0216
+        },
+        "SSC3051": {
+            "cosine_similarity": 0.6840999722480774,
+            "importance": 0.0148,
+            "correlation": 0.035
+        },
+        "SSC2037": {
+            "cosine_similarity": 0.6832000017166138,
+            "importance": 0.0281,
+            "correlation": 0.0774
+        }
+    },
+    "SSC3051": {
+        "SSC2037": {
+            "cosine_similarity": 0.7426000237464905,
+            "importance": 0.0504,
+            "correlation": 0.0613
+        },
+        "COR1003": {
+            "cosine_similarity": 0.722100019454956,
+            "importance": 0.0192,
+            "correlation": 0.0319
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6884999871253967,
+            "importance": 0.0336,
+            "correlation": 0.0302
+        },
+        "SCI1016": {
+            "cosine_similarity": 0.6581000089645386,
+            "importance": 0.0261,
+            "correlation": 0.0929
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6523000001907349,
+            "importance": 0.0252,
+            "correlation": 0.0122
+        }
+    },
+    "SSC3052": {
+        "SSC3032": {
+            "cosine_similarity": 0.7962999939918518,
+            "importance": 0.0223,
+            "correlation": 0.1093
+        },
+        "COR1003": {
+            "cosine_similarity": 0.7293000221252441,
+            "importance": 0.0253,
+            "correlation": 0.0907
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.7175999879837036,
+            "importance": 0.0301,
+            "correlation": 0.0477
+        },
+        "SSC2064": {
+            "cosine_similarity": 0.715499997138977,
+            "importance": 0.0191,
+            "correlation": 0.0866
+        },
+        "SSC2024": {
+            "cosine_similarity": 0.6583999991416931,
+            "importance": 0.0181,
+            "correlation": 0.0442
+        }
+    },
+    "SSC3054": {
+        "COR1003": {
+            "cosine_similarity": 0.6348999738693237,
+            "importance": 0.0261,
+            "correlation": 0.1075
+        },
+        "SSC3059": {
+            "cosine_similarity": 0.6043000221252441,
+            "importance": 0.0257,
+            "correlation": 0.0538
+        },
+        "SSC2024": {
+            "cosine_similarity": 0.5981000065803528,
+            "importance": 0.0304,
+            "correlation": 0.1839
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.5848000049591064,
+            "importance": 0.0404,
+            "correlation": 0.1762
+        },
+        "SSC1007": {
+            "cosine_similarity": 0.5619000196456909,
+            "importance": 0.0766,
+            "correlation": 0.3093
+        }
+    },
+    "SSC3055": {
+        "SSC2046": {
+            "cosine_similarity": 0.7064999938011169,
+            "importance": 0.0257,
+            "correlation": 0.1183
+        },
+        "SSC3008": {
+            "cosine_similarity": 0.6825000047683716,
+            "importance": 0.0114,
+            "correlation": 0.0782
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6560999751091003,
+            "importance": 0.0284,
+            "correlation": 0.0953
+        },
+        "SSC3012": {
+            "cosine_similarity": 0.652999997138977,
+            "importance": 0.0162,
+            "correlation": 0.0809
+        },
+        "SSC1025": {
+            "cosine_similarity": 0.6520000100135803,
+            "importance": 0.0247,
+            "correlation": 0.0118
+        }
+    },
+    "SSC3056": {
+        "SSC3017": {
+            "cosine_similarity": 0.7523999810218811,
+            "importance": 0.0125,
+            "correlation": 0.1324
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.6966999769210815,
+            "importance": 0.0229,
+            "correlation": 0.0048
+        },
+        "SSC1027": {
+            "cosine_similarity": 0.6843000054359436,
+            "importance": 0.0111,
+            "correlation": 0.0245
+        },
+        "COR1002": {
+            "cosine_similarity": 0.6726999878883362,
+            "importance": 0.0209,
+            "correlation": 0.0944
+        },
+        "SSC2064": {
+            "cosine_similarity": 0.6717000007629395,
+            "importance": 0.0066,
+            "correlation": 0.0669
+        }
+    },
+    "SSC3059": {
+        "SSC3055": {
+            "cosine_similarity": 0.7656000256538391,
+            "importance": 0.0259,
+            "correlation": 0.1399
+        },
+        "COR1003": {
+            "cosine_similarity": 0.6880000233650208,
+            "importance": 0.0755,
+            "correlation": 0.0925
+        },
+        "SSC3032": {
+            "cosine_similarity": 0.6729000210762024,
+            "importance": 0.0171,
+            "correlation": 0.0016
+        },
+        "SSC3036": {
+            "cosine_similarity": 0.6492999792098999,
+            "importance": 0.0187,
+            "correlation": 0.0016
+        },
+        "SSC2024": {
+            "cosine_similarity": 0.6395000219345093,
+            "importance": 0.0176,
+            "correlation": 0.0243
+        }
+    },
+    "SSC3060": {
+        "SSC3047": {
+            "cosine_similarity": 0.7487000226974487,
+            "importance": 0.0178,
+            "correlation": 0.2112
+        },
+        "COR1003": {
+            "cosine_similarity": 0.7192999720573425,
+            "importance": 0.0467,
+            "correlation": 0.3525
+        },
+        "SSC2002": {
+            "cosine_similarity": 0.7142000198364258,
+            "importance": 0.0125,
+            "correlation": 0.1427
+        },
+        "SCI1016": {
+            "cosine_similarity": 0.6963000297546387,
+            "importance": 0.0788,
+            "correlation": 0.4492
+        },
+        "COR1004": {
+            "cosine_similarity": 0.6646999716758728,
+            "importance": 0.0323,
+            "correlation": 0.1772
+        }
+    },
+    "SSC3061": {}
+}

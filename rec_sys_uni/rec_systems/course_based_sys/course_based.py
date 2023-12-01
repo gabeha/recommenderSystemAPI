@@ -122,7 +122,18 @@ class CourseBasedRecSys:
               f"model_name: {self.model_name}\n" +
               f"seed_help: {self.seed_help}\n" +
               f"domain_adapt: {self.domain_adapt}\n" +
-              f"zero_adapt: {self.zero_adapt}\n")
+              f"zero_adapt: {self.zero_adapt}\n" +
+              f"seed_type: {self.seed_type}\n" +
+              f"domain_type: {self.domain_type}\n" +
+              f"zero_type: {self.zero_type}\n" +
+              f"adaptive_thr: {self.adaptive_thr}\n" +
+              f"minimal_similarity_zeroshot: {self.minimal_similarity_zeroshot}\n" +
+              f"score_alg: {self.score_alg}\n" +
+              f"distance: {self.distance}\n" +
+              f"backend: {self.backend}\n" +
+              f"scaler: {self.scaler}\n" +
+              f"sent_splitter: {self.sent_splitter}\n" +
+              f"precomputed_course: {self.precomputed_course}\n")
 
     def recommend(self, student_info):
 

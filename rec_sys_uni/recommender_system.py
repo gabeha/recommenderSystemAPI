@@ -1,10 +1,11 @@
 from rec_sys_uni.errors_checker.errors import check_student_input, check_student_data, check_course_data
-from rec_sys_uni.datasets.datasets import get_course_data
+from rec_sys_uni.datasets.datasets import get_course_data, get_student_data
 from rec_sys_uni._helpers_rec_sys import make_results_template, semester_course_cleaning, StudentNode, sort_by_periods
 from rec_sys_uni.rec_systems._systems import *
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
 from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
 from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
+from rec_sys_uni.rec_systems.warning_model.warning_model import WarningModel
 import json
 from datetime import datetime
 import pymongo
@@ -18,12 +19,14 @@ class RecSys:
                  course_based: CourseBasedRecSys = None,
                  bloom_based: BloomBasedRecSys = None,
                  explanation: LLM = None,
+                 warning_model: WarningModel = None,
                  top_n=7):
         self.constraints = False
         self.validate_input = True
         self.course_based = course_based
         self.bloom_based = bloom_based
         self.explanation = explanation
+        self.warning_model = warning_model
         self.top_n = top_n
         self.db = pymongo.MongoClient("mongodb://localhost:27017/")["RecSys"]
 
@@ -41,8 +44,14 @@ class RecSys:
 
         check_student_input(student_input)
 
+        if system_student_data:
+            student_data = get_student_data()
+
         if system_course_data:
-            course_data = get_course_data()
+            exception_courses = []
+            if student_data:
+                exception_courses = list(student_data['courses_taken'].keys())
+            course_data = get_course_data(except_courses=exception_courses)
 
         check_course_data(course_data)
 
@@ -50,6 +59,7 @@ class RecSys:
             check_student_data(student_data)
 
         return student_input, course_data, student_data
+
 
     def get_recommendation(self,
                            student_intput,
@@ -161,6 +171,9 @@ and sorted_recommended_courses key in the results)              },
 
         compute_recommendation(self, student_info)
 
+        if self.warning_model:
+            compute_warnings(self, student_info)
+
         # Sort by periods
         sort_by_periods(self, student_info, self.top_n, include_keywords=True, include_score=True,
                         include_blooms=False)
@@ -240,4 +253,6 @@ and sorted_recommended_courses key in the results)              },
               f"Validate_input: {self.validate_input} \n" +
               f"Course_based: {self.course_based} \n" +
               f"Bloom_based: {self.bloom_based} \n" +
+              f"Explanation: {self.explanation} \n" +
+              f"Warning_model: {self.warning_model} \n" +
               f"Top_n: {self.top_n} \n")
