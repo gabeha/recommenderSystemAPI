@@ -64,6 +64,22 @@ def get_explanation():
     return jsonify({'explanation': explanation})
 
 
+# TODO: Implement this, just here as a showcase
+@app.route('/api/timeline', methods=['POST'])
+def get_timeline():
+    input = request.get_json()
+    student_mongo_id = input['student_mongo_id']
+
+    # Request the recommended courses and their weights from the database
+    # recommended_courses = request_to_mongo_db()
+    
+    # Call the timeline generator
+    # timeline = rs.generate_timeline(student_mongo_id, course_code)
+
+    # return the timeline
+    # return jsonify({'timeline': timeline})
+
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)
 
