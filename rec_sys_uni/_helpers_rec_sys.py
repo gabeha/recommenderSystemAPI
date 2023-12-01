@@ -3,6 +3,7 @@ def make_results_template(results, course_data):
         results["recommended_courses"][course] = {"score": 0,
                                                   "period": course_data[course]["period"],
                                                   "warning": False,
+                                                  "warning_recommendation": [],
                                                   "keywords": {},
                                                   "blooms": {}}
     return results
@@ -56,7 +57,10 @@ def sort_by_periods(recSys, student_info, max, include_keywords=False,
     for i in sorted_recommendation_list:
         period = student_info.course_data[i[0]]['period']
 
-        course_tmp = {'course_code': i[0], 'course_name': student_info.course_data[i[0]]['course_name'], 'warning': student_info.results['recommended_courses'][i[0]]['warning']}
+        course_tmp = {'course_code': i[0],
+                      'course_name': student_info.course_data[i[0]]['course_name'],
+                      'warning': student_info.results['recommended_courses'][i[0]]['warning'],
+                      'warning_recommendation': student_info.results['recommended_courses'][i[0]]['warning_recommendation']}
 
         flag = False
         for j in period:
@@ -128,6 +132,9 @@ def print_text(i, include_keywords, include_blooms, include_score):
         text += f" - {i['blooms']}"
     if include_score:
         text += f" - {i['score']}"
+    text += f" - {i['warning']}"
+    for j in i['warning_recommendation']:
+        text += f" - {j}"
     print(text)
 
 class StudentNode:

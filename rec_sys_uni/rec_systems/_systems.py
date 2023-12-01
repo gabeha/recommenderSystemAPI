@@ -4,3 +4,6 @@ def compute_recommendation(recSys, student_info):
 
     if recSys.bloom_based:
         recSys.bloom_based.recommend(student_info)
+
+def compute_warnings(recSys, student_info):
+    recSys.warning_model.predict(student_info) # Predict the pass or fail for courses and give warning recommendations

@@ -1,5 +1,6 @@
 from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
 from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
+from rec_sys_uni.rec_systems.warning_model.warning_model import WarningModel
 from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
 from rec_sys_uni.recommender_system import RecSys
 
@@ -39,9 +40,11 @@ explanation = LLM(
 # explanation = None
 bloom_based = BloomBasedRecSys()
 # bloom_based = None
+warning_model = WarningModel()
 rs = RecSys(course_based=course_based,
             bloom_based=bloom_based,
             explanation=explanation,
+            warning_model=warning_model,
             top_n=7, )
 # Print a setting of the rec_sys object
 rs.print_config()

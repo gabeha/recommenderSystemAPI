@@ -15,7 +15,7 @@ return: course_data : dictionary
 """
 
 
-def get_course_data(only_courses=True):
+def get_course_data(only_courses=True, except_courses=[]):
     file_name = 'rec_sys_uni/datasets/data/course/course_data.json'
 
     # Check if file exists
@@ -31,7 +31,7 @@ def get_course_data(only_courses=True):
         course = i['code']
         if ("SKI" not in course and "PRO" not in course and
             "UGR" not in course and "CAP" not in course and
-            "LAN" not in course) or not only_courses:
+            "LAN" not in course and course not in except_courses) or not only_courses:
             final_course_data[course] = {
                 'course_name': i['title'],
                 'period': i['period'],
@@ -210,10 +210,12 @@ def calculate_precomputed_courses(course_data, model_name,
         np.save(f'{path}/course_embed_{code}.npy', embed)
 
 
-"""
-TODO: Data should be preprossed before using the following functions
-function: get_student_data
-return: student_data : dictionary
-"""
-# def get_student_data():
-#     return
+def get_student_data():
+    """
+    function: get_student_data
+    return: student_data : dictionary
+    """
+    # Read JSON file
+    with open('rec_sys_uni/datasets/data/student/student.json', encoding="utf8") as fp:
+        student_data = json.load(fp)
+    return student_data
