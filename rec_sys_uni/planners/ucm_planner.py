@@ -394,7 +394,7 @@ class UCMPlanner:
 
                     if res.x[i] > 0.5:
                         _, p, y = e
-                        tree[y][p].append({'code': course['code'], 'title': course['title']})
+                        tree[y][p].append({'courseCode': course['code'], 'courseTitle': course['title']})
                     
             pretty_tree = {
                 f'Year_{y}': {f'Period_{p}': tree[y][p] for p in periods} for y in years

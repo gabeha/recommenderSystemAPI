@@ -3,6 +3,7 @@ from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRec
 from rec_sys_uni.rec_systems.warning_model.warning_model import WarningModel
 from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
 from rec_sys_uni.recommender_system import RecSys
+from rec_sys_uni.planners.ucm_planner import UCMPlanner
 
 """
 Asymmetric search:
@@ -45,6 +46,7 @@ rs = RecSys(course_based=course_based,
             bloom_based=bloom_based,
             explanation=explanation,
             warning_model=warning_model,
-            top_n=7, )
+            top_n=7, 
+            planner=UCMPlanner('rec_sys_uni/planners/catalog.json'))
 # Print a setting of the rec_sys object
 rs.print_config()
