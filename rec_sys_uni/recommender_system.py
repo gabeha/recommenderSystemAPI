@@ -10,6 +10,7 @@ import json
 from datetime import datetime
 import pymongo
 from bson.objectid import ObjectId
+from rec_sys_uni.planners.ucm_planner import UCMPlanner
 
 
 
@@ -20,7 +21,8 @@ class RecSys:
                  bloom_based: BloomBasedRecSys = None,
                  explanation: LLM = None,
                  warning_model: WarningModel = None,
-                 top_n=7):
+                 top_n: int = 7,
+                 planner: UCMPlanner | None = None):
         self.constraints = False
         self.validate_input = True
         self.course_based = course_based
@@ -29,6 +31,7 @@ class RecSys:
         self.warning_model = warning_model
         self.top_n = top_n
         self.db = pymongo.MongoClient("mongodb://localhost:27017/")["RecSys"]
+        self.planner = planner if planner is not None else UCMPlanner('rec_sys_uni/planners/catalog.json')
 
 
     def validate_system_input(self,
@@ -239,9 +242,11 @@ and sorted_recommended_courses key in the results)              },
 
         return json.loads(response.choices[0].message.content)
 
-    def compute_constraints(self, student_info):
-        # Here you can call the integer linear programming model
-        pass
+    def make_timeline(self, student_id):
+        collection = self.db['students_results']
+        student_info = collection.find({'_id': ObjectId(student_id)})[0]
+        course_data = student_info['results']['recommended_courses']
+        return self.planner.plan(course_data)
 
     def compute_warnings(self, student_info):
         # Here you can call the warnings prediction model
