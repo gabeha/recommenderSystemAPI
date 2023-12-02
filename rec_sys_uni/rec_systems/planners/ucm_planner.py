@@ -319,6 +319,7 @@ def norm_periods(courses: Sequence[dict]):
 
 class UCMPlanner:
     def __init__(self, reclib: Sequence[dict] | str) -> None:
+        print('\nStarting planner...')
 
         if isinstance(reclib, str):
             with open(reclib, 'r') as file:
@@ -354,6 +355,8 @@ class UCMPlanner:
         self.state_vars_list = [v for v in self.state_vars.values()]
         self.all_vars_list = self.alloc_vars_list + self.state_vars_list
         self.idxmap = {v: i for i, v in enumerate(self.all_vars_list)}
+
+        print('Planner started.\n')
 
     def _update_ranks(self, courses: Sequence[dict]):
         for c in courses:
