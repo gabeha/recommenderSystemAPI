@@ -319,6 +319,8 @@ def norm_periods(courses: Sequence[dict]):
 
 class UCMPlanner:
     def __init__(self, reclib: Sequence[dict] | str) -> None:
+        t1 = time.time()
+        print(f'\nStarting UCM timeline planner at {t1} sec')
 
         if isinstance(reclib, str):
             with open(reclib, 'r') as file:
@@ -355,10 +357,14 @@ class UCMPlanner:
         self.all_vars_list = self.alloc_vars_list + self.state_vars_list
         self.idxmap = {v: i for i, v in enumerate(self.all_vars_list)}
 
+        t2 = time.time()
+        print(f'UCM timeline planner finished setup at {t2} sec\n')
+        print(f'Elapsed time during UCM planner setup: {t2 - t1} sec\n')
+
     def _update_ranks(self, courses: Sequence[dict]):
-        for c in courses:
-            ref = self.code_to_course[c['code']]
-            ref['rank'] = c['score'] if 'score' in c else c['rank']
+        for code, course in courses.items():
+            ref = self.code_to_course[code]
+            ref['rank'] = course['score'] if 'score' in course else course['rank']
 
     def plan(self, courses: Sequence[dict]):
         self._update_ranks(courses)
@@ -394,12 +400,12 @@ class UCMPlanner:
 
                     if res.x[i] > 0.5:
                         _, p, y = e
-                        tree[y][p].append({'code': course['code'], 'title': course['title']})
+                        tree[y][p].append({'courseCode': course['code'], 'courseTitle': course['title']})
                     
             pretty_tree = {
                 f'Year_{y}': {f'Period_{p}': tree[y][p] for p in periods} for y in years
             }
 
-            return pretty_tree, res
+            return pretty_tree
 
-        return None, res
+        return None
