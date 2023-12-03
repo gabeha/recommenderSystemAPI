@@ -159,8 +159,28 @@ def make_caps_ineq(courses: Sequence[dict], state_vars: dict):
     ineqs = [(1., {state_vars[c['code']]: 1. for c in courses if is_capstone(c)}, 1.)]
     return ineqs
 
-def make_ects_ineq(courses: Sequence[dict], state_vars: dict):
-    return [(180., {state_vars[c['code']]: c['ects'] for c in courses}, 180.)]
+def make_ects_ineq(courses: Sequence[dict], state_vars: dict, edge_to_alloc: dict | None = None):
+    ineq = []
+
+    ineq.append((180., {state_vars[c['code']]: c['ects'] for c in courses}, 180.))
+
+    if edge_to_alloc is not None:
+        cs, ps, ys = zip(*edge_to_alloc.keys())
+        codes = frozenset(cs)
+        periods = frozenset(ps)
+        years = frozenset(ys)
+        
+        for year in years:
+            for period in periods:
+                edges = [edge for edge in edge_to_alloc if edge[1] == period and edge[2] == year]
+
+                #One skill per period
+                ineq.append((0., {edge_to_alloc[edge]: 1. for edge in edges if edge[0].startswith('SKI')}, 1.))
+
+                #One project per period + capstone or project but not both
+                ineq.append((0., {edge_to_alloc[edge]: 1. for edge in edges if edge[0].startswith('PRO') or edge[0].startswith('CAP')}, 1.))
+
+    return ineq
 
 def make_load_ineq(edges: tuple[tuple[str, int, int]], time_segments: Sequence[tuple[int, int]], edge_to_alloc: dict, edge_to_course: dict):
     ineq = []
@@ -347,7 +367,7 @@ class UCMPlanner:
         '''gedu_ineq = make_gedu_ineq(self.courses, self.state_vars)
         conc_ineq = make_conc_ineq(self.courses, self.state_vars)'''
         caps_ineq = make_caps_ineq(self.courses, self.state_vars)
-        ects_ineq = make_ects_ineq(self.courses, self.state_vars)
+        ects_ineq = make_ects_ineq(self.courses, self.state_vars, self.edge_to_alloc)
         load_ineq = make_load_ineq(self.edges, self.tseg, self.edge_to_alloc, self.edge_to_course)
         prereq_ineq = make_prereq_ineq(self.courses, self.edges, self.edge_to_alloc)
         self.ineq_list = time_ineq + load_ineq + core_ineq + caps_ineq + ects_ineq + prereq_ineq
