@@ -69,8 +69,9 @@ def get_explanation():
 def get_timeline():
     input = request.get_json()
     student_mongo_id = input['student_mongo_id']
+    print(f"student_mongo_id: {student_mongo_id}")
     timeline = rs.make_timeline(student_mongo_id)
-    return jsonify({'timeline': timeline})
+    return timeline
 
 
 if __name__ == '__main__':
