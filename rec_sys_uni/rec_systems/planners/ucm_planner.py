@@ -327,6 +327,7 @@ from scipy.optimize import milp, LinearConstraint
 from typing import Callable
 
 from copy import deepcopy
+import datetime
 
 def norm_periods(courses: Sequence[dict]):
     for course in courses:
@@ -339,9 +340,10 @@ def norm_periods(courses: Sequence[dict]):
 
 class UCMPlanner:
     def __init__(self, reclib: Sequence[dict] | str) -> None:
-        t1 = time.time()
-        print(f'\nStarting UCM timeline planner at {t1} sec')
 
+        t1 = time.time()
+        current_time = datetime.datetime.fromtimestamp(t1).strftime('%H-%M-%S')
+        print(f'\nStarting UCM timeline planner at {current_time} sec')
         if isinstance(reclib, str):
             with open(reclib, 'r') as file:
                 self.courses = json.load(file)
