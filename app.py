@@ -10,7 +10,6 @@ from helpers.cast_int_to_float import recursive_cast_to_float
 
 app = Flask(__name__)
 CORS(app)
-socketio.init_app(app)
 
 def dummy_llm_function():
     for i in range(10):
@@ -38,17 +37,14 @@ def recommend():
 
         output = {'structured_recommendation': results.get('structured_recommendation'),
                   'student_mongo_id': str(student_info.id), "student_input": student_input}
-        
-        print("emit recommendations")
-        socketio.emit('recommendations', {'recommended_courses': output})
 
     except Exception as e:
         output = {'error': str(e)}
-        socketio.emit('error', {'error': str(e)})
+        return jsonify({'error': str(e)})
     finally:
         # Thread(target=generate_explanations_and_emit, args=(rs, student_info,)).start()
         
-        Thread(target=dummy_llm_function, args=()).start()
+        # Thread(target=dummy_llm_function, args=()).start()
         return jsonify({'recommended_courses': output})
 
 @app.route('/api/explanation', methods=['POST'])
@@ -74,8 +70,8 @@ def get_timeline():
     return timeline
 
 
-if __name__ == '__main__':
-    socketio.run(app, debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
 
 # input = {
 #     "config": {"model_name": "all-MiniLM-L12-v2", "seed_help": True, "domain_adapt": True, "zero_adapt": True},
