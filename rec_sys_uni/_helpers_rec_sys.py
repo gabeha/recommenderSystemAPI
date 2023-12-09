@@ -1,4 +1,8 @@
-def make_results_template(results, course_data):
+def make_results_template(course_data):
+    results = {
+        "recommended_courses": {},
+        "sorted_recommended_courses": []
+    }
     for course in course_data:
         results["recommended_courses"][course] = {"score": 0,
                                                   "period": course_data[course]["period"],
@@ -9,7 +13,7 @@ def make_results_template(results, course_data):
     return results
 
 
-def semester_course_cleaning(course_data, semester): #TODO: DEPRECATED
+def semester_course_cleaning(course_data, semester):  # TODO: DEPRECATED
     """
     course_data: dictionary of course data
     semester: int
@@ -42,17 +46,17 @@ def sort_by_periods(recSys, student_info, max, include_keywords=False,
 
     # structured recommendation dictionary
     structured_recommendation = {
-                                'semester_1':
-                                    {
-                                        'period_1': [],
-                                        'period_2': []
-                                    },
-                                'semester_2':
-                                    {
-                                        'period_4': [],
-                                        'period_5': []
-                                    }
-                                }
+        'semester_1':
+            {
+                'period_1': [],
+                'period_2': []
+            },
+        'semester_2':
+            {
+                'period_4': [],
+                'period_5': []
+            }
+    }
 
     for i in sorted_recommendation_list:
         period = student_info.course_data[i[0]]['period']
@@ -80,14 +84,18 @@ def sort_by_periods(recSys, student_info, max, include_keywords=False,
         if not flag:
             continue
 
-        if include_keywords and recSys.course_based:
+        course_tmp = course_tmp.copy()
+
+        if include_keywords and recSys.keyword_based:
             if percentage:
-                course_tmp['keywords'] = {k: round(v * 100, 2) for k, v in student_info.results['recommended_courses'][i[0]]['keywords'].items()}
+                course_tmp['keywords'] = {k: round(v * 100, 2) for k, v in
+                                          student_info.results['recommended_courses'][i[0]]['keywords'].items()}
             else:
                 course_tmp['keywords'] = student_info.results['recommended_courses'][i[0]]['keywords']
         if include_blooms and recSys.bloom_based:
             if percentage:
-                course_tmp['blooms'] = {k: round(v * 100, 2) for k, v in student_info.results['recommended_courses'][i[0]]['blooms'].items()}
+                course_tmp['blooms'] = {k: round(v * 100, 2) for k, v in
+                                        student_info.results['recommended_courses'][i[0]]['blooms'].items()}
             else:
                 course_tmp['blooms'] = student_info.results['recommended_courses'][i[0]]['blooms']
         if include_score:
@@ -104,27 +112,29 @@ def sort_by_periods(recSys, student_info, max, include_keywords=False,
     student_info.results['structured_recommendation'] = structured_recommendation
     student_info.results['sorted_recommended_courses'] = final_recommendation_list
 
-def print_recommendation(results, include_keywords=False, include_blooms=False, include_score=False):
+
+def print_recommendation(results, include_keywords=False, include_blooms=False, include_score=False, include_warning=False):
     print("\nTop recommended courses:")
     for i in results['sorted_recommended_courses']:
-        print_text(i, include_keywords, include_blooms, include_score)
+        print_text(i, include_keywords, include_blooms, include_score, include_warning)
 
     print(f"\n\nSemester 1:")
     print(f"\nPeriod 1:")
     for i in results['structured_recommendation']['semester_1']['period_1']:
-        print_text(i, include_keywords, include_blooms, include_score)
+        print_text(i)
     print(f"\nPeriod 2:")
     for i in results['structured_recommendation']['semester_1']['period_2']:
-        print_text(i, include_keywords, include_blooms, include_score)
+        print_text(i)
     print(f"\nSemester 2:")
     print(f"\nPeriod 4:")
     for i in results['structured_recommendation']['semester_2']['period_4']:
-        print_text(i, include_keywords, include_blooms, include_score)
+        print_text(i)
     print(f"\nPeriod 5:")
     for i in results['structured_recommendation']['semester_2']['period_5']:
-        print_text(i, include_keywords, include_blooms, include_score)
+        print_text(i)
 
-def print_text(i, include_keywords, include_blooms, include_score):
+
+def print_text(i, include_keywords=False, include_blooms=False, include_score=False, include_warning=False):
     text = f"{i['course_code']} - {i['course_name']}"
     if include_keywords:
         text += f" - {i['keywords']}"
@@ -132,10 +142,12 @@ def print_text(i, include_keywords, include_blooms, include_score):
         text += f" - {i['blooms']}"
     if include_score:
         text += f" - {i['score']}"
-    text += f" - {i['warning']}"
-    for j in i['warning_recommendation']:
-        text += f" - {j}"
+    if include_warning:
+        text += f" - {i['warning']}"
+        for j in i['warning_recommendation']:
+            text += f" - {j}"
     print(text)
+
 
 class StudentNode:
     def __init__(self, results, student_intput, course_data, student_data):

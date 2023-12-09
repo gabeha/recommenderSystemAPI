@@ -2,7 +2,7 @@ import numpy as np
 import json
 
 
-class BloomBasedRecSys:
+class BloomBased:
 
     def __init__(self, precomputed_blooms: bool = True, top_n: int | None = 4):
         """
