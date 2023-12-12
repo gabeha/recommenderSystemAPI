@@ -7,6 +7,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from rec_sys_uni.errors_checker.exceptions.rec_sys_errors import ModelDoesNotExistError
 import torch
+from tqdm.auto import tqdm
 
 """
 TODO: Data should be preprossed before using the following functions
@@ -69,7 +70,8 @@ def get_keyword_data_GPT():
 
 def calculate_zero_shot_adaptation(course_data, model_name, attention,
                                    adaptive_thr: float = 0.15,
-                                   minimal_similarity_zeroshot: float = 0.8):
+                                   minimal_similarity_zeroshot: float = 0.8,
+                                   use_cuda=False):
     """
     :param course_data: Course Data
     :param model_name: Model Name
@@ -79,7 +81,7 @@ def calculate_zero_shot_adaptation(course_data, model_name, attention,
     """
     # Model Check
     try:
-        SentenceTransformer(model_name)
+        SentenceTransformer(model_name, device='cuda' if use_cuda else 'cpu')
     except Exception:
         raise ModelDoesNotExistError("Such Model Name does not exist")
 
@@ -96,15 +98,17 @@ def calculate_zero_shot_adaptation(course_data, model_name, attention,
             os.makedirs(path)
             print(f"The new directory {path} for {model_name} is created!")
 
-        if isinstance(attention, str):
-            attention = [attention]
-
+        progress_bar = tqdm(range(len(list_courses)))
         for code in list_courses:
-            print("Calculating domain word embedding for " + str(code))
+            attention_loop = attention[code]
+            if isinstance(attention_loop, str):
+                attention_loop = [attention_loop]
+
             kw_model = adaptKeyBERT(model=SentenceTransformer(model_name), zero_adapt=True)
-            kw_model.zeroshot_pre_train(attention, adaptive_thr=adaptive_thr,
+            kw_model.zeroshot_pre_train(attention_loop, adaptive_thr=adaptive_thr,
                                         minimal_similarity_zeroshot=minimal_similarity_zeroshot)
             np.save(f'{path}/domain_embed_{code}.npy', kw_model.domain_word_embeddings)
+            progress_bar.update(1)
 
 
 def calculate_few_shot_adaptation(course_data, model_name, attention,
@@ -112,7 +116,8 @@ def calculate_few_shot_adaptation(course_data, model_name, attention,
                                   start_index=0,
                                   include_description=True,
                                   include_title=False,
-                                  include_ilos=False, ):
+                                  include_ilos=False,
+                                  use_cuda=False ):
     """
     :param course_data: Course Data
     :param model_name: Model Name
@@ -127,7 +132,7 @@ def calculate_few_shot_adaptation(course_data, model_name, attention,
 
     # Model Check
     try:
-        SentenceTransformer(model_name)
+        SentenceTransformer(model_name, device='cuda' if use_cuda else 'cpu')
     except Exception:
         raise ModelDoesNotExistError("Such Model Name does not exist")
 
@@ -156,8 +161,6 @@ def calculate_few_shot_adaptation(course_data, model_name, attention,
 
         for i, code in enumerate(list_courses):
             if (i >= start_index):
-                print("Calculating for " + str(code))
-                print("Index " + str(i) + " out of " + str(len(list_courses)))
                 desc = ""
 
                 if include_title:
@@ -167,18 +170,27 @@ def calculate_few_shot_adaptation(course_data, model_name, attention,
                 if include_ilos:
                     desc += "\n".join(course_data[code]['ilos'])
 
+                desc = desc.replace('course', course_data[code]['course_name'])
+
+                attention_loop = attention[code]
+                if isinstance(attention_loop, str):
+                    attention_loop = [attention_loop]
+                print(f"Training for {code}")
+                print(f"Index: {i}/{len(list_courses)}")
                 kw_model = adaptKeyBERT(model=model_name, domain_adapt=True)
-                kw_model.pre_train([desc], [attention], lr=lr, epochs=epochs)
+                kw_model.pre_train([desc], attention_loop, lr=lr, epochs=epochs)
                 torch.save(kw_model.attention_layer, f'{path_attention}/attention_layer_{code}.pth')
                 torch.save(kw_model.target_word_embeddings_pt, f'{path_target}/target_embed_{code}.pth')
+
 
 
 def calculate_precomputed_courses(course_data, model_name,
                                   include_description=True,
                                   include_title=False,
-                                  include_ilos=False, ):
+                                  include_ilos=False,
+                                  use_cuda=False):
     try:
-        SentenceTransformer(model_name)
+        SentenceTransformer(model_name, device='cuda' if use_cuda else 'cpu')
     except Exception:
         raise ModelDoesNotExistError("Such Model Name does not exist")
 
@@ -196,8 +208,8 @@ def calculate_precomputed_courses(course_data, model_name,
             print(f"The new directory {path} for {model_name} is created!")
 
     kw_model = comKeyBERT(model=model_name)
+    progress_bar = tqdm(range(len(course_data)))
     for code in course_data:
-        print("Calculating for " + str(code))
         desc = ""
         if include_title:
             desc += course_data[code]['course_name']
@@ -206,8 +218,10 @@ def calculate_precomputed_courses(course_data, model_name,
         if include_ilos:
             desc += "\n".join(course_data[code]['ilos'])
 
+        desc = desc.replace('course', course_data[code]['course_name'])
         embed = kw_model.model.embed([desc])
         np.save(f'{path}/course_embed_{code}.npy', embed)
+        progress_bar.update(1)
 
 
 def get_student_data():

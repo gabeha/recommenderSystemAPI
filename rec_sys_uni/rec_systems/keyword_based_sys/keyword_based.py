@@ -55,7 +55,7 @@ class KeywordBased:
                  precomputed_course=False
                  ):
         """
-        The constructor for CourseBasedRecSys class.
+        The constructor for KeywordBasedRecSys class.
         :param model_name: model name of the sentence transformer
         :param top_n: number of keywords to be extracted
         :param seed_help: apply seed help
@@ -70,6 +70,7 @@ class KeywordBased:
         :param distance: distance metric either 'cos' or 'dot'
         :param backend: backend either 'keyBert' or 'Intel'
         :param scaler: apply min-max scaler to the keywords weights
+        :param sent_splitter: apply sentence splitter
         :param precomputed_course: use precomputed course embeddings or not
         """
         if backend == 'keyBert':

@@ -20,15 +20,16 @@ class RecSys:
                  bloom_based: BloomBased = None,
                  explanation: LLM = None,
                  warning_model: WarningModel = None,
+                 planner: UCMPlanner = None,
+                 validate_input: bool = True,
                  top_n: int = 7,
-                 planner: UCMPlanner = None):
-        self.constraints = False
-        self.validate_input = True
+                 ):
         self.keyword_based = keyword_based
         self.bloom_based = bloom_based
         self.explanation = explanation
         self.warning_model = warning_model
         self.planner = planner
+        self.validate_input = validate_input
         self.top_n = top_n
         self.db = pymongo.MongoClient("mongodb://localhost:27017/")["RecSys"]
 
@@ -69,8 +70,8 @@ class RecSys:
                            system_student_data=False,
                            ):
         """
-        function: get_list_recommended_courses
-        description: get list of recommended courses based on student input
+        function: get_recommendation
+        description: get Student Node object
         parameters: student_input : dictionary {
                                                 keywords: {keywords(String): weight(float), ...} ,
                                                 blooms: {blooms(String): weight(float), ...}
@@ -164,12 +165,16 @@ and sorted_recommended_courses key in the results)              },
                                                                                   system_course_data,
                                                                                   system_student_data)
 
+        # Make results template
         results = make_results_template(course_data)
 
+        # Create StudentNode object
         student_info = StudentNode(results, student_intput, course_data, student_data)
 
+        # Compute recommendation and store in student_info
         compute_recommendation(self, student_info)
 
+        # Compute warnings and store in student_info
         if self.warning_model:
             compute_warnings(self, student_info)
 
@@ -177,9 +182,10 @@ and sorted_recommended_courses key in the results)              },
         sort_by_periods(self, student_info, self.top_n, include_keywords=True, include_score=True,
                         include_blooms=False)
 
+        # Save student_info to database
         now = datetime.now()
 
-        collection = self.db["students_results"]
+        collection = self.db["student_results"]
         input_dict = {
             "student_id": "123",
             "student_input": student_info.student_input,
@@ -191,10 +197,11 @@ and sorted_recommended_courses key in the results)              },
         object_db = collection.insert_one(input_dict)
         student_info.set_id(object_db.inserted_id)
 
+        # Return StudentNode object
         return student_info
 
     def generate_explanation(self, student_id, course_code):
-        collection = self.db["students_results"]
+        collection = self.db["student_results"]
         student_info = collection.find({"_id": ObjectId(student_id)})[0]
         student_input = student_info["student_input"]
         course_result = student_info["results"]["recommended_courses"][course_code]
@@ -241,7 +248,7 @@ and sorted_recommended_courses key in the results)              },
         return json.loads(response.choices[0].message.content)
 
     def make_timeline(self, student_id):
-        collection = self.db['students_results']
+        collection = self.db['student_results']
         student_info = collection.find({'_id': ObjectId(student_id)})[0]
         course_data = student_info['results']['recommended_courses']
         return self.planner.plan(course_data)
