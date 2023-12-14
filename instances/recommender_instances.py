@@ -26,7 +26,7 @@ keyword_based = KeywordBased(model_name="all-MiniLM-L12-v2",
                              score_alg='sum',
                              distance='cos',
                              backend='keyBert',
-                             scaler=True,
+                             scaler="MinMax",
                              sent_splitter=False,
                              precomputed_course=True)
 # Print a setting of the Keyword Based system
@@ -35,7 +35,9 @@ keyword_based.print_config()
 # Content Based
 content_based = ContentBased(
                              model_name='BAAI/bge-large-en-v1.5',
-                             distance='cos')
+                             distance='cos',
+                             score_alg='sum',
+                             scaler='None')
 
 # Explanation model
 explanation = LLM(
@@ -44,7 +46,8 @@ explanation = LLM(
 # explanation = None
 
 # Bloom Based
-bloom_based = BloomBased(score_alg='sum')
+bloom_based = BloomBased(score_alg='sum',
+                         scaler='None')
 # bloom_based = None
 
 # Warning model
@@ -52,8 +55,8 @@ warning_model = WarningModel()
 # warning_model = None
 
 # Planner model
-# planner = UCMPlanner('rec_sys_uni/datasets/data/planners/catalog.json')
-planner = None
+planner = UCMPlanner('rec_sys_uni/datasets/data/planners/catalog.json')
+# planner = None
 
 rs = RecSys(keyword_based=keyword_based,
             content_based=content_based,
