@@ -1,6 +1,6 @@
 from rec_sys_uni.errors_checker.errors import check_student_input, check_student_data, check_course_data
 from rec_sys_uni.datasets.datasets import get_course_data, get_student_data
-from rec_sys_uni._helpers_rec_sys import make_results_template, semester_course_cleaning, StudentNode, sort_by_periods
+from rec_sys_uni._rec_sys_helpers import make_results_template, StudentNode, sort_by_periods
 from rec_sys_uni.rec_systems._systems import *
 from rec_sys_uni.rec_systems.keyword_based_sys.keyword_based import KeywordBased
 from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBased
@@ -119,7 +119,7 @@ class RecSys:
                                                         },
                                                     ...
                                                 }
-        return: StudentNode object, which contains: (check _helpers_rec_sys.py)
+        return: StudentNode object, which contains: (check _rec_sys_helpers.py)
                 results: dictionary of recommended courses
                 e.g. {
                         recommended_courses: dictionary {
@@ -171,16 +171,27 @@ and sorted_recommended_courses key in the results)              },
         # Create StudentNode object
         student_info = StudentNode(results, student_intput, course_data, student_data)
 
-        # Compute recommendation and store in student_info
-        compute_recommendation(self, student_info)
+        # Compute recommendation and store in student_info.results['recommended_courses']
+        if self.keyword_based or self.bloom_based:
+            compute_recommendation(self, student_info)
 
-        # Compute warnings and store in student_info
+        # Compute warnings and store in student_info.results['recommended_courses']
         if self.warning_model:
             compute_warnings(self, student_info)
 
         # Sort by periods
-        sort_by_periods(self, student_info, self.top_n, include_keywords=True, include_score=True,
-                        include_blooms=False)
+        sorted_recommendation_list, structured_recommendation = sort_by_periods(self,
+                                                                                student_info.results['recommended_courses'],
+                                                                                student_info.course_data,
+                                                                                self.top_n,
+                                                                                include_keywords=False,
+                                                                                include_score=False,
+                                                                                include_blooms=False,
+                                                                                include_warnings=True,
+                                                                                percentage=False
+                                                                                )
+        student_info.results['sorted_recommended_courses'] = sorted_recommendation_list
+        student_info.results['structured_recommendation'] = structured_recommendation
 
         # Save student_info to database
         now = datetime.now()
@@ -201,57 +212,10 @@ and sorted_recommended_courses key in the results)              },
         return student_info
 
     def generate_explanation(self, student_id, course_code):
-        collection = self.db["student_results"]
-        student_info = collection.find({"_id": ObjectId(student_id)})[0]
-        student_input = student_info["student_input"]
-        course_result = student_info["results"]["recommended_courses"][course_code]
-        course = student_info["course_data"][course_code]
-
-        response = self.explanation.generate_explanation(student_input, course_code, course, course_result)
-
-        collection_LLM = self.db["LLM_usage"]
-        llm_usage_old = collection_LLM.find_one({"_id": student_info["student_id"]})
-
-        # Keep track of LLM usage for each student
-        if llm_usage_old is None:
-            collection_LLM.insert_one({
-                "_id": student_info["student_id"],
-                "completion_tokens": response.usage.completion_tokens,
-                "prompt_tokens": response.usage.prompt_tokens,
-                "total_tokens": response.usage.total_tokens,
-            })
-        else:
-            completion_tokens = llm_usage_old["completion_tokens"] + response.usage.completion_tokens
-            prompt_tokens = llm_usage_old["prompt_tokens"] + response.usage.prompt_tokens
-            total_tokens = llm_usage_old["total_tokens"] + response.usage.total_tokens
-            collection_LLM.update_one({"_id": student_info["student_id"]}, {"$set": {
-                "completion_tokens": completion_tokens,
-                "prompt_tokens": prompt_tokens,
-                "total_tokens": total_tokens,
-            }})
-
-        now = datetime.now()
-
-        # Insert explanation into LLM_results
-        self.db["LLM_results"].insert_one({
-            "student_id": student_info["student_id"],
-            "course_code": course_code,
-            "student_input": student_info["student_input"],
-            "course_keywords": course_result['keywords'],
-            "explanation": json.loads(response.choices[0].message.content),
-            "completion_tokens": response.usage.completion_tokens,
-            "prompt_tokens": response.usage.prompt_tokens,
-            "total_tokens": response.usage.total_tokens,
-            "time": now.strftime("%d/%m/%Y %H:%M:%S")
-        })
-
-        return json.loads(response.choices[0].message.content)
+        return json.loads(compute_explanations(self, student_id, course_code))
 
     def make_timeline(self, student_id):
-        collection = self.db['student_results']
-        student_info = collection.find({'_id': ObjectId(student_id)})[0]
-        course_data = student_info['results']['recommended_courses']
-        return self.planner.plan(course_data)
+        return compute_timeline(self, student_id)
 
     def print_config(self):
         print(f"RecSys settings: \n" +

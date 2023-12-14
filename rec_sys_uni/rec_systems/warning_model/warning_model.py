@@ -29,28 +29,31 @@ class WarningModel:
 
 
 
-    def predict(self, student_info):
+    def predict(self, student_data, course_data, predict_list):
         X = pd.DataFrame(columns=self.columns_order)
-        if student_info.student_data:
-            for i in student_info.student_data['courses_taken']:
-                X.loc[0, i] = student_info.student_data['courses_taken'][i]['grade']
+        if student_data:
+            for i in student_data['courses_taken']:
+                X.loc[0, i] = student_data['courses_taken'][i]['grade']
             X.fillna(0, inplace=True)
         else:
             X.loc[0, :] = 0
 
-        course_data = student_info.course_data
-        for i in student_info.results["recommended_courses"]:
+        course_data = course_data
+        results = {}
+        for i in predict_list:
+            results[i] = {"warning": False, "warning_recommendation": []}
             if i in self.models:
                 prediction = self.models[i].predict(X[self.models[i].feature_names_in_])
                 if prediction[0] == 0:
-                    student_info.results["recommended_courses"][i]["warning"] = True
+                    results[i]["warning"] = True
                     recommended_courses = self.rec_courses[i]
                     for j in recommended_courses:
-                        if student_info.student_data:
-                            if j in student_info.student_data['courses_taken']:
+                        if student_data:
+                            if j in student_data['courses_taken']:
                                 continue
                         if recommended_courses[j]['cosine_similarity'] > 0.66:
                             json_object = {"course_code": j,
                                            "course_name": course_data[j]['course_name'],
                                            "match": round(recommended_courses[j]['cosine_similarity'] * 100, 1)}
-                            student_info.results["recommended_courses"][i]["warning_recommendation"].append(json_object)
+                            results[i]["warning_recommendation"].append(json_object)
+        return results

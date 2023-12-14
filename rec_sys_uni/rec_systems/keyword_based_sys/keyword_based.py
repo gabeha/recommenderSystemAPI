@@ -4,8 +4,8 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 from typing import List, Union, Tuple
 import torch
-import os
 from sklearn.preprocessing import MinMaxScaler
+import os
 import spacy
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import AutoConfig, AutoTokenizer
@@ -50,7 +50,7 @@ class KeywordBased:
                  score_alg: str = 'rrf',  # 'sum' or 'rrf'
                  distance: str = 'cos',  # 'cos' or 'dot'
                  backend: str = 'keyBert',  # 'keyBert' or 'Intel'
-                 scaler: bool = True,
+                 scaler: str = 'MaxMin',  # 'MaxMin' or 'None
                  sent_splitter: bool = False,
                  precomputed_course=False
                  ):
@@ -138,10 +138,8 @@ class KeywordBased:
               f"sent_splitter: {self.sent_splitter}\n" +
               f"precomputed_course: {self.precomputed_course}\n")
 
-    def recommend(self, student_info):
+    def recommend(self, course_data, student_keywords):
 
-        course_data = student_info.course_data  # Get course data
-        student_keywords = student_info.student_input['keywords']  # Get student input
         domains_data = get_domains_data_GPT()  # Get domains data
 
         # Put keywords in a list
@@ -191,12 +189,14 @@ class KeywordBased:
                                                             seed_keywords=seed_keywords,
                                                             distance=self.distance)
 
-            if self.score_alg == 'sum':
-                # Sum all weights of keywords
-                sum_keywords_weight(keywords_relevance, student_info, course_data, student_keywords, self.scaler)
-            elif self.score_alg == 'rrf':
-                # Reciprocal Rank Fusion algorithm
-                reciprocal_rank_fusion(keywords_relevance, student_info, course_data, student_keywords)
+            keywords_output = {}
+            for index, course in enumerate(course_data):
+                keywords_output[course] = {}
+                keywords = keywords_relevance[index]
+                for keyword in keywords:
+                    keywords_output[course][keyword[0]] = keyword[1]
+
+            return keywords_output
         else:
             nlp = spacy.load("en_core_web_sm")
             course_sentences = {}
@@ -222,50 +222,7 @@ class KeywordBased:
                 course_sentences[course_codes[index]] = sentence_relevance
             # print(course_sentences)
             # TODO: Implementation of Linear Programming
-
-
-def sum_keywords_weight(keywords_relevance, student_info, course_data, student_keywords, scaler):
-    # MinMaxScale keywords weights
-
-    matrix = []
-    for keyword in range(len(course_data)):
-        keywords_weights = keywords_relevance[keyword]
-        matrix.append([])
-        for weight in keywords_weights:
-            matrix[keyword].append(weight[1])
-
-    if scaler:
-        matrix = MinMaxScaler().fit_transform(matrix)
-
-    recommended_courses = student_info.results['recommended_courses']
-    for index, code in enumerate(course_data):
-        keywords_weights = keywords_relevance[index]
-        normalized_weights = matrix[index]
-        for keyword, weight in zip(keywords_weights, normalized_weights):
-            weight = round(weight * student_keywords[keyword[0]], 4)
-            recommended_courses[code]['score'] += weight
-            recommended_courses[code]['keywords'][keyword[0]] = weight
-    student_info.results['recommended_courses'] = recommended_courses
-
-
-def reciprocal_rank_fusion(keywords_relevance, student_info, course_data, student_keywords, k=60):
-    recommended_courses = student_info.results['recommended_courses']
-    for index, code in enumerate(course_data):
-        keywords_weights = keywords_relevance[index]
-        for i in keywords_weights:
-            recommended_courses[code]['keywords'][i[0]] = i[1]
-
-    for keyword in student_keywords:
-        # Sort by keyword score
-        sorted_keyword_list = sorted(recommended_courses.items(),
-                                     key=lambda x: x[1]['keywords'][keyword], reverse=True)
-
-        for rank in range(len(sorted_keyword_list)):
-            # Reciprocal Rank Fusion algorithm
-            recommended_courses[sorted_keyword_list[rank][0]]['score'] += student_keywords[keyword] / (rank + k)
-
-    student_info.results['recommended_courses'] = recommended_courses
-
+            raise NotImplementedError("Sentence Splitter is not implemented yet")
 
 def apply_zero_adaptation(candidate_embeddings, doc_embedding, domain_word_embeddings, adaptive_thr,
                           minimal_similarity_zeroshot):

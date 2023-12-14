@@ -1,12 +1,11 @@
 from instances.recommender_instances import rs
-from rec_sys_uni._helpers_rec_sys import print_recommendation
+from rec_sys_uni._rec_sys_helpers import print_recommendation
 
 
 def recommend(student_input):
     student_info = rs.get_recommendation(student_input)
 
     return student_info
-
 
 
 input = {
@@ -27,7 +26,12 @@ input = {
 }
 
 student_info = recommend(input)
-print_recommendation(student_info.results, include_keywords=True, include_blooms=False, include_score=True, include_warning=True)
-
-
-
+print_recommendation(rs,
+                     student_info.results["recommended_courses"],
+                     student_info.course_data,
+                     max=7,
+                     include_keywords=True,
+                     include_blooms=False,
+                     include_score=True,
+                     include_warning=True,
+                     percentage=True)

@@ -38,7 +38,7 @@ explanation = LLM(
 # explanation = None
 
 # Bloom Based
-bloom_based = BloomBased()
+bloom_based = BloomBased(score_alg='sum')
 # bloom_based = None
 
 # Warning model
