@@ -2,6 +2,7 @@ from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBased
 from rec_sys_uni.rec_systems.keyword_based_sys.keyword_based import KeywordBased
 from rec_sys_uni.rec_systems.warning_model.warning_model import WarningModel
 from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
+from rec_sys_uni.rec_systems.content_based_sys.content_based import ContentBased
 from rec_sys_uni.recommender_system import RecSys
 from rec_sys_uni.rec_systems.planners.ucm_planner import UCMPlanner
 
@@ -31,6 +32,11 @@ keyword_based = KeywordBased(model_name="all-MiniLM-L12-v2",
 # Print a setting of the Keyword Based system
 keyword_based.print_config()
 
+# Content Based
+content_based = ContentBased(
+                             model_name='BAAI/bge-large-en-v1.5',
+                             distance='cos')
+
 # Explanation model
 explanation = LLM(
     token="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"
@@ -50,6 +56,7 @@ warning_model = WarningModel()
 planner = None
 
 rs = RecSys(keyword_based=keyword_based,
+            content_based=content_based,
             bloom_based=bloom_based,
             explanation=explanation,
             warning_model=warning_model,

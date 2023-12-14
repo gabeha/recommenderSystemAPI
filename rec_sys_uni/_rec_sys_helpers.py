@@ -39,7 +39,8 @@ def sort_by_periods(recSys,
                     include_blooms=False,
                     include_score=False,
                     include_warnings=False,
-                    percentage=True):
+                    include_content=False,
+                    percentage=False):
     # Sort recommended courses by score
     sorted_recommendation_list = sorted(recommended_courses.items(),
                                         key=lambda x: x[1]['score'], reverse=True)
@@ -69,6 +70,7 @@ def sort_by_periods(recSys,
                       }
 
         flag = False
+        # Add courses to periods with certain max number of courses in period
         for j in period:
             if j == 1 and len(structured_recommendation['semester_1']['period_1']) < max:
                 structured_recommendation['semester_1']['period_1'].append(course_tmp)
@@ -86,6 +88,7 @@ def sort_by_periods(recSys,
         if not flag:
             continue
 
+        # Add other information to the course, for testing purposes
         if include_warnings and recSys.warning_model:
             course_tmp['warning'] = recommended_courses[i[0]]['warning'],
             course_tmp['warning_recommendation'] = recommended_courses[i[0]]['warning_recommendation']
@@ -98,12 +101,21 @@ def sort_by_periods(recSys,
                                           recommended_courses[i[0]]['keywords'].items()}
             else:
                 course_tmp['keywords'] = recommended_courses[i[0]]['keywords']
+            course_tmp['keywords_score'] = recommended_courses[i[0]]['keywords_score']
         if include_blooms and recSys.bloom_based:
             if percentage:
                 course_tmp['blooms'] = {k: round(v * 100, 2) for k, v in
                                         recommended_courses[i[0]]['blooms'].items()}
             else:
                 course_tmp['blooms'] = recommended_courses[i[0]]['blooms']
+            course_tmp['blooms_score'] = recommended_courses[i[0]]['blooms_score']
+        if include_content and recSys.content_based:
+            if percentage:
+                course_tmp['content'] = {k: round(v * 100, 2) for k, v in
+                                         recommended_courses[i[0]]['content'].items()}
+            else:
+                course_tmp['content'] = recommended_courses[i[0]]['content']
+            course_tmp['content_score'] = recommended_courses[i[0]]['content_score']
         if include_score:
             course_tmp['score'] = recommended_courses[i[0]]['score']
 
@@ -118,6 +130,7 @@ def sort_by_periods(recSys,
     return final_recommendation_list, structured_recommendation
 
 
+# Print for test
 def print_recommendation(recSys,
                          recommended_courses,
                          course_data,
@@ -126,6 +139,7 @@ def print_recommendation(recSys,
                          include_blooms=False,
                          include_score=False,
                          include_warning=False,
+                         include_content=False,
                          percentage=False):
     sorted_recommendation_list, structured_recommendation = sort_by_periods(recSys,
                                                                             recommended_courses,
@@ -135,10 +149,11 @@ def print_recommendation(recSys,
                                                                             include_blooms,
                                                                             include_score,
                                                                             include_warning,
+                                                                            include_content,
                                                                             percentage)
     print("\nTop recommended courses:")
     for i in sorted_recommendation_list:
-        print_text(i, include_keywords, include_blooms, include_score, include_warning)
+        print_text(i, include_keywords, include_blooms, include_score, include_warning, include_content)
 
     print(f"\n\nSemester 1:")
     print(f"\nPeriod 1:")
@@ -156,18 +171,28 @@ def print_recommendation(recSys,
         print_text(i)
 
 
-def print_text(i, include_keywords=False, include_blooms=False, include_score=False, include_warning=False):
+def print_text(i,
+               include_keywords=False,
+               include_blooms=False,
+               include_score=False,
+               include_warning=False,
+               include_content=False):
     text = f"{i['course_code']} - {i['course_name']}"
     if include_keywords:
-        text += f" - {i['keywords']}"
+        text += f"\n - Keywords {i['keywords']}"
+        text += f" - {i['keywords_score']}"
     if include_blooms:
-        text += f" - {i['blooms']}"
+        text += f"\n - Blooms {i['blooms']}"
+        text += f" - {i['blooms_score']}"
+    if include_content:
+        text += f"\n - Content {i['content']}"
+        text += f" - {i['content_score']}"
     if include_score:
-        text += f" - {i['score']}"
+        text += f"\n - Final Score {i['score']}"
     if include_warning:
-        text += f" - {i['warning']}"
+        text += f"\n - Warning {i['warning']}"
         for j in i['warning_recommendation']:
-            text += f" - {j}"
+            text += f"\n - {j}"
     print(text)
 
 

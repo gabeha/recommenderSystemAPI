@@ -13,6 +13,7 @@ def compute_recommendation(recSys, student_info):
         "output": {},
     }
 
+    # Keyword-based
     if recSys.keyword_based:
         keywords_output = recSys.keyword_based.recommend(student_info.course_data,
                                                          student_info.student_input['keywords'])
@@ -20,18 +21,31 @@ def compute_recommendation(recSys, student_info):
         ranker_dict["scaler"]["keywords"] = recSys.keyword_based.scaler
         ranker_dict["output"]["keywords"] = keywords_output
 
+    # Bloom's taxonomy
     if recSys.bloom_based:
-        blooms_output = recSys.bloom_based.recommend(student_info.course_data, student_info.student_input['blooms'])
+        blooms_output = recSys.bloom_based.recommend(student_info.course_data,
+                                                     student_info.student_input['blooms'])
         ranker_dict["score_alg"]["blooms"] = recSys.bloom_based.score_alg
         ranker_dict["scaler"]["blooms"] = recSys.bloom_based.scaler
         ranker_dict["output"]["blooms"] = blooms_output
 
+    # Content-based
+    if recSys.content_based and student_info.student_data:
+        content_based_output = recSys.content_based.compute_course_similarity(
+                                            student_info.results["recommended_courses"].keys(),
+                                            student_info.student_data)
+        ranker_dict["score_alg"]["content"] = recSys.content_based.score_alg
+        ranker_dict["scaler"]["content"] = recSys.content_based.scaler
+        ranker_dict["output"]["content"] = content_based_output
+
+    # Add outputs to recommended courses
     student_info.results["recommended_courses"] = add_outputs_to_recommended_courses(
         student_info.results["recommended_courses"],
         student_info.course_data,
         student_info.student_input,
         ranker_dict)
 
+    # Calculate final score
     student_info.results["recommended_courses"] = calculate_final_score_TEMPORY(
         student_info.results["recommended_courses"],
         recSys.top_n)

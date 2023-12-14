@@ -5,6 +5,7 @@ from rec_sys_uni.rec_systems._systems import *
 from rec_sys_uni.rec_systems.keyword_based_sys.keyword_based import KeywordBased
 from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBased
 from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
+from rec_sys_uni.rec_systems.content_based_sys.content_based import ContentBased
 from rec_sys_uni.rec_systems.warning_model.warning_model import WarningModel
 import json
 from datetime import datetime
@@ -17,6 +18,7 @@ class RecSys:
 
     def __init__(self,
                  keyword_based: KeywordBased = None,
+                 content_based: ContentBased = None,
                  bloom_based: BloomBased = None,
                  explanation: LLM = None,
                  warning_model: WarningModel = None,
@@ -25,6 +27,7 @@ class RecSys:
                  top_n: int = 7,
                  ):
         self.keyword_based = keyword_based
+        self.content_based = content_based
         self.bloom_based = bloom_based
         self.explanation = explanation
         self.warning_model = warning_model
@@ -183,12 +186,7 @@ and sorted_recommended_courses key in the results)              },
         sorted_recommendation_list, structured_recommendation = sort_by_periods(self,
                                                                                 student_info.results['recommended_courses'],
                                                                                 student_info.course_data,
-                                                                                self.top_n,
-                                                                                include_keywords=False,
-                                                                                include_score=False,
-                                                                                include_blooms=False,
-                                                                                include_warnings=True,
-                                                                                percentage=False
+                                                                                self.top_n
                                                                                 )
         student_info.results['sorted_recommended_courses'] = sorted_recommendation_list
         student_info.results['structured_recommendation'] = structured_recommendation
@@ -224,5 +222,5 @@ and sorted_recommended_courses key in the results)              },
               f"Bloom_based: {self.bloom_based} \n" +
               f"Explanation: {self.explanation} \n" +
               f"Warning_model: {self.warning_model} \n" +
-              f"Planner: {self.planner}" +
+              f"Planner: {self.planner} \n" +
               f"Top_n: {self.top_n} \n")

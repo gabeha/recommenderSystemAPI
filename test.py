@@ -3,7 +3,7 @@ from rec_sys_uni._rec_sys_helpers import print_recommendation
 
 
 def recommend(student_input):
-    student_info = rs.get_recommendation(student_input)
+    student_info = rs.get_recommendation(student_input, system_student_data=False)
 
     return student_info
 
@@ -33,5 +33,6 @@ print_recommendation(rs,
                      include_keywords=True,
                      include_blooms=False,
                      include_score=True,
-                     include_warning=True,
+                     include_warning=False,
+                     include_content=False,
                      percentage=True)
