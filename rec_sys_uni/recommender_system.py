@@ -1,10 +1,11 @@
 from rec_sys_uni.errors_checker.errors import check_student_input, check_student_data, check_course_data
 from rec_sys_uni.datasets.datasets import get_course_data, get_student_data
-from rec_sys_uni._helpers_rec_sys import make_results_template, semester_course_cleaning, StudentNode, sort_by_periods
+from rec_sys_uni._rec_sys_helpers import make_results_template, StudentNode, sort_by_periods
 from rec_sys_uni.rec_systems._systems import *
-from rec_sys_uni.rec_systems.course_based_sys.course_based import CourseBasedRecSys
-from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBasedRecSys
+from rec_sys_uni.rec_systems.keyword_based_sys.keyword_based import KeywordBased
+from rec_sys_uni.rec_systems.bloom_based_sys.bloom_based import BloomBased
 from rec_sys_uni.rec_systems.llm_explanation.LLM import LLM
+from rec_sys_uni.rec_systems.content_based_sys.content_based import ContentBased
 from rec_sys_uni.rec_systems.warning_model.warning_model import WarningModel
 import json
 from datetime import datetime
@@ -13,26 +14,27 @@ from bson.objectid import ObjectId
 from rec_sys_uni.rec_systems.planners.ucm_planner import UCMPlanner
 
 
-
 class RecSys:
 
     def __init__(self,
-                 course_based: CourseBasedRecSys = None,
-                 bloom_based: BloomBasedRecSys = None,
+                 keyword_based: KeywordBased = None,
+                 content_based: ContentBased = None,
+                 bloom_based: BloomBased = None,
                  explanation: LLM = None,
                  warning_model: WarningModel = None,
+                 planner: UCMPlanner = None,
+                 validate_input: bool = True,
                  top_n: int = 7,
-                 planner: UCMPlanner | None = None):
-        self.constraints = False
-        self.validate_input = True
-        self.course_based = course_based
+                 ):
+        self.keyword_based = keyword_based
+        self.content_based = content_based
         self.bloom_based = bloom_based
         self.explanation = explanation
         self.warning_model = warning_model
+        self.planner = planner
+        self.validate_input = validate_input
         self.top_n = top_n
         self.db = pymongo.MongoClient("mongodb://localhost:27017/")["RecSys"]
-        self.planner = planner if planner is not None else UCMPlanner('rec_sys_uni/datasets/data/planners/catalog.json')
-
 
     def validate_system_input(self,
                               student_input,
@@ -63,7 +65,6 @@ class RecSys:
 
         return student_input, course_data, student_data
 
-
     def get_recommendation(self,
                            student_intput,
                            course_data=None,
@@ -72,8 +73,8 @@ class RecSys:
                            system_student_data=False,
                            ):
         """
-        function: get_list_recommended_courses
-        description: get list of recommended courses based on student input
+        function: get_recommendation
+        description: get Student Node object
         parameters: student_input : dictionary {
                                                 keywords: {keywords(String): weight(float), ...} ,
                                                 blooms: {blooms(String): weight(float), ...}
@@ -121,7 +122,7 @@ class RecSys:
                                                         },
                                                     ...
                                                 }
-        return: StudentNode object, which contains: (check _helpers_rec_sys.py)
+        return: StudentNode object, which contains: (check _rec_sys_helpers.py)
                 results: dictionary of recommended courses
                 e.g. {
                         recommended_courses: dictionary {
@@ -130,15 +131,19 @@ class RecSys:
                                    Total score of each model                score: float,
                                    Course periods                           period: [int, ...] or [[int, int], ...],    e.g [1, 4] or [[1, 2, 3], [4, 5, 6]] or [[1,2]]
                                                                             warning: boolean
+                                                                            warning_recommendation: list of warning recommendation
                                    (after applying CourseBased model)       keywords: {scores to each keyword}
                                    (after applying BloomBased model)        blooms: {scores to each bloom}
                                                                         },
                                                             ...
                                                         },
                         sorted_recommended_courses: list of courses {'course_code': String,
-                                                                     'course_name': String
-Note: if you want include keyword or blooms, check                   'keywords': {keywords(String): weight(float), ...} ,
-rec_sys_uni._helpers_rec_sys.py -> sort_by_periods function          'blooms': {blooms(String): weight(float), ...}
+                                                                     'course_name': String,
+                                                                     'warning': boolean,
+                                                                     'warning_recommendation': list of warning recommendation,
+                                                                     'keywords': {keywords(String): weight(float), ...} ,
+                                                                     'blooms': {blooms(String): weight(float), ...}
+                                                                     'score': float,
 
                         structured_recommendation: dictionary {
                                                                 semester_1: dictionary {
@@ -163,27 +168,33 @@ and sorted_recommended_courses key in the results)              },
                                                                                   system_course_data,
                                                                                   system_student_data)
 
-        results = {
-                    "recommended_courses": {},
-                    "sorted_recommended_courses": []
-                   }
+        # Make results template
+        results = make_results_template(course_data)
 
-        results = make_results_template(results, course_data)
-
+        # Create StudentNode object
         student_info = StudentNode(results, student_intput, course_data, student_data)
 
-        compute_recommendation(self, student_info)
+        # Compute recommendation and store in student_info.results['recommended_courses']
+        if self.keyword_based or self.bloom_based:
+            compute_recommendation(self, student_info)
 
+        # Compute warnings and store in student_info.results['recommended_courses']
         if self.warning_model:
             compute_warnings(self, student_info)
 
         # Sort by periods
-        sort_by_periods(self, student_info, self.top_n, include_keywords=True, include_score=True,
-                        include_blooms=False)
+        sorted_recommendation_list, structured_recommendation = sort_by_periods(self,
+                                                                                student_info.results['recommended_courses'],
+                                                                                student_info.course_data,
+                                                                                self.top_n
+                                                                                )
+        student_info.results['sorted_recommended_courses'] = sorted_recommendation_list
+        student_info.results['structured_recommendation'] = structured_recommendation
 
+        # Save student_info to database
         now = datetime.now()
 
-        collection = self.db["students_results"]
+        collection = self.db["student_results"]
         input_dict = {
             "student_id": "123",
             "student_input": student_info.student_input,
@@ -195,69 +206,21 @@ and sorted_recommended_courses key in the results)              },
         object_db = collection.insert_one(input_dict)
         student_info.set_id(object_db.inserted_id)
 
+        # Return StudentNode object
         return student_info
 
     def generate_explanation(self, student_id, course_code):
-        collection = self.db["students_results"]
-        student_info = collection.find({"_id": ObjectId(student_id)})[0]
-        student_input = student_info["student_input"]
-        course_result = student_info["results"]["recommended_courses"][course_code]
-        course = student_info["course_data"][course_code]
-
-        response = self.explanation.generate_explanation(student_input, course_code, course, course_result)
-
-        collection_LLM = self.db["LLM_usage"]
-        llm_usage_old = collection_LLM.find_one({"_id": student_info["student_id"]})
-
-        if llm_usage_old is None:
-            collection_LLM.insert_one({
-                "_id": student_info["student_id"],
-                "completion_tokens": response.usage.completion_tokens,
-                "prompt_tokens": response.usage.prompt_tokens,
-                "total_tokens": response.usage.total_tokens,
-            })
-        else:
-            completion_tokens = llm_usage_old["completion_tokens"] + response.usage.completion_tokens
-            prompt_tokens = llm_usage_old["prompt_tokens"] + response.usage.prompt_tokens
-            total_tokens = llm_usage_old["total_tokens"] + response.usage.total_tokens
-            collection_LLM.update_one({"_id": student_info["student_id"]}, {"$set": {
-                "completion_tokens": completion_tokens,
-                "prompt_tokens": prompt_tokens,
-                "total_tokens": total_tokens,
-            }})
-
-        now = datetime.now()
-
-        self.db["LLM_results"].insert_one({
-            "student_id": student_info["student_id"],
-            "course_code": course_code,
-            "student_input": student_info["student_input"],
-            "course_keywords": course_result['keywords'],
-            "explanation": json.loads(response.choices[0].message.content),
-            "completion_tokens": response.usage.completion_tokens,
-            "prompt_tokens": response.usage.prompt_tokens,
-            "total_tokens": response.usage.total_tokens,
-            "time": now.strftime("%d/%m/%Y %H:%M:%S")
-        })
-
-        return json.loads(response.choices[0].message.content)
+        return json.loads(compute_explanations(self, student_id, course_code))
 
     def make_timeline(self, student_id):
-        collection = self.db['students_results']
-        student_info = collection.find({'_id': ObjectId(student_id)})[0]
-        course_data = student_info['results']['recommended_courses']
-        return self.planner.plan(course_data)
-
-    def compute_warnings(self, student_info):
-        # Here you can call the warnings prediction model
-        pass
+        return compute_timeline(self, student_id)
 
     def print_config(self):
         print(f"RecSys settings: \n" +
-              f"Contraints: {self.constraints} \n" +
               f"Validate_input: {self.validate_input} \n" +
-              f"Course_based: {self.course_based} \n" +
+              f"Keyword_based: {self.keyword_based} \n" +
               f"Bloom_based: {self.bloom_based} \n" +
               f"Explanation: {self.explanation} \n" +
               f"Warning_model: {self.warning_model} \n" +
+              f"Planner: {self.planner} \n" +
               f"Top_n: {self.top_n} \n")
