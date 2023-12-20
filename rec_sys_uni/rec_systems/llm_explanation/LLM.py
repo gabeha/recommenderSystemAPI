@@ -1,100 +1,11 @@
-from langchain.embeddings.huggingface import HuggingFaceEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import FAISS
-from langchain.document_loaders import TextLoader
 from openai import OpenAI
-from threading import Thread
-from langchain.llms import HuggingFaceTextGenInference
-from langchain.chat_models import ChatOpenAI
-from langchain.callbacks import get_openai_callback
-from langchain.chains import RetrievalQA
-from rec_sys_uni.rec_systems.llm_explanation.Streaming import StreamingRecSys
-import transformers
-import time
-import asyncio
-import os
 
 
 class LLM:
-    def __init__(self, url: str, token: str, model_id: str,
-                 model_name: str,
-                 chat_gpt: bool = False,
-                 thread_mode: bool = False):
-        self.model_id = model_id
-        self.thread_mode = thread_mode
-        self.chat_gpt = chat_gpt
-
-        if chat_gpt:
-            self.llm = OpenAI(api_key=token)
-        else:
-            self.llm = HuggingFaceTextGenInference(
-                inference_server_url=url,
-                max_new_tokens=1000,
-                temperature=0.05,
-                # top_k=10,
-                # top_p=0.95,
-                # typical_p=0.95,
-                repetition_penalty=1.1,
-                streaming=True,
-                stop_sequences=["\n\n\n\n", "[INST]"],
-            )
-            # Authentication
-            self.llm.client.headers = {"Authorization": f"Bearer {token}"}
-
-
-        # # Load local FAISS database
-        # db = load_local_db_FAISS(model_name)
-        #
-        # # RAG Pipeline
-        # self.rag = RetrievalQA.from_chain_type(
-        #     llm=self.llm, chain_type='stuff',
-        #     retriever=db.as_retriever()
-        # )
-
-
-    def generate_in_thread(self, prompt_tokenized, course_code):
-        pass
-        # result = self.llm(prompt_tokenized, callbacks=[StreamingRecSys(course_code)])
-        # print("\n\n")
-        # print(f"Course: {course_code}")
-        # print(result)
-
-    def generate_GPT_in_thread(self, prompt, course_code):
-        pass
-        # response = self.llm.chat.completions.create(
-        #     model="gpt-3.5-turbo-1106",
-        #     messages=prompt,
-        #     temperature=0.1,
-        #     max_tokens=4096,
-        #     top_p=0.95,
-        #     frequency_penalty=1.1,
-        #     presence_penalty=0.95
-        # )
-        # print("\n\n")
-        # print(f"Course: {course_code}")
-        # print(response.choices[0].message.content)
-
-    def generate_explanations_sync(self, student_input, course_code, course, course_results):
-        """
-        Synchronously generate explanations for recommended courses.
-        """
-        pass
-        # # Generate prompt for each course
-        # prompt = generate_prompt_per_course(student_input, course, course_description)
-        # # Add the prompt to the template
-        # final_prompt_tokenized = add_to_template(prompt, self.model_id)
-        # # Create a coroutine for the task
-        # # self.rag.run(final_prompt_tokenized, callbacks=[StreamingRecSys(course['course_code'])])
-        # print("\n")
-        # print(f"Course: {course['course_code']}")
-        # if self.thread_mode:
-        #     Thread(target=self.generate_in_thread, args=(final_prompt_tokenized, course['course_code'])).start()
-        # else:
-        #     self.llm(final_prompt_tokenized, callbacks=[StreamingRecSys(course['course_code'])])
-
-
-
-
+    def __init__(self,
+                 token: str
+                 ):
+        self.llm = OpenAI(api_key=token)
 
     def generate_explanations_GPT(self, student_input, course_code, course, course_results):
         """
@@ -103,35 +14,25 @@ class LLM:
         # Generate prompt for each course
         prompt = generate_prompt_per_course(student_input, course_code, course, course_results)
         # Add the prompt to the template
-        final_prompt_tokenized = add_to_template(prompt, self.model_id, chat_gpt=True)
+        final_prompt_tokenized = add_to_template(prompt)
         # Generate explanation
-        if self.thread_mode:
-            Thread(target=self. generate_GPT_in_thread, args=(final_prompt_tokenized, course['course_code'])).start()
-        else:
-            response = self.llm.chat.completions.create(
-                model="gpt-3.5-turbo-1106",
-                messages=final_prompt_tokenized,
-                response_format={"type": "json_object"},
-                temperature=0.1,
-                max_tokens=4096,
-                top_p=0.95,
-                frequency_penalty=0,
-                presence_penalty=0,
-            )
-            return response
-
+        response = self.llm.chat.completions.create(
+            model="gpt-3.5-turbo-1106",
+            messages=final_prompt_tokenized,
+            response_format={"type": "json_object"},
+            temperature=0.1,
+            max_tokens=4096,
+            top_p=0.95,
+            frequency_penalty=0,
+            presence_penalty=0,
+        )
+        return response
 
     def generate_explanation(self, student_input, course_code, course, course_results):
         """
         Generate explanations for recommended courses.
         """
-        # Assuming generate_explanations_async is an async method
-        if not self.chat_gpt:
-            return self.generate_explanations_sync(student_input, course_code, course, course_results)
-        else:
-            return self.generate_explanations_GPT(student_input, course_code, course, course_results)
-
-
+        return self.generate_explanations_GPT(student_input, course_code, course, course_results)
 
 
 def generate_prompt_per_course(student_input, course_code, course, course_results):
@@ -171,11 +72,8 @@ def generate_prompt_per_course(student_input, course_code, course, course_result
     return text_promt
 
 
-def add_to_template(text_promt, model_id, chat_gpt=False):
-    if chat_gpt:
-        template = get_prompt_template_per_course_GPT()
-    else:
-        template = get_prompt_template_per_course()
+def add_to_template(text_promt):
+    template = get_prompt_template_per_course_GPT()
     # Add recommended courses to ask the LLM to generate explanation
     template.append(
         {
@@ -184,71 +82,8 @@ def add_to_template(text_promt, model_id, chat_gpt=False):
         }
     )
 
-    # Return the tokenized template
-    if chat_gpt:
-        return template
-    else:
-        # Tokenize the template for the LLM
-        tokenizer = transformers.AutoTokenizer.from_pretrained(model_id)
-        return tokenizer.apply_chat_template(template, tokenize=False, add_generation_prompt=True)
-
-
-# def create_knowledge_base(course_data, model_name):
-#     knowledge_base = []
-#     index = 0
-#     # Create knowledge base
-#     for code in course_data:
-#         title = course_data[code]['course_name']  # Title of the course
-#         desc = course_data[code]['description']  # Description of the course
-#         ilos = course_data[code]['ilos']  # ILOs of the course
-#         text = "Title of the course: " + title + ". "  # For each text add the title of the course
-#         for i in desc.split('.'):
-#             text_length = len(text)
-#             i_length = len(i)
-#             if text_length + i_length < 1000:  # Check if the text is less than 1000 characters
-#                 text += i.strip() + '.'
-#             else:
-#                 knowledge_base.append(text.strip())  # If the text is more than 1000 characters,
-#                 # add it to the knowledge base
-#                 text = "Title of the course: " + title + ". " + i.strip() + '.'  # Start a new text
-#         knowledge_base.append(text)
-#
-#         # Add ILOs to the knowledge base with the title of the course
-#         text = f"\nThe {title} has the following ILOs: " + ", ".join(ilos).strip() + ". "
-#         knowledge_base.append(text)
-#         index += 1
-#
-#     with (open(r'rec_sys_uni/datasets/data/LLM/knowledge_base.txt', 'w')) as fp:
-#         fp.write('\n'.join(knowledge_base))
-#
-#     embedding_model = HuggingFaceEmbeddings(
-#         model_name=model_name
-#     )
-#
-#     # Load documents and split them
-#     documents = TextLoader("rec_sys_uni/datasets/data/LLM/knowledge_base.txt").load()
-#     # Initialize text splitter
-#     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-#     # Split documents into chunks
-#     docs = text_splitter.split_documents(documents)
-#
-#     # Create local vector database
-#     db = FAISS.from_documents(docs, embedding_model)
-#     # Save local vector database
-#     db.save_local("rec_sys_uni/datasets/data/LLM/db_FAISS")
-#
-#
-# def load_local_db_FAISS(model_name):
-#     """
-#     function: load local FAISS database for Retrieval Augmented Generation (RAG)
-#     """
-#     # Load embedding model
-#     embedding_model = HuggingFaceEmbeddings(
-#         model_name=model_name
-#     )
-#     # Load local vector database for RAG
-#     db = FAISS.load_local("rec_sys_uni/datasets/data/LLM/db_FAISS", embedding_model)
-#     return db
+    # Return template
+    return template
 
 
 def get_prompt_template_per_course_GPT():
@@ -412,11 +247,4 @@ def get_prompt_template_per_course_GPT():
         }
     ]
 
-
-def get_prompt_template_per_course():
-    """
-    function: get the prompt template for LLM
-    """
-    return None
-
-#%%
+# %%
