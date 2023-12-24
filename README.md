@@ -1,51 +1,17 @@
-# Recommender System API
+# Recommender System
 
-This is a Flask project containing the recommender system API for the colleges at Maastricht University.
+## Introduction
+The project is designed to improve the quality of education through the use of AI technologies. The primary objective is to demonstrate how AI can facilitate personalized education within the UCM college program. This will be achieved by assisting UCM students in developing the program with their own individual learning pathway and providing adaptive teaching materials to their individual needs. To subsequently develop a system in collaboration with educational institutions that meets societal needs and expectations, providing a responsive educational chain in the fast-paced world.
 
-## Installation
+`notebook/Tutorial_RecSys.ipynb` provides an overview of the recommender system we have built for UCM. It includes key aspects to help you understand the system's functionality and workflow. We'll begin with how to call the system and then delve into the details of each component.
 
-1. Clone the repository.
-2. Install the required packages using `pip install -r requirements.txt`.
-3. Run the application using `python3 run.py`.
+Note: We are not Software Engineers, so the structure might not be the best. We are open to suggestions and improvements.
 
-## Usage
+Before starting, it's necessary to install the system's requirements. These are listed in the `requirements.txt` file. To install them, run the following command in your terminal:
 
-1. Open a tool like Postman and create a POST request to `http://127.0.0.1:5000/api/recommend`.
+```
+pip install -r requirements.txt
+```
 
-The POST request needs to contain a JSON object like this as it's body:
 
-`{
-"keywords": {
-"dog": 0.4,
-"cat": 0.8,
-"animal": 0.9,
-"pet": 0.7,
-"cute": 0.6,
-"adorable": 0.5,
-"kitten": 0.8,
-"puppy": 0.8
-},
-"bloom": {
-"remember": 0.5,
-"understand": 0.6,
-"apply": 0.7,
-"analyze": 0.8,
-"evaluate": 0.9,
-"create": 1.0
-}
-}`
-
-## Contributing
-
-1. Fork the repository.
-2. Create a new branch.
-3. Make your changes and commit them.
-4. Push to your fork and submit a pull request.
-
-## Credits
-
-This project was created by [Gabriel Hauss](https://github.com/gabeha).
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+Additionally, when you run the system for the first time, some transformer models will be downloaded. This will take some time in the first run. Moreover, we use MongoDB for the system. You need to have MongoDB installed on your system. You can download MongoDB from [here](https://www.mongodb.com/try/download/community).
